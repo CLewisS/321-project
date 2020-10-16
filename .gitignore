@@ -3,3 +3,6 @@
 
 # Build results
 build/
+
+# npm files
+node_modules/

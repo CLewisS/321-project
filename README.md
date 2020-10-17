@@ -6,7 +6,30 @@ Android studio project
 ## Server
 ![](imgs/server_modules.png?raw=true)
 
-### Database setup
+### Server Setup
+1. Install [Nodejs](https://nodejs.org/en/download/)
+
+2. Clone repo
+
+3. navigate to *server/dbInterface*
+
+4. Run `npm install` in the command line
+
+5. navigate to *server/requestManager*
+
+6. Run `npm install` in the command line
+
+7. Run `node server.js` in the command line
+
+*Optional:*
+
+I have created a very basic web client which can be found in *test.html*. 
+
+If you want to use it for debugging while running the server open [this](http://localhost:3000/)
+in your browser.
+
+
+### Database Setup
 
 1. Follow online [instructions](https://dev.mysql.com/doc/mysql-getting-started/en/#mysql-getting-started-installing)
 

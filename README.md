@@ -4,6 +4,22 @@
 Android studio project
 
 ## Server
+
+### Interface
+
+#### HTTP Request Methods
+- POST /service: Add a new service. Must contain a JSON object of the service values.
+
+  - Service Attributes:
+      - name (string): The title of the service
+      - date (date): The date of the service. Format: 'YYY-MM-DD'
+      - time (time): The time that the service is occuring at. Format: 'hh:mm:ss'
+      - lat (double): The latitudinal coordinate of the event location.
+      - longi (double): The longitudinal coordinate of the event location.
+      - owner (string): The name of the person that created the event.
+      - type (string): The type of service being provided (eg. food, money, etc.)
+
+### Modules
 ![](imgs/server_modules.png?raw=true)
 
 ### Server Setup
@@ -56,4 +72,4 @@ CREATE TABLE services (
 
 ### Database notes
 
-- The detabase configuration must be in the dbConfig.js file in order to connect to it
+- The database configuration must be in the dbConfig.js file in order to connect to it

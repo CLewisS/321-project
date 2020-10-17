@@ -4,4 +4,4 @@
 Android studio project
 
 ## Server
-![](imgs/server_module.png?raw=true)
+![](imgs/server_modules.png?raw=true)

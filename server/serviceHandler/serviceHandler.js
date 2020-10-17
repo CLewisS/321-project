@@ -8,17 +8,12 @@ module.exports.getServices = function (req, res) {
 }
 
 module.exports.addService = function (req, res) {
-/*
-  var mysql = require('mysql');
-
-  var dbConn = mysql.createConnection({
-    host:'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'services'
-  });
-  */
+  
+  var db = require('../dbInterface/serviceDB.js');
 
   console.log('In service handler: add service');
+  
+  db.add('Hi');
+
   res.send('<p> Service Handler: add service </p>');  
 };

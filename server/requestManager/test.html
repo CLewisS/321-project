@@ -1,0 +1,43 @@
+<html>
+
+<body>
+
+  <script>
+    var get_services = function () {
+
+      const Http = new XMLHttpRequest();
+  
+      Http.open("GET", '/service');
+      Http.send();
+
+      console.log("Getting services: GET /service");
+    }
+
+    var add_service = function () {
+
+      const Http = new XMLHttpRequest();
+  
+      Http.open("POST", '/service');
+      Http.send();
+      
+      console.log("Adding service: POST /service");
+    }
+
+    var get_new_messages = function () {
+
+      const Http = new XMLHttpRequest();
+  
+      Http.open("GET", '/chat');
+      Http.send();
+
+      console.log("Getting messages: GET /chat");
+    }
+  
+  </script>
+
+  <button onclick='get_services()'> Get Services </button>
+  <button onclick='add_service()'> Add Service </button>
+  <button onclick='get_new_messages()'> Get Messages </button>
+
+</body>
+</html>

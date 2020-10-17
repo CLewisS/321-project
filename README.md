@@ -30,3 +30,7 @@ CREATE TABLE services (
   PRIMARY KEY (id)
 );
 ```
+
+### Database notes
+
+- The detabase configuration must be in the dbConfig.js file in order to connect to it

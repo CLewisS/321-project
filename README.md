@@ -8,7 +8,7 @@ Android studio project
 ### Interface
 
 #### HTTP Request Methods
-- POST /service: Add a new service. Must contain a JSON object of the service values.
+- POST /service: Add a new service. Must contain a JSON object of the service values. The response contains the unique identifier for the service.
 
   - Service Attributes:
       - name (string): The title of the service

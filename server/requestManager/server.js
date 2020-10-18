@@ -22,8 +22,9 @@ app.get('/', (req, res) => {
 
 app.get('/service', serviceHandler.getServices);
 
+app.post('/service', serviceHandler.addService);
+
 app.get('/chat', chatServer.getNewMessages);
 
-app.post('/service', serviceHandler.addService);
 
 app.listen(PORT, () => console.log('Listening on port ' + PORT));

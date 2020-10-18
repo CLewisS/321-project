@@ -17,7 +17,6 @@ const PORT = 3000;
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/test.html');
 });
-
 //*******************
 
 app.get('/service', serviceHandler.getServices);

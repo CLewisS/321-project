@@ -1,4 +1,8 @@
 /* The interface for the service database
+ *
+ * Functions:
+ *   - add: Adds a new entry to the services database.
+ *   - get: Gets services that meet the given conditions from the service database. 
  */
 
 
@@ -12,7 +16,8 @@ var dbConfig = require('./dbConfig');
  *   - service: The values for the service to be added. 
  *              Must be a JSON object.
  *
- *   - res: The response object for the http request
+ *   - callback: A callback function that is called once the service  has been inserted.
+ *               The unique identifier of the inserted service is passed as an argument.
  */
 
 module.exports.add = function (service, callback) {
@@ -67,6 +72,16 @@ module.exports.add = function (service, callback) {
 }; 
 
 
+/* Gets services that meet the given conditions from the service database. 
+ *
+ * Parameters:
+ *   - conditions: The max and min values for the services being retrieved. 
+ *                 Must be a JSON object where each key is an attribute, 
+ *                 and each value is another JSON object with up to 2 keys (max, min).
+ *
+ *   - callback: A callback function that is called once the services have been retrieved.
+ *               The retrieved services are passed as an argument.
+ */
 module.exports.get = function(conditions, callback) {
   console.log('Getting Services from DB');
 
@@ -107,8 +122,6 @@ module.exports.get = function(conditions, callback) {
 
     query += sqlConds.join(' AND ');
   
-    //query = 'SELECT * FROM services WHERE date >= \'2020-10-15\' AND date <= \'2020-10-25\' AND time <= \'15:57:3\' AND lat >= 49.56911 AND longi >= 122.908 AND longi <= 130.456';
-
     console.log(query);
 
     // Get services

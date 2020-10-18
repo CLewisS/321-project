@@ -1,6 +1,10 @@
 /* This module handles service requests
- *
+ * 
+ * Functions:
+ *   - getServices: Gets services requested in the HTTP request, and returns them in the response.
+ *   - addService:  Adds the new service from the HTTP request. 
  */
+
 
 var db = require('../dbInterface/serviceDB.js');
 

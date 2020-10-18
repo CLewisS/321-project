@@ -1,6 +1,9 @@
 package com.example.community_link;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.google.gson.*;
 
 @SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
@@ -12,6 +15,8 @@ public class ServiceData implements Serializable{
     private int hour;
     private int minute;
     private String eventName;
+    private String dow;
+    private String type;
 
     public ServiceData(){
     }
@@ -24,6 +29,10 @@ public class ServiceData implements Serializable{
         this.year = year;
         this.month = month;
         this.day = day;
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+        Date date = new Date(year, month, day-1);
+        String dow = simpledateformat.format(date);
+        this.dow = dow;
     }
 
     public void setTime(int hour, int minute){
@@ -33,6 +42,10 @@ public class ServiceData implements Serializable{
 
     public void setEventName(String eventName){
         this.eventName = eventName;
+    }
+
+    public void setType(String type){
+        this.type = type;
     }
 
     public String toJSON(){

@@ -2,6 +2,7 @@ package com.example.community_link;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ public class AddService extends AppCompatActivity {
     private TextView tvw;
      ServiceData sd = new ServiceData();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,10 @@ public class AddService extends AppCompatActivity {
         picker=(TimePicker)findViewById(R.id.datePicker1);
         picker.setIs24HourView(true);
         btnGet=(Button)findViewById(R.id.button2);
+        TextView txvPN = findViewById(R.id.textViewProjectName);
+        TextView txvPT = findViewById(R.id.textViewType);
+        txvPN.setText("Project Name");
+        txvPT.setText("Project Type");
     }
 
     public void getTime(View view){
@@ -39,9 +45,13 @@ public class AddService extends AppCompatActivity {
         }
         EditText editText = (EditText) findViewById(R.id.editTextTextPersonName2);
         String message = editText.getText().toString();
+        EditText editType = (EditText) findViewById(R.id.editTextType);
+        String type = editType.getText().toString();
         sd.setTime(hour,minute);
         sd.setEventName(message);
         sd.setName("Jiang Zeming");
+        sd.setType(type);
+
         Intent addService2 = new Intent(this,AddService2.class);
         addService2.putExtra("ServiceData",sd);
         startActivity(addService2);

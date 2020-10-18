@@ -17,13 +17,13 @@ const PORT = 3000;
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/test.html');
 });
-
 //*******************
 
 app.get('/service', serviceHandler.getServices);
 
+app.post('/service', serviceHandler.addService);
+
 app.get('/chat', chatServer.getNewMessages);
 
-app.post('/service', serviceHandler.addService);
 
 app.listen(PORT, () => console.log('Listening on port ' + PORT));

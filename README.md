@@ -59,7 +59,9 @@ in your browser.
 
 3. `CREATE DATABASE services;`
 
-4. 
+4. `USE services;`
+
+5. 
 ```
 CREATE TABLE services (
   id INT unsigned NOT NULL AUTO_INCREMENT,

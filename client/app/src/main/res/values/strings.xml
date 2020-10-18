@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">community_link</string>
+    <string name="button_send">Add Service</string>
+    <string name="name_event">Your event name here</string>
 </resources>

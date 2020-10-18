@@ -5,6 +5,7 @@
  */
 
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 var serviceHandler = require('../serviceHandler/serviceHandler.js');
 var chatServer = require('../chatServer/chatServer.js');
@@ -18,6 +19,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/test.html');
 });
 //*******************
+
+app.use(bodyParser.json());
 
 app.get('/service', serviceHandler.getServices);
 

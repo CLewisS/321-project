@@ -12,6 +12,7 @@ module.exports.getServices = function (req, res) {
   console.log('In service handler: get services');
 
   // This is just a placeholder for debugging
+  // This is also a good example of what the conditions object should be like
   //*****************************************
   var conditions = {
     date:  {min:'2020-10-15', max:'2020-10-25'},
@@ -21,7 +22,8 @@ module.exports.getServices = function (req, res) {
   };
   //*****************************************
 
-  //TODO: Get conditions from request, and check that it has all the information required
+  //TODO: Get conditions from request (req) body, and check that it has all the information required
+  // The conditions should be in a JSON object (Details in README), and assigned to the variable conditions.
   
 
   db.get(conditions, (services) => { 
@@ -35,6 +37,7 @@ module.exports.addService = function (req, res) {
   console.log('In service handler: add service');
  
   // This is just a placeholder for debugging
+  // This is also a good example of what the service object should be like
   //*****************************************
   var service = {
     name: 'A service',
@@ -42,12 +45,13 @@ module.exports.addService = function (req, res) {
     time: '12:57:33',
     lat:   49.56911,
     longi: 123.456,
-    owner: 'Bood',
+    owner: 'Jon',
     type:  'food'
   };
   //*****************************************
 
-  //TODO: Get service from request, and check that it has all the information required
+  //TODO: Get service from request (req) body, and check that it has all the information required
+  // The service should be in a JSON object (Details in README), and assigned to the variable service.
 
   db.add(service, (id) => {
     res.json(id);

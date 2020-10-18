@@ -29,8 +29,10 @@ public class AddService extends AppCompatActivity {
         btnGet=(Button)findViewById(R.id.button2);
         TextView txvPN = findViewById(R.id.textViewProjectName);
         TextView txvPT = findViewById(R.id.textViewType);
+        TextView txvDS = findViewById(R.id.textViewDesc);
         txvPN.setText("Project Name");
         txvPT.setText("Project Type");
+        txvDS.setText("Project Description");
     }
 
     public void getTime(View view){
@@ -47,10 +49,13 @@ public class AddService extends AppCompatActivity {
         String message = editText.getText().toString();
         EditText editType = (EditText) findViewById(R.id.editTextType);
         String type = editType.getText().toString();
+        EditText editDesc = (EditText) findViewById(R.id.editTextDesc);
+        String desc = editDesc.getText().toString();
         sd.setTime(hour,minute);
         sd.setEventName(message);
         sd.setName("Jiang Zeming");
         sd.setType(type);
+        sd.setDescription(desc);
 
         Intent addService2 = new Intent(this,AddService2.class);
         addService2.putExtra("ServiceData",sd);

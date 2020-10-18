@@ -10,10 +10,10 @@
         android:id="@+id/datePicker1"
         android:layout_width="234dp"
         android:layout_height="194dp"
-        android:layout_marginTop="328dp"
+        android:layout_marginTop="396dp"
         android:timePickerMode="spinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,9 +32,9 @@
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginRight="48dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:ems="10"
         android:hint="@string/name_event"
         android:inputType="textPersonName"
@@ -46,23 +46,23 @@
         android:id="@+id/textViewProjectName"
         android:layout_width="84dp"
         android:layout_height="42dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginRight="52dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName2"
         app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName2"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName2"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="Project Name" />
 
     <TextView
         android:id="@+id/textViewType"
         android:layout_width="85dp"
         android:layout_height="46dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginRight="52dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/editTextType"
         app:layout_constraintEnd_toStartOf="@+id/editTextType"
@@ -72,7 +72,7 @@
         android:id="@+id/editTextType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Type"
@@ -80,5 +80,31 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+
+    <TextView
+        android:id="@+id/textViewDesc"
+        android:layout_width="83dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="40dp"
+        android:text="TextView"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextDesc"
+        app:layout_constraintEnd_toStartOf="@+id/editTextDesc"
+        app:layout_constraintHorizontal_bias="0.565"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewType" />
+
+    <EditText
+        android:id="@+id/editTextDesc"
+        android:layout_width="208dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextType" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

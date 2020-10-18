@@ -17,6 +17,7 @@ public class ServiceData implements Serializable{
     private String eventName;
     private String dow;
     private String type;
+    private String description;
 
     public ServiceData(){
     }
@@ -46,6 +47,10 @@ public class ServiceData implements Serializable{
 
     public void setType(String type){
         this.type = type;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
     }
 
     public String toJSON(){

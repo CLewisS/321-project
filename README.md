@@ -12,12 +12,14 @@ Android studio project
 
   - Service Attributes:
       - name (string): The title of the service
-      - date (date): The date of the service. Format: 'YYY-MM-DD'
+      - date (date): The date of the service. Format: 'YYYY-MM-DD'
+      - dow (string): The day of the week that the service occurs on.
       - time (time): The time that the service is occuring at. Format: 'hh:mm:ss'
       - lat (double): The latitudinal coordinate of the event location.
       - longi (double): The longitudinal coordinate of the event location.
       - owner (string): The name of the person that created the event.
       - type (string): The type of service being provided (eg. food, money, etc.)
+      - description (string): A description of the service provided.
 
 ### Modules
 ![](imgs/server_modules.png?raw=true)

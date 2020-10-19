@@ -49,12 +49,24 @@
 
       console.log("Getting messages: GET /chat");
     }
+
+    var add_message = function () {
+
+      const Http = new XMLHttpRequest();
+
+
+      Http.open("POST", '/chat');
+      Http.send();
+
+      console.log("Adding message: POST /chat");
+    }
   
   </script>
 
   <button onclick='get_services()'> Get Services </button>
   <button onclick='add_service()'> Add Service </button>
   <button onclick='get_new_messages()'> Get Messages </button>
+  <button onclick='add_message()'> Add Message </button>
 
 </body>
 </html>

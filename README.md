@@ -20,8 +20,22 @@ Android studio project
       - owner (string): The name of the person that created the event.
       - type (string): The type of service being provided (eg. food, money, etc.)
       - description (string): A description of the service provided.
+
 - GET /service: Get services that meet specified conditions. Must conatin a JSON object with min and max conditions.
     - Example: `{date: {min: '2020-10-15', max: '2020-11-15'}, lat: {min: 49.3456}, longi: {max: 123.456}}`
+
+- POST /chat: Add a new message. Must contain a JSON object with users, timestamp, and content.
+    - Message Attributes:
+        - sender (string): The user id of the sender
+        - reciever (string): The user id of the reciever
+        - timestamp (string): The time that the message was sent. Format 'YYYY-MM-DD hh:mm:ss'
+        - content (string): The message content.
+
+- GET /chat: Get messages.
+    - conditions:
+        - user1 (string): One of the users involved in the message.
+        - user2 (string): The other user involved in the message.
+        - newest (int): The newest message to retrieve from the thread (the first message ever sent between these two users is 1, the second is 2, etc.). 
 
 ### Modules
 ![](imgs/server_modules.png?raw=true)
@@ -75,6 +89,14 @@ CREATE TABLE services (
   PRIMARY KEY (id)
 );
 ```
+
+6. `CREATE DATABASE chat;`
+
+7. `USE chat;`
+
+8. `CREATE TABLE threads (thread VARCHAR(150) NOT NULL, numMess INT unsigned NOT NULL, PRIMARY KEY (thread));`
+
+9. `CREATE TABLE messages (id VARCHAR(160) NOT NULL, time TIMESTAMP NOT NULL, content TEXT NOT NULL, PRIMARY KEY (id));`
 
 ### Database notes
 

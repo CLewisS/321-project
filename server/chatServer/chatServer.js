@@ -4,10 +4,15 @@ var db = require('../dbInterface/chatDB.js');
 module.exports.getMessages = function(req, res) {
   console.log('In chat server');
  
-  var message;
+  // This is just a placeholder for debugging
+  //*****************************************
+  var user1 = 'b';
+  var user2 = 'c';
+  var newest = 4;
+  //*****************************************
 
-  db.get(conditions, (id) => {
-    res.json(id);
+  db.get(user1, user2, newest, (messages) => {
+    res.json(messages);
   });
 };
 
@@ -17,10 +22,10 @@ module.exports.addMessage = function(req, res) {
   // This is just a placeholder for debugging
   //*****************************************
   var message = {
-    user1: 'a',
-    user2: 'b',
+    user1: 'b',
+    user2: 'c',
     time: '2020-10-11 12:23:45',
-    content: 'THis is most definitely a message!!!'
+    content: 'This is most definitely a message!!!'
   };
   //*****************************************
 

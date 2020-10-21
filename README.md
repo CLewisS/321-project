@@ -21,8 +21,10 @@ Android studio project
       - type (string): The type of service being provided (eg. food, money, etc.)
       - description (string): A description of the service provided.
 
-- GET /service: Get services that meet specified conditions. Must conatin a JSON object with min and max conditions.
-    - Example: `{date: {min: '2020-10-15', max: '2020-11-15'}, lat: {min: 49.3456}, longi: {max: 123.456}}`
+- GET /service: Get services that meet specified conditions. Must contain conditions in query string.
+    - Example: http://xxxxxxx:####/service?date-min=2020-10-15&date-max=2020-11-15&lat-min=49.3456&longi-max=123.456
+
+    `{date: {min: '2020-10-15', max: '2020-11-15'}, lat: {min: 49.3456}, longi: {max: 123.456}}`
 
 - POST /chat: Add a new message. Must contain a JSON object with users, timestamp, and content.
     - Message Attributes:
@@ -86,6 +88,7 @@ CREATE TABLE services (
   longi DOUBLE NOT NULL,
   owner VARCHAR(150) NOT NULL,
   type VARCHAR(150) NOT NULL,
+  description TEXT,
   PRIMARY KEY (id)
 );
 ```

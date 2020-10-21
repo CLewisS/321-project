@@ -46,7 +46,8 @@ module.exports.addService = function (req, res) {
     lat:   49.56911,
     longi: 123.456,
     owner: 'Jon',
-    type:  'food'
+    type:  'food',
+    description: 'Food will be provided'
   };
   //*****************************************
 

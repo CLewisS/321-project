@@ -37,15 +37,22 @@ module.exports.add = function (service, callback) {
 
     // Get Service Values  
     try {
-      var values = Object.values(service);
-      if (values.length != 7) throw 'Service has too few [' + values.length + '] values. service: ' + JSON.stringify(service);
+      if (Object.values(service).length != 8) throw 'Service has too few [' + values.length + '] values. service: ' + JSON.stringify(service);
     } catch (err) {
       return console.error(err);
     }
+    var values = [service.name, 
+                  service.date, 
+                  service.time, 
+                  service.lat, 
+                  service.longi, 
+                  service.owner, 
+                  service.type, 
+                  service.description];
     
     // Insert service into database
-    var query = `INSERT INTO services (name, date, time, lat, longi, owner, type)
-                 VALUES(?, ?, ?, ?, ?, ?, ?)`;
+    var query = `INSERT INTO services (name, date, time, lat, longi, owner, type, description)
+                 VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {

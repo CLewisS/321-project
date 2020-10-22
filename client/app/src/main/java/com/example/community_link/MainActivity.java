@@ -25,13 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setApplicationId("APP ID") // Required for Analytics.
-                .setProjectId("PROJECT ID") // Required for Firebase Installations.
-                .setApiKey("GOOGLE API KEY") // Required for Auth.
-                .build();
-        FirebaseApp.initializeApp(this, options, "Community_Link");
-
         System.out.println("Getting instance id");
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {

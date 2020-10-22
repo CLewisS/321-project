@@ -3,6 +3,11 @@
 ## Client
 Android studio project
 
+### Push Notifications
+Push notifications are used to send new messages to the recipient.
+
+Handling of the received messages is done in the method *onMessageReceived* in the class **MyFirebaseMessagingService**.
+
 ## Server
 
 ### Interface

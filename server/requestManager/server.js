@@ -20,6 +20,8 @@ app.get('/', (req, res) => {
 });
 //*******************
 
+var jsonParser = bodyParser.json();
+
 app.use(bodyParser.json());
 
 app.get('/service', serviceHandler.getServices);

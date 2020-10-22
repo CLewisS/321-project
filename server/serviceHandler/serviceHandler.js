@@ -25,6 +25,7 @@ module.exports.getServices = function (req, res) {
   //TODO: Get conditions from request (req) body, and check that it has all the information required
   // The conditions should be in a JSON object (Details in README), and assigned to the variable conditions.
   
+  console.log('query: ' + req.query.datemin);
 
   db.get(conditions, (services) => { 
     res.json(services);
@@ -53,6 +54,8 @@ module.exports.addService = function (req, res) {
 
   //TODO: Get service from request (req) body, and check that it has all the information required
   // The service should be in a JSON object (Details in README), and assigned to the variable service.
+
+  console.log(req.body);
 
   db.add(service, (id) => {
     res.json(id);

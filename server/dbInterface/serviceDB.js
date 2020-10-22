@@ -6,8 +6,8 @@
  */
 
 
-var mysql = require('mysql');
-var dbConfig = require('./dbConfig');
+var mysql = require("mysql");
+var dbConfig = require("./dbConfig");
 
 
 /* Adds a new entry to the services database
@@ -22,7 +22,7 @@ var dbConfig = require('./dbConfig');
 
 module.exports.add = function (service, callback) {
 
-  console.log('Adding Service to DB');
+  console.log("Adding Service to DB");
 
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
@@ -30,14 +30,14 @@ module.exports.add = function (service, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error('error: ' + err.message);
+      return console.error("error: " + err.message);
     }
 
-    console.log('Connected to MySQL server');
+    console.log("Connected to MySQL server");
 
     // Get Service Values  
     try {
-      if (Object.values(service).length != 8) throw 'Service has too few [' + values.length + '] values. service: ' + JSON.stringify(service);
+      if (Object.values(service).length != 8) throw "Service has too few [" + values.length + "] values. service: " + JSON.stringify(service);
     } catch (err) {
       return console.error(err);
     }
@@ -59,7 +59,7 @@ module.exports.add = function (service, callback) {
         return console.error(err.message);
       }
   
-      console.log('Inserted');
+      console.log("Inserted");
 
       callback({id: results.insertId});
     });
@@ -68,10 +68,10 @@ module.exports.add = function (service, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error('error: ' + err.message); 
+        return console.error("error: " + err.message); 
       }
   
-      console.log('Closed connection to MySQL server');
+      console.log("Closed connection to MySQL server");
     });
 
   });
@@ -90,17 +90,17 @@ module.exports.add = function (service, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.get = function(conditions, callback) {
-  console.log('Getting Services from DB');
+  console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error('error: ' + err.message);
+      return console.error("error: " + err.message);
     }
 
-    console.log('Connected to MySQL server');
+    console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = `SELECT * FROM services WHERE `;
@@ -109,25 +109,25 @@ module.exports.get = function(conditions, callback) {
 
     for (var [key, value] of Object.entries(conditions)) {
 
-      if (value.hasOwnProperty('min')) {
-        if (key == 'lat' || key == 'longi') {
-          sqlConds.push(key + ' >= ' + value['min']);
+      if (value.hasOwnProperty("min")) {
+        if (key === "lat" || key === "longi") {
+          sqlConds.push(key + " >= " + value["min"]);
         } else {
-          sqlConds.push(key + ' >=' + '\'' + value['min'] + '\'');
+          sqlConds.push(key + " >=" + "'" + value["min"] + "'");
         }
       }
 
-      if (value.hasOwnProperty('max')) {
-        if (key == 'lat' || key == 'longi') {
-          sqlConds.push(key + ' <= ' + value['max']);
+      if (value.hasOwnProperty("max")) {
+        if (key == "lat" || key == "longi") {
+          sqlConds.push(key + " <= " + value["max"]);
         } else {
-          sqlConds.push(key + ' <=' + '\'' + value['max'] + '\'');
+          sqlConds.push(key + " <=" + "'" + value["max"] + "'");
         }
       }
 
     }
 
-    query += sqlConds.join(' AND ');
+    query += sqlConds.join(" AND ");
   
     console.log(query);
 
@@ -143,10 +143,10 @@ module.exports.get = function(conditions, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error('error: ' + err.message); 
+        return console.error("error: " + err.message); 
       }
   
-      console.log('Closed connection to MySQL server');
+      console.log("Closed connection to MySQL server");
     });
 
   });

@@ -4,30 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".RequestExample">
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="194dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="80dp"
-        android:hint="@string/button_send"
-        android:onClick="addService"
-        android:text="Add Service"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button4"
+        android:id="@+id/get"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="requestExample"
-        android:text="Request Example"
+        android:onClick="getServicesButton"
+        android:text="Get"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/res"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/get" />
 </androidx.constraintlayout.widget.ConstraintLayout>

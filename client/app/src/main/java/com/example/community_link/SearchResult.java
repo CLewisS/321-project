@@ -26,20 +26,22 @@ public class SearchResult extends AppCompatActivity {
 
         /*<--------------HARDCODING----------------------->*/
         ServiceData sd1 = new ServiceData();
-        sd1.setDescription("Tian'an Men Silence");
-        sd1.setType("Parade");
-        sd1.setDate(1989,6,4);
-        sd1.setName("Anti-China Terrorists");
-        sd1.setEventName("Silence");
+        sd1.setDescription("An O(n) Sorting Algorithm, iterating the array and remove " +
+                            "the not-in-order elements");
+        sd1.setType("Sorting");
+        sd1.setDate(1938,6,4);
+        sd1.setName("Joseph Vissarionovich Stalin");
+        sd1.setEventName("Stalin Sort");
         sd1.setTime(0,0);
 
         ServiceData sd2 = new ServiceData();
-        sd2.setDescription("Tian'an Men Cleaning");
-        sd2.setType("Cleaning");
-        sd2.setDate(1989,6,4);
-        sd2.setName("Jiang Zemin");
-        sd2.setEventName("Clean");
-        sd2.setTime(0,0);
+        sd2.setDescription("An O(1) Sorting Algorithm, simply claimint the array is already" +
+                            "sorted, and those who against are CNN and CHINESE media");
+        sd2.setType("Sorting");
+        sd2.setDate(2017,1,20);
+        sd2.setName("Donald John Trump");
+        sd2.setEventName("Trump Sort");
+        sd2.setTime(8,41);
 
         sdList.add(sd1);
         sdList.add(sd2);

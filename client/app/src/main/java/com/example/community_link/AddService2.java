@@ -22,7 +22,6 @@ public class AddService2 extends AppCompatActivity {
     ServiceData sd;
     DatePicker picker;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,23 +36,32 @@ public class AddService2 extends AppCompatActivity {
         sd.setDate(picker.getYear(),picker.getMonth(),picker.getDayOfMonth());
         TextView txv = findViewById(R.id.textView2);
         txv.setText(sd.toJSON());
-
+        //postToServer();
     }
-/*
+
+    /**To Enable the postToServer() Function,
+     * Uncomment the postToServer Function, Replace the url with your url
+     * Uncomment the postToServer() above,
+     * Comment Line 37 & 38
+     **/
+
+    /*
     private void postToServer(){
        RequestQueue queue = Volley.newRequestQueue(this);
-       String url ="http://www.google.com";
+       String url ="http://nazokunvm.eastus.cloudapp.azure.com:8080/get";
 
        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                new Response.Listener<String>() {
                    @Override
                    public void onResponse(String response) {
-
+                       TextView txv = findViewById(R.id.textView2);
+                       txv.setText(response);
                    }
                }, new Response.ErrorListener() {
            @Override
            public void onErrorResponse(VolleyError error) {
-               // error
+               TextView txv = findViewById(R.id.textView2);
+               txv.setText(error.getMessage());
            }
        }){
            @Override
@@ -65,5 +73,6 @@ public class AddService2 extends AppCompatActivity {
 
        queue.add(stringRequest);
    }
-  */
+ */
+
 }

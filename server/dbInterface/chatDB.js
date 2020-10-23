@@ -1,8 +1,8 @@
 /* The interface for the chat Database
  */
 
-var mysql = require('mysql');
-var dbConfig = require('./dbConfig');
+var mysql = require("mysql");
+var dbConfig = require("./dbConfig");
 
 
 /* Adds a new entry to the chat database
@@ -17,7 +17,7 @@ var dbConfig = require('./dbConfig');
 
 module.exports.add = function (message, callback) {
 
-  console.log('Adding message to DB');
+  console.log("Adding message to DB");
 
 
   var dbConn = mysql.createConnection(dbConfig.chatDB);
@@ -25,31 +25,31 @@ module.exports.add = function (message, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error('error: ' + err.message);
+      return console.error("error: " + err.message);
     }
 
-    console.log('Connected to MySQL server');
+    console.log("Connected to MySQL server");
 
-    var thread = message.user1 + ':' + message.user2;
+    var thread = message.user1 + ":" + message.user2;
     
     // Increment number of messages in thread
-    var query = 'INSERT INTO threads (thread, numMess) VALUES (\'' + thread + '\', 1) ON DUPLICATE KEY UPDATE numMess = numMess + 1';
+    var query = "INSERT INTO threads (thread, numMess) VALUES ('" + thread + "', 1) ON DUPLICATE KEY UPDATE numMess = numMess + 1";
     dbConn.query(query, (err, results, fields) => {
       if (err) {
         return console.error(err.message);
       }
   
-      console.log('Updated thread message count');
+      console.log("Updated thread message count");
 
       // Get number of messages in thread
-      query = 'SELECT numMess FROM threads WHERE thread = \'' + thread + '\'';
+      query = "SELECT numMess FROM threads WHERE thread = '" + thread + "'";
       dbConn.query(query, (err, results, fields) => {
         if (err) {
           return console.error(err.message);
         }
 
         // Insert message into table
-        query = 'INSERT INTO messages (id, time, content) VALUES(\'' + thread + ':' + results[0].numMess + '\', \'' + message.time + '\', \'' + message.content + '\')';
+        query = "INSERT INTO messages (id, time, content) VALUES('" + thread + ":" + results[0].numMess + "', '" + message.time + "', '" + message.content + "')";
         dbConn.query(query, (err, results, fields) => {
           if (err) {
             return console.error(err.message);
@@ -59,10 +59,10 @@ module.exports.add = function (message, callback) {
         // End connection
         dbConn.end(function (err) {
           if (err) {
-            return console.error('error: ' + err.message); 
+            return console.error("error: " + err.message); 
           }
       
-          console.log('Closed connection to MySQL server');
+          console.log("Closed connection to MySQL server");
         });
       });
 
@@ -83,21 +83,21 @@ module.exports.add = function (message, callback) {
  *               The retrieved messages are passed as an argument.
  */
 module.exports.get = function(user1, user2, newest, callback) {
-  console.log('Getting messages from DB');
+  console.log("Getting messages from DB");
 
   var dbConn = mysql.createConnection(dbConfig.chatDB);
 
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error('error: ' + err.message);
+      return console.error("error: " + err.message);
     }
 
-    console.log('Connected to MySQL server');
+    console.log("Connected to MySQL server");
 
-    var thread = user1 + ':' + user2;
+    var thread = user1 + ":" + user2;
 
-    var query = `SELECT numMess FROM threads WHERE thread=\'` + thread + '\'';
+    var query = "SELECT numMess FROM threads WHERE thread='" + thread + "'";
 
     // Get total number of thread messages
     dbConn.query(query, (err, result, fields) => {
@@ -110,10 +110,10 @@ module.exports.get = function(user1, user2, newest, callback) {
       var numMess = result[0].numMess;
       if (newest <= numMess) {
         for (var i = newest; i <= numMess; i++) {
-          newer.push('\'' + thread + ':' + i + '\'');
+          newer.push("'" + thread + ":" + i + "'");
         }
 
-        query = 'SELECT * FROM messages WHERE id IN (' + newer.join(', ') + ')';
+        query = "SELECT * FROM messages WHERE id IN (" + newer.join(", ") + ")";
         console.log(query);
         dbConn.query(query, (err, results, fields) => {
           if (err) {
@@ -126,10 +126,10 @@ module.exports.get = function(user1, user2, newest, callback) {
       // End connection
       dbConn.end(function (err) {
         if (err) {
-          return console.error('error: ' + err.message); 
+          return console.error("error: " + err.message); 
         }
   
-        console.log('Closed connection to MySQL server');
+        console.log("Closed connection to MySQL server");
       });
     });
 

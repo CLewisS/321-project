@@ -14,7 +14,7 @@
         longi: {max: 130.456, min: 122.908}
       };
 
-      Http.open("GET", '/service?datemin=2020-10-15');
+      Http.open("GET", '/service?date-min=2020-10-15&lat-min=45.786&lat-max=67.89&longi-min=122.3434');
       Http.send();
 
       console.log("Getting services: GET /service");
@@ -30,7 +30,8 @@
                    lat:   49.56911,
                    longi: 123.456,
                    owner: 'Jon',
-                   type:  'food'
+                   type:  'food',
+                   description: 'This is a description'
                  };
   
       Http.open("POST", '/service');

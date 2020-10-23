@@ -37,7 +37,7 @@ module.exports.add = function (service, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(service).length != 8) throw "Service has too few [" + values.length + "] values. service: " + JSON.stringify(service);
+      if (Object.values(service).length != 8) throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
     } catch (err) {
       return console.error(err);
     }
@@ -105,9 +105,9 @@ module.exports.get = function(conditions, callback) {
     // Build SQL query
     var query = `SELECT * FROM services WHERE `;
 
-    var sqlConds = [];
+    var sqlConds = conditions;
 
-    for (var [key, value] of Object.entries(conditions)) {
+/*    for (var [key, value] of Object.entries(conditions)) {
 
       if (value.hasOwnProperty("min")) {
         if (key === "lat" || key === "longi") {
@@ -124,8 +124,11 @@ module.exports.get = function(conditions, callback) {
           sqlConds.push(key + " <=" + "'" + value["max"] + "'");
         }
       }
-
-    }
+      
+      if (key === "type") {
+        sqlConds.push("type='" + value + "'");
+      }
+    }*/
 
     query += sqlConds.join(" AND ");
   

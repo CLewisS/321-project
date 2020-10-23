@@ -25,7 +25,9 @@ module.exports.getMessages = function(req, res) {
   var newest = "2020-10-10 12:30:45";
   //*****************************************
 
-  db.get(user1, user2, newest, (messages) => {
+  var queryString = req.query;
+
+  db.get(queryString.user1, queryString.user2, queryString.newest, (messages) => {
 
     res.json(messages);
     console.log(messages);

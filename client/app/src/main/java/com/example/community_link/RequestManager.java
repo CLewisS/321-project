@@ -40,7 +40,9 @@ public class RequestManager {
             "time-min", "time-max",
             "lat-min", "lat-max",
             "longi-min", "longi-max",
-            "type"));;
+            "type"));
+
+    private static final ArrayList<String> validmessageConditions = new ArrayList<>(Arrays.asList("sender", "recipient", "newest"));
 
     public RequestManager(DiskBasedCache cache) {
 
@@ -53,6 +55,28 @@ public class RequestManager {
 
         this.requestQueue.start();
     }
+
+    private String conditionsToQueryString(JSONObject conditions, ArrayList validConditions) {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("?");
+        Iterator<String> keys = conditions.keys();
+
+        while(keys.hasNext()) {
+            String key = keys.next();
+            if (validConditions.contains(key)) {
+                try {
+                    queryString.append(key + "=" + conditions.get(key) + "&");
+                } catch(JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        queryString.deleteCharAt(queryString.length() - 1);
+
+        return queryString.toString();
+    }
+
 
     /**
      *  Gets services that meet the specified conditions.
@@ -74,22 +98,7 @@ public class RequestManager {
      */
     public void getServices(JSONObject conditions, Response.Listener getServicesCallback, Response.ErrorListener getServicesErrorCallback) {
         StringBuilder endpoint = new StringBuilder();
-        endpoint.append("/service?");
-
-        Iterator<String> keys = conditions.keys();
-
-        while(keys.hasNext()) {
-            String key = keys.next();
-            if (validServiceConditions.contains(key)) {
-                try {
-                    endpoint.append(key + "=" + conditions.get(key) + "&");
-                } catch(JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        endpoint.deleteCharAt(endpoint.length() - 1);
+        endpoint.append("/service" + conditionsToQueryString(conditions, validServiceConditions));
         System.out.println(endpoint);
         sendGetRequest(endpoint.toString(), getServicesCallback, getServicesErrorCallback);
     }
@@ -114,6 +123,34 @@ public class RequestManager {
      */
     public void addService(JSONObject service, Response.Listener addServiceCallback, Response.ErrorListener addServiceErrorCallback) {
         sendPostRequest("/service", service, addServiceCallback, addServiceErrorCallback);
+    }
+
+    /**
+     *  Gets messages that meet the specified conditions.
+     *
+     * @param conditions A JSON object containing the conditions for services.
+     *                   Example: conditions = {sender: "Me", recipient: "you", timestamp: "2020-10-15 12:30:33"}
+     *
+     * @param getMessagesCallback A callback function for a response. Example in RequestExample activity.
+     * @param getMessagesErrorCallback A callback function for an error
+     */
+    public void getMessages(JSONObject conditions, Response.Listener getMessagesCallback, Response.ErrorListener getMessagesErrorCallback) {
+        StringBuilder endpoint = new StringBuilder();
+        endpoint.append("/chat" + conditionsToQueryString(conditions, validmessageConditions));
+        System.out.println(endpoint);
+        sendGetRequest(endpoint.toString(), getMessagesCallback, getMessagesErrorCallback);
+    }
+
+    /**
+     *  Add a new message.
+     *
+     * @param message A JSON object containing the message attributes.
+     *
+     * @param addMessageCallback A callback function for a response. Example in RequestExample activity.
+     * @param addMessageErrorCallback A callback function for an error
+     */
+    public void addMessage(JSONObject message, Response.Listener addMessageCallback, Response.ErrorListener addMessageErrorCallback) {
+        sendPostRequest("/chat", message, addMessageCallback, addMessageErrorCallback);
     }
 
     private void sendGetRequest(String endpoint, Response.Listener responseCallback, Response.ErrorListener errorCallback) {

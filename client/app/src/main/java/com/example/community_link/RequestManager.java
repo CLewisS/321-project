@@ -15,9 +15,16 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.JsonArray;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class RequestManager {
 
@@ -29,9 +36,15 @@ public class RequestManager {
 
     private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
 
-    public RequestManager(DiskBasedCache cache) {
-        this.cache = cache;//new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+    private static final ArrayList<String> validServiceConditions = new ArrayList<>(Arrays.asList("date-min", "date-max",
+            "time-min", "time-max",
+            "lat-min", "lat-max",
+            "longi-min", "longi-max",
+            "type"));;
 
+    public RequestManager(DiskBasedCache cache) {
+
+        this.cache = cache;
         // Set up the network to use HttpURLConnection as the HTTP client.
         this.network = new BasicNetwork(new HurlStack());
 
@@ -41,66 +54,91 @@ public class RequestManager {
         this.requestQueue.start();
     }
 
+    /**
+     *  Gets services that meet the specified conditions.
+     *
+     * @param conditions A JSON object containing the conditions for services.
+     *                   Conditions must be for maximums or minimums (except for type) of valid service attributes.
+     *
+     *                   Valid service attributes:
+     *                     - date (Format: "YYYY-MM-DD")
+     *                     - time (Format: "hh:mm:ss")
+     *                     - lat (latitudinal coordinate)
+     *                     - longi (longitudinal coordinate)
+     *                     - type (category of the service)
+     *
+     *                   Example: conditions = {date-min: "2020-10-15", lat-min: 48.61284, lat-max: 56.73}
+     *
+     * @param getServicesCallback A callback function for a response. Example in RequestExample activity.
+     * @param getServicesErrorCallback A callback function for an error
+     */
     public void getServices(JSONObject conditions, Response.Listener getServicesCallback, Response.ErrorListener getServicesErrorCallback) {
         StringBuilder endpoint = new StringBuilder();
-        endpoint.append("/service?date-min=2020-10-15&date-max=2020-11-15&lat-min=49.3456&longi-max=123.456");
+        endpoint.append("/service?");
 
+        Iterator<String> keys = conditions.keys();
+
+        while(keys.hasNext()) {
+            String key = keys.next();
+            if (validServiceConditions.contains(key)) {
+                try {
+                    endpoint.append(key + "=" + conditions.get(key) + "&");
+                } catch(JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        endpoint.deleteCharAt(endpoint.length() - 1);
+        System.out.println(endpoint);
         sendGetRequest(endpoint.toString(), getServicesCallback, getServicesErrorCallback);
     }
 
-    private void sendGetRequest(String endpoint, Response.Listener getServicesCallback, Response.ErrorListener getServicesErrorCallback) {
+    /**
+     *  Add a new service.
+     *
+     * @param service A JSON object containing the service attributes.
+     *                Valid service attributes:
+     *                  - name (The title of the service)
+     *                  - date (Format: "YYYY-MM-DD")
+     *                  - dow (day of the week)
+     *                  - time (Format: "hh:mm:ss")
+     *                  - lat (latitudinal coordinate)
+     *                  - longi (longitudinal coordinate)
+     *                  - owner (The name of the person who created the service)
+     *                  - type (category of the service)
+     *                  - description (A description of the service provided)
+     *
+     * @param addServiceCallback A callback function for a response. Example in RequestExample activity.
+     * @param addServiceErrorCallback A callback function for an error
+     */
+    public void addService(JSONObject service, Response.Listener addServiceCallback, Response.ErrorListener addServiceErrorCallback) {
+        sendPostRequest("/service", service, addServiceCallback, addServiceErrorCallback);
+    }
+
+    private void sendGetRequest(String endpoint, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
 
         // Formulate the request and handle the response.
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, serverUrl + endpoint, null,
-                getServicesCallback,
-                getServicesErrorCallback);
+                responseCallback,
+                errorCallback);
 
         requestQueue.add(request);
 
     }
 
-    private void sendPostRequest(String endpoint, Response.Listener getServicesCallback, Response.ErrorListener getServicesErrorCallback) {
-
-        // Formulate the request and handle the response.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, serverUrl + endpoint,
-                getServicesCallback,
-                getServicesErrorCallback);
-
-        /*JSONObject jsonBody = new JSONObject();
-        jsonBody.put("Title", "Android Volley Demo");
-        jsonBody.put("Author", "BNK");
-        final String requestBody = jsonBody.toString();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                getServicesCallback,
-                getServicesErrorCallback) {
+    private void sendPostRequest(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, serverUrl + endpoint, body,
+                responseCallback,
+                errorCallback) {
             @Override
             public String getBodyContentType() {
                 return "application/json; charset=utf-8";
             }
 
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
-                    return null;
-                }
-            }
+        };
 
-            @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                String responseString = "";
-                if (response != null) {
-                    responseString = String.valueOf(response.statusCode);
-                    // can get more details such as response.headers
-                }
-                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-            }
-        };*/
-
-        requestQueue.add(stringRequest);
+        requestQueue.add(request);
 
     }
 }

@@ -22,11 +22,13 @@ module.exports.getMessages = function(req, res) {
   //*****************************************
   var user1 = "b";
   var user2 = "c";
-  var newest = 4;
+  var newest = "2020-10-10 12:30:45";
   //*****************************************
 
   db.get(user1, user2, newest, (messages) => {
+
     res.json(messages);
+    console.log(messages);
   });
 };
 
@@ -36,10 +38,10 @@ module.exports.addMessage = function(req, res) {
   // This is just a placeholder for debugging
   //*****************************************
   var message = {
-    user1: "b",
-    user2: "c",
-    time: "2020-10-11 12:23:45",
-    content: "This is most definitely a message!!!"
+    sender: "c",
+    recipient: "b",
+    time: "2020-10-13 12:25:56",
+    content: "Hi!!!"
   };
   //*****************************************
 

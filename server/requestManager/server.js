@@ -8,7 +8,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 var serviceHandler = require("../serviceHandler/serviceHandler.js");
-var chatServer = require("../chatServer/chatServer.js");
+//var chatServer = require("../chatServer/chatServer.js");
 
 
 const PORT = 3000;

@@ -47,6 +47,8 @@ module.exports.addMessage = function(req, res) {
   };
   //*****************************************
 
+  message = req.body;
+
   var payload = {
       data: message
   };

@@ -29,7 +29,7 @@ module.exports.getMessages = function(req, res) {
 
   db.get(queryString.user1, queryString.user2, queryString.newest, (messages) => {
 
-    res.json(messages);
+    res.json(JSON.parse(messages));
     console.log(messages);
   });
 };

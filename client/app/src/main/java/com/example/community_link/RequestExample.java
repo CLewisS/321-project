@@ -94,8 +94,8 @@ public class RequestExample extends AppCompatActivity {
     public void getMessagesButton(View view) {
         JSONObject conditions = new JSONObject();
         try {
-            conditions.put("sender", "me");
-            conditions.put("recipient", "you");
+            conditions.put("user1", "me");
+            conditions.put("user2", "you");
             conditions.put("newest", "2020-10-22 10:51:33");
         }catch(JSONException e) {
             e.printStackTrace();

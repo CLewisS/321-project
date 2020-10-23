@@ -42,7 +42,7 @@ public class RequestManager {
             "longi-min", "longi-max",
             "type"));
 
-    private static final ArrayList<String> validmessageConditions = new ArrayList<>(Arrays.asList("sender", "recipient", "newest"));
+    private static final ArrayList<String> validmessageConditions = new ArrayList<>(Arrays.asList("user1", "user2", "newest"));
 
     public RequestManager(DiskBasedCache cache) {
 
@@ -129,7 +129,7 @@ public class RequestManager {
      *  Gets messages that meet the specified conditions.
      *
      * @param conditions A JSON object containing the conditions for services.
-     *                   Example: conditions = {sender: "Me", recipient: "you", timestamp: "2020-10-15 12:30:33"}
+     *                   Example: conditions = {user1: "Me", user2: "you", timestamp: "2020-10-15 12:30:33"}
      *
      * @param getMessagesCallback A callback function for a response. Example in RequestExample activity.
      * @param getMessagesErrorCallback A callback function for an error
@@ -145,6 +145,7 @@ public class RequestManager {
      *  Add a new message.
      *
      * @param message A JSON object containing the message attributes.
+     *                Message Attributes: sender, recipient, timestamp, content
      *
      * @param addMessageCallback A callback function for a response. Example in RequestExample activity.
      * @param addMessageErrorCallback A callback function for an error

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class RequestExample extends AppCompatActivity {
@@ -26,11 +27,11 @@ public class RequestExample extends AppCompatActivity {
     public void getServicesButton(View view) {
         JSONObject conditions = new JSONObject();
 
-        Response.Listener getServicesCallback = new Response.Listener<String>() {
+        Response.Listener getServicesCallback = new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(String response) {
-                Log.d("response", response);
-                res.setText(response);
+            public void onResponse(JSONArray response) {
+                Log.d("response", response.toString());
+                res.setText(response.toString());
             }
         };
 

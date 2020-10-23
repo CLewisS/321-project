@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONObject;
@@ -50,9 +51,54 @@ public class RequestManager {
     private void sendGetRequest(String endpoint, Response.Listener getServicesCallback, Response.ErrorListener getServicesErrorCallback) {
 
         // Formulate the request and handle the response.
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, serverUrl + endpoint, null,
+                getServicesCallback,
+                getServicesErrorCallback);
+
+        requestQueue.add(request);
+
+    }
+
+    private void sendPostRequest(String endpoint, Response.Listener getServicesCallback, Response.ErrorListener getServicesErrorCallback) {
+
+        // Formulate the request and handle the response.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, serverUrl + endpoint,
                 getServicesCallback,
                 getServicesErrorCallback);
+
+        /*JSONObject jsonBody = new JSONObject();
+        jsonBody.put("Title", "Android Volley Demo");
+        jsonBody.put("Author", "BNK");
+        final String requestBody = jsonBody.toString();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                getServicesCallback,
+                getServicesErrorCallback) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String responseString = "";
+                if (response != null) {
+                    responseString = String.valueOf(response.statusCode);
+                    // can get more details such as response.headers
+                }
+                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };*/
 
         requestQueue.add(stringRequest);
 

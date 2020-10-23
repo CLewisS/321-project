@@ -51,9 +51,11 @@ module.exports.add = function (message, callback) {
           return console.error(err.message);
         }
 
+          console.log(message);
         // Insert message into table
         query = "INSERT INTO messages (id, sender, recipient, time, content) VALUES('" 
-                + thread + ":" + results[0].numMess + "', '" + message.sender + "', '" + message.recipient + "', '" + message.time + "', '" + message.content + "')";
+                + thread + ":" + results[0].numMess + "', '" + message.sender + "', '" + message.recipient + "', '" + message.timestamp + "', '" + message.content + "')";
+          console.log(query);
         dbConn.query(query, (err, results, fields) => {
           if (err) {
             return console.error(err.message);

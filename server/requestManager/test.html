@@ -58,9 +58,10 @@
       var message = {sender: "c",
                    recipient: "b",
                    timestamp: "2020-10-31 11:23:34",
-                   content: "Hello!"}
+                   content: "Hello!"};
 
       Http.open("POST", '/chat');
+      Http.setRequestHeader('Content-Type', 'application/json');
       Http.send(JSON.stringify(message));
 
       console.log("Adding message: POST /chat");

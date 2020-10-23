@@ -46,8 +46,14 @@ module.exports.addMessage = function(req, res) {
     content: "Hi!!!"
   };
   //*****************************************
+  
+  var body = req.body;
 
-  message = req.body;
+  if (typeof(body) === "string") {
+    body = JSON.parse(body);
+  }
+
+  message = body;
 
   var payload = {
       data: message

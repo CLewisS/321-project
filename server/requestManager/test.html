@@ -45,7 +45,7 @@
       const Http = new XMLHttpRequest();
 
 
-      Http.open("GET", '/chat');
+      Http.open("GET", '/chat?user1=me&user2=you&newest=2020-10-22%2012:22:34');
       Http.send();
 
       console.log("Getting messages: GET /chat");
@@ -55,9 +55,15 @@
 
       const Http = new XMLHttpRequest();
 
+      var message = {
+        sender: "me",
+        recipient: "you",
+        timestamp: "2020-10-22 12:30:33",
+        content: "This is a message."
+      };
 
       Http.open("POST", '/chat');
-      Http.send();
+      Http.send(JSON.stringify(message));
 
       console.log("Adding message: POST /chat");
     }

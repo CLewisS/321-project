@@ -56,12 +56,15 @@ Handling of the received messages is done in the method *onMessageReceived* in t
  
  4. Run `npm install` in the command line
  
- 5. navigate to *server/requestManager*
+ 5. Navigate to *server/chatserver*
  
  6. Run `npm install` in the command line
  
- 7. Run `node server.js` in the command line
-
+ 7. navigate to *server/requestManager*
+ 
+ 8. Run `npm install` in the command line
+ 
+ 9. Run `node server.js` in the command line
 *Optional:*
 
 I have created a very basic web client which can be found in *test.html*. 
@@ -73,6 +76,11 @@ in your browser.
 
  1. Follow online [instructions](https://dev.mysql.com/doc/mysql-getting-started/en/#mysql-getting-started-installing)
 
+ 5. navigate to *server/requestManager*
+
+ 6. Run `npm install` in the command line
+
+ 7. Run `node server.js` in the command line
 *Then once MySQL server is running:*
 
  2. `ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';`

@@ -11,7 +11,7 @@ var serviceHandler = require("../serviceHandler/serviceHandler.js");
 var chatServer = require("../chatServer/chatServer.js");
 
 
-const PORT = 3000;
+const PORT = 8080;
 
 //*******************
 // JUST FOR DEBUGGING

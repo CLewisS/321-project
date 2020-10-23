@@ -51,6 +51,17 @@ public class ServiceData implements Serializable{
         this.description = description;
     }
 
+    public String toString(){
+        return "Owner: " + this.owner + "\n" +
+                "Date: " + this.date + "\n" +
+                "Time: " + this.time  + "\n" +
+                "Event Name: " + this.name + "\n" +
+                "Day of Week: " + this.dow + "\n" +
+                "Type: " + this.type + "\n" +
+                "Description: " + this.description + "\n" +
+                "Coordinate: (" + this.lat + "," + this.longi + ")";
+    }
+
     public String toJSON(){
         Gson gson = new Gson();
         return gson.toJson(this);

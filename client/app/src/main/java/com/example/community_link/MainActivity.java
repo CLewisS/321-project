@@ -20,4 +20,9 @@ public class MainActivity extends AppCompatActivity {
         Intent addService = new Intent(this, AddService.class);
         startActivity(addService);
     }
+
+    public void getService(View view){
+        Intent getService = new Intent(this,GetService.class);
+        startActivity(getService);
+    }
 }

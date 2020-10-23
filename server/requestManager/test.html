@@ -14,8 +14,8 @@
         longi: {max: 130.456, min: 122.908}
       };
 
-      Http.open("GET", '/service');
-      Http.send(JSON.stringify(conditions));
+      Http.open("GET", '/service?datemin=2020-10-15');
+      Http.send();
 
       console.log("Getting services: GET /service");
     }
@@ -34,6 +34,7 @@
                  };
   
       Http.open("POST", '/service');
+      Http.setRequestHeader('Content-Type', 'application/json');
       Http.send(JSON.stringify(body));
       
       console.log("Adding service: POST /service");

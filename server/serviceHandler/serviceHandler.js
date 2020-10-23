@@ -6,17 +6,17 @@
  */
 
 
-var db = require('../dbInterface/serviceDB.js');
+var db = require("../dbInterface/serviceDB.js");
 
 module.exports.getServices = function (req, res) {
-  console.log('In service handler: get services');
+  console.log("In service handler: get services");
 
   // This is just a placeholder for debugging
   // This is also a good example of what the conditions object should be like
   //*****************************************
   var conditions = {
-    date:  {min:'2020-10-15', max:'2020-10-25'},
-    time:  {max:'15:57:33'},
+    date:  {min:"2020-10-15", max:"2020-10-25"},
+    time:  {max:"15:57:33"},
     lat:   {min: 49.56911},
     longi: {max: 130.456, min: 122.908}
   };
@@ -25,6 +25,7 @@ module.exports.getServices = function (req, res) {
   //TODO: Get conditions from request (req) body, and check that it has all the information required
   // The conditions should be in a JSON object (Details in README), and assigned to the variable conditions.
   
+  console.log("query: " + req.query.datemin);
 
   db.get(conditions, (services) => { 
     res.json(services);
@@ -34,24 +35,27 @@ module.exports.getServices = function (req, res) {
 module.exports.addService = function (req, res) {
   
 
-  console.log('In service handler: add service');
+  console.log("In service handler: add service");
  
   // This is just a placeholder for debugging
   // This is also a good example of what the service object should be like
   //*****************************************
   var service = {
-    name: 'A service',
-    date: '2020-10-17',
-    time: '12:57:33',
+    name: "A service",
+    date: "2020-10-17",
+    time: "12:57:33",
     lat:   49.56911,
     longi: 123.456,
-    owner: 'Jon',
-    type:  'food'
+    owner: "Jon",
+    type:  "food",
+    description: "Food will be provided"
   };
   //*****************************************
 
   //TODO: Get service from request (req) body, and check that it has all the information required
   // The service should be in a JSON object (Details in README), and assigned to the variable service.
+
+  console.log(req.body);
 
   db.add(service, (id) => {
     res.json(id);

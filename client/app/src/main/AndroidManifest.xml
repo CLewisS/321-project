@@ -45,7 +45,7 @@
 
         <activity
             android:name=".SearchResult"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".GetService">
         </activity>
 
         <activity

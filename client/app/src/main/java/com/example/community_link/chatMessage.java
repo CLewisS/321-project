@@ -6,14 +6,14 @@ import com.google.gson.Gson;
 //TODO: security private guards?
 public class chatMessage {
     public String sender;
-    public String receiver;
-    public String timeStamp;
+    public String recipient;
+    public String timestamp;
     public String content;
 
-    public chatMessage(String sender, String receiver, String timeStamp, String content){
+    public chatMessage(String sender, String recipient, String timestamp, String content){
         this.sender = sender;
-        this.receiver = receiver;
-        this.timeStamp = timeStamp;
+        this.recipient = recipient;
+        this.timestamp = timestamp;
         this.content = content;
     }
 
@@ -21,8 +21,8 @@ public class chatMessage {
     public String toString() {
         return "chatMessage{" +
                 "sender=" + sender + '\n' +
-                "receiver=" + receiver + '\n' +
-                "timeStamp=" + timeStamp + '\n' +
+                "recipient=" + recipient + '\n' +
+                "timestamp=" + timestamp + '\n' +
                 "content=" + content + '\n' +
                 '}';
     }

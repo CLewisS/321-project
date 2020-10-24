@@ -15,7 +15,7 @@
       };
       
         //Http.open("GET", '/service?date-minn=2020-10-15&lat-min=45.786&lat-max=67.89&longi-min=122.3434');
-      Http.open("GET", '/service?date-min=2020-10-16&date-max=2020-10-25&type=food&lat-min=45.786&lat-max=67.89&longi-min=122.3434&longi-max=125.2323');
+      Http.open("GET", '/service?owner=jon&date-min=2020-10-16&date-max=2020-10-25&type=food&lat-min=45.786&lat-max=67.89&longi-min=122.3434&longi-max=125.2323');
       Http.send();
 
       console.log("Getting services: GET /service");
@@ -26,6 +26,7 @@
       const Http = new XMLHttpRequest();
 
       var body = { name: 'A service',
+                   dow: 'Monday',
                    date: '2020-10-17',
                    time: '12:57:33',
                    lat:   49.56911,

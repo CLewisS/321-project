@@ -6,6 +6,8 @@ import java.util.Date;
 
 import com.google.gson.*;
 
+import org.json.JSONObject;
+
 @SuppressWarnings("serial") //With this annotation we are going to hide compiler warnings
 public class ServiceData implements Serializable{
     private String owner;

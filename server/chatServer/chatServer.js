@@ -25,9 +25,11 @@ module.exports.getMessages = function(req, res) {
   var newest = "2020-10-10 12:30:45";
   //*****************************************
 
-  db.get(user1, user2, newest, (messages) => {
+  var queryString = req.query;
 
-    res.json(messages);
+  db.get(queryString.user1, queryString.user2, queryString.newest, (messages) => {
+
+    res.json(JSON.parse(messages));
     console.log(messages);
   });
 };
@@ -44,6 +46,14 @@ module.exports.addMessage = function(req, res) {
     content: "Hi!!!"
   };
   //*****************************************
+  
+  var body = req.body;
+
+  if (typeof(body) === "string") {
+    body = JSON.parse(body);
+  }
+
+  message = body;
 
   var payload = {
       data: message
@@ -56,7 +66,7 @@ module.exports.addMessage = function(req, res) {
 
   admin.messaging().sendToDevice(registrationToken, payload, options)
   .then(function(response) {
-    console.log("Successfully sent message:", response);
+    console.log("Successfully sent message:");
   })
   .catch(function(error) {
     console.log("Error sending message:", error);

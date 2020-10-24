@@ -52,15 +52,21 @@ module.exports.add = function (message, callback) {
         }
 
           console.log(message);
+        var values = [thread + ":" + results[0].numMess, 
+                      message.sender, 
+                      message.recipient, 
+                      message.timestamp, 
+                      message.content];
         // Insert message into table
-        query = "INSERT INTO messages (id, sender, recipient, time, content) VALUES('" 
-                + thread + ":" + results[0].numMess + "', '" + message.sender + "', '" + message.recipient + "', '" + message.timestamp + "', '" + message.content + "')";
-          console.log(query);
-        dbConn.query(query, (err, results, fields) => {
+        query = "INSERT INTO messages (id, sender, recipient, time, content)" + 
+                " VALUES(?, ?, ?, ?, ?)"; 
+          console.log(query, values);
+        dbConn.query(query, values, (err, results, fields) => {
           if (err) {
             return console.error(err.message);
           }
           console.log("Inserted into messages");
+          callback({id: values[0]});
         });
           
         // End connection

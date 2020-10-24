@@ -9,12 +9,13 @@
   
       var conditions = {
         date:  {min:'2020-10-15', max:'2020-10-25'},
-        time:  {max:'15:57:33'},
-        lat:   {min: 49.56911},
+        type:  "food",
+        lat:   {max:47.453, min:50.342},
         longi: {max: 130.456, min: 122.908}
       };
-
-      Http.open("GET", '/service?datemin=2020-10-15');
+      
+        //Http.open("GET", '/service?date-minn=2020-10-15&lat-min=45.786&lat-max=67.89&longi-min=122.3434');
+      Http.open("GET", '/service?owner=jon&date-min=2020-10-16&date-max=2020-10-25&type=food&lat-min=45.786&lat-max=67.89&longi-min=122.3434&longi-max=125.2323');
       Http.send();
 
       console.log("Getting services: GET /service");
@@ -25,25 +26,27 @@
       const Http = new XMLHttpRequest();
 
       var body = { name: 'A service',
+                   dow: 'Monday',
                    date: '2020-10-17',
                    time: '12:57:33',
                    lat:   49.56911,
                    longi: 123.456,
-                   owner: 'Jon',
-                   type:  'food'
+                   owner: 'Brendon',
+                   type:  'food',
+                   description: 'This is a description'
                  };
   
       Http.open("POST", '/service');
       Http.setRequestHeader('Content-Type', 'application/json');
-      Http.send(JSON.stringify(body));
       
+      Http.send(JSON.stringify(body));
+      //Http.send(body);
       console.log("Adding service: POST /service");
     }
 
     var get_new_messages = function () {
 
-      const Http = new XMLHttpRequest();
-
+       const Http = new XMLHttpRequest();
 
       Http.open("GET", '/chat?user1=me&user2=you&newest=2020-10-22%2012:22:34');
       Http.send();
@@ -55,14 +58,13 @@
 
       const Http = new XMLHttpRequest();
 
-      var message = {
-        sender: "me",
-        recipient: "you",
-        timestamp: "2020-10-22 12:30:33",
-        content: "This is a message."
-      };
+      var message = {sender: "c",
+                   recipient: "b",
+                   timestamp: "2020-10-31 11:23:34",
+                   content: "Hello!"};
 
       Http.open("POST", '/chat');
+      Http.setRequestHeader('Content-Type', 'application/json');
       Http.send(JSON.stringify(message));
 
       console.log("Adding message: POST /chat");

@@ -15,25 +15,28 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RequestExample"></activity>
 
-
-    <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
-
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/google_maps_key" />
-
-
-        <activity
-            android:name=".ChatActivity">
+        <activity android:name=".BrowseResult"
+                  android:parentActivityName=".BrowseServiceCond">
         </activity>
 
+        <activity
+            android:name=".BrowseServiceCond"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
+        <activity android:name=".RequestExample" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity android:name=".ChatActivity" />
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -48,16 +51,12 @@
 
         <activity
             android:name=".SearchResult"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".GetService">
         </activity>
-
         <activity
             android:name=".GetService"
             android:parentActivityName=".MainActivity">
-
         </activity>
-
-
         <activity
             android:name=".AddService2"
             android:parentActivityName=".MainActivity">
@@ -67,7 +66,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".AddService"
             android:parentActivityName=".MainActivity">
@@ -77,7 +75,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

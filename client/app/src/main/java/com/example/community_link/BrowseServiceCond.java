@@ -20,14 +20,14 @@ public class BrowseServiceCond extends AppCompatActivity {
     public void browseResult(View view){
         EditText title = findViewById(R.id.titleInput);
         EditText dist = findViewById(R.id.distanceInput);
-        EditText currlat = findViewById(R.id.currLat);
+        EditText currLat = findViewById(R.id.currLat);
         EditText currLong = findViewById(R.id.currLong);
 
         Intent browseResult = new Intent(this,BrowseResult.class);
-        browseResult.putExtra("title", title.getText());
-        browseResult.putExtra("dist", dist.getText());
-        browseResult.putExtra("currLat", currlat.getText());
-        browseResult.putExtra("currLong", currLong.getText());
+        browseResult.putExtra("title", title.getText().toString());
+        browseResult.putExtra("dist", Float.valueOf(dist.getText().toString()));
+        browseResult.putExtra("currLat", Float.valueOf(currLat.getText().toString()));
+        browseResult.putExtra("currLong", Float.valueOf(currLong.getText().toString()));
         startActivity(browseResult);
     }
 

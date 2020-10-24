@@ -57,16 +57,18 @@ public class BrowseResult extends AppCompatActivity {
         //getLocation();
 
         // Retrieve search criteria for services
-        double currLat = getIntent().getDoubleExtra("currLat", 49);
-        double currLong = getIntent().getDoubleExtra("currLong", -123);
-        double dist = getIntent().getDoubleExtra("dist", 15);
+        Float currLat = getIntent().getExtras().getFloat("currLat",49);
+        Float currLong = getIntent().getExtras().getFloat("currLong", -123);
+        double dist = getIntent().getExtras().getFloat("dist", 15);
         double latDiff = dist / 111;
-        double longDiff = 1 / (Math.cos(currLat) * 111);
+        double longDiff = dist / (Math.cos(Math.toRadians(currLat)) * 111);
         double latMin = currLat - latDiff;
         double latMax = currLat + latDiff;
         double longMin = currLong - longDiff;
         double longMax = currLong + longDiff;
-        String title = getIntent().getStringExtra("title");
+
+        String title = getIntent().getExtras().getString("title");
+        System.out.println("Title: " + title);
 
         JSONObject conditions = new JSONObject();
         try {
@@ -79,6 +81,8 @@ public class BrowseResult extends AppCompatActivity {
         }catch(JSONException e) {
             e.printStackTrace();
         }
+
+        System.out.println(conditions);
 
         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
             @Override

@@ -6,15 +6,80 @@
     android:layout_height="match_parent"
     tools:context=".BrowseServiceCond">
 
-    <Button
-        android:id="@+id/browseForService"
-        android:layout_width="169dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="320dp"
-        android:onClick="browseResult"
-        android:text="Click to Browse"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/serviceTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Service Title:" />
+
+        <EditText
+            android:id="@+id/titleInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Service Title"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/currentLoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current Location" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/currLat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Latitude"
+                android:inputType="numberSigned|numberDecimal" />
+
+            <EditText
+                android:id="@+id/currLong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Longitude"
+                android:inputType="numberSigned|numberDecimal" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Distance from current location:" />
+
+        <EditText
+            android:id="@+id/distanceInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Distance"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/browseForService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:onClick="browseResult"
+            android:text="Click to Browse" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

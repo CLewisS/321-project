@@ -1,14 +1,28 @@
 package com.example.community_link;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -21,9 +35,12 @@ import java.util.List;
 public class BrowseResult extends AppCompatActivity {
 
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
+    private FusedLocationProviderClient fusedLocationClient;
+    private static final int REQUEST_CODE = 101;
     private int i = 0;
     private TextView txv;
     private int size;
+    private Location userLoc;
 
 
     @SuppressLint("SetTextI18n")
@@ -36,11 +53,29 @@ public class BrowseResult extends AppCompatActivity {
         /*<--------------HARDCODING----------------------->*/
         txv = (TextView) findViewById(R.id.browseResult);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //getLocation();
+
+        // Retrieve search criteria for services
+        double currLat = getIntent().getDoubleExtra("currLat", 49);
+        double currLong = getIntent().getDoubleExtra("currLong", -123);
+        double dist = getIntent().getDoubleExtra("dist", 15);
+        double latDiff = dist / 111;
+        double longDiff = 1 / (Math.cos(currLat) * 111);
+        double latMin = currLat - latDiff;
+        double latMax = currLat + latDiff;
+        double longMin = currLong - longDiff;
+        double longMax = currLong + longDiff;
+        String title = getIntent().getStringExtra("title");
+
         JSONObject conditions = new JSONObject();
         try {
             conditions.put("date-min", "2020-10-15");
-            conditions.put("lat-min", 48.61284);
-            conditions.put("lat-max", 56.73);
+            conditions.put("name", title);
+            conditions.put("lat-min", latMin);
+            conditions.put("lat-max", latMax);
+            conditions.put("longi-min", longMin);
+            conditions.put("longi-max", longMax);
         }catch(JSONException e) {
             e.printStackTrace();
         }
@@ -57,7 +92,18 @@ public class BrowseResult extends AppCompatActivity {
                     }
                 }
                 size = sdList.size();
-                txv.setText(sdList.get(i).toString());
+                if (size == 0) {
+                    System.out.println("No services");
+                    CharSequence errorMess = "Sorry, no services found. Please enter different search criteria";
+                    Toast errorToast = Toast.makeText(getApplicationContext(), errorMess, Toast.LENGTH_LONG);
+                    errorToast.setGravity(Gravity.CENTER, 0, 0);
+                    errorToast.show();
+
+                    Intent browseService = new Intent(getApplicationContext(), BrowseServiceCond.class);
+                    startActivity(browseService);
+                } else {
+                    txv.setText(sdList.get(i).toString());
+                }
             }
         };
 
@@ -88,5 +134,33 @@ public class BrowseResult extends AppCompatActivity {
             i++;
         }
         txv.setText(sdList.get(i).toString());
+    }
+
+    //This isn't working for some reason
+/*
+    private void getLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            System.out.println("Couldn't get permission _____________-------------------__________________---------");
+            return;
+        }
+        Task<Location> task = fusedLocationClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    System.out.println("GOT LOCATION _____________-------------------__________________---------");
+                    userLoc = location;
+                    Toast.makeText(getApplicationContext(), userLoc.getLatitude() + "" + userLoc.getLongitude(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }*/
+
+    public void viewOnMap(View view) {
+        Intent mapActivity = new Intent(this, MapActivity.class);
+        mapActivity.putExtra("service", sdList.get(i));
+        startActivity(mapActivity);
     }
 }

@@ -66,6 +66,46 @@ public class ServiceData implements Serializable{
                 "Coordinate: (" + this.lat + "," + this.longi + ")";
     }
 
+    public double getLongi () {
+        return this.longi;
+    }
+
+    public double getLat() {
+        return this.lat;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDow() {
+        return dow;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getType() {
+        return type;
+    }
+
     public String toJSON(){
         Gson gson = new Gson();
         return gson.toJson(this);

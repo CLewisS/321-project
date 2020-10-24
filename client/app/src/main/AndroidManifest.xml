@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -17,16 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".BrowseResult"
-                  android:parentActivityName=".BrowseServiceCond">
-        </activity>
-
+        <activity android:name=".MapActivity"></activity>
+        <activity
+            android:name=".BrowseResult"
+            android:parentActivityName=".BrowseServiceCond"></activity>
         <activity
             android:name=".BrowseServiceCond"
-            android:parentActivityName=".MainActivity">
-
-        </activity>
+            android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".RequestExample" />
 
         <meta-data
@@ -51,12 +49,10 @@
 
         <activity
             android:name=".SearchResult"
-            android:parentActivityName=".GetService">
-        </activity>
+            android:parentActivityName=".GetService"></activity>
         <activity
             android:name=".GetService"
-            android:parentActivityName=".MainActivity">
-        </activity>
+            android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".AddService2"
             android:parentActivityName=".MainActivity">

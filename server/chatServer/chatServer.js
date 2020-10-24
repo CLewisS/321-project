@@ -66,7 +66,7 @@ module.exports.addMessage = function(req, res) {
 
   admin.messaging().sendToDevice(registrationToken, payload, options)
   .then(function(response) {
-    console.log("Successfully sent message:", response);
+    console.log("Successfully sent message:");
   })
   .catch(function(error) {
     console.log("Error sending message:", error);

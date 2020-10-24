@@ -27,13 +27,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        Button chatButton = findViewById(R.id.chatEntry_Button);
-        chatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ChatActivity.class));
-            }
-        });
 
 
         System.out.println("Getting instance id");
@@ -74,4 +67,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(requestExample);
 
     }
+
+    public void enterChat(View view){
+        Intent enterChat = new Intent(this, ChatActivity.class);
+        startActivity(enterChat);
+    }
+
+
 }

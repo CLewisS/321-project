@@ -19,6 +19,10 @@ module.exports.getServiceFromReq = function(body) {
     service = body;
   }
 
+  if (service.hasOwnProperty("id")) {
+    delete service.id;
+  }
+
   if (!serviceIsValid(service)) {
     throw "Service is invalid";
   }

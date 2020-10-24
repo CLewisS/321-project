@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
     }
 
     public void addService(View view) {
@@ -61,8 +63,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(addService);
     }
 
-    public void getService(View view){
-        Intent getService = new Intent(this,GetService.class);
+
+    public void getService(View view) {
+        Intent getService = new Intent(this, GetService.class);
         startActivity(getService);
+    }
+
+    public void requestExample(View view) {
+        Intent requestExample = new Intent(this, RequestExample.class);
+        startActivity(requestExample);
+
     }
 }

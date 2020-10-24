@@ -30,7 +30,10 @@ module.exports.add = function (message, callback) {
 
     console.log("Connected to MySQL server");
 
-    var thread = message.user1 + ":" + message.user2;
+    var users = [message.sender, message.recipient];
+    users.sort();
+
+    var thread = users[0] + ":" + users[1];
     
     // Increment number of messages in thread
     var query = "INSERT INTO threads (thread, numMess) VALUES ('" + thread + "', 1) ON DUPLICATE KEY UPDATE numMess = numMess + 1";
@@ -48,12 +51,16 @@ module.exports.add = function (message, callback) {
           return console.error(err.message);
         }
 
+          console.log(message);
         // Insert message into table
-        query = "INSERT INTO messages (id, time, content) VALUES('" + thread + ":" + results[0].numMess + "', '" + message.time + "', '" + message.content + "')";
+        query = "INSERT INTO messages (id, sender, recipient, time, content) VALUES('" 
+                + thread + ":" + results[0].numMess + "', '" + message.sender + "', '" + message.recipient + "', '" + message.timestamp + "', '" + message.content + "')";
+          console.log(query);
         dbConn.query(query, (err, results, fields) => {
           if (err) {
             return console.error(err.message);
           }
+          console.log("Inserted into messages");
         });
           
         // End connection
@@ -106,22 +113,17 @@ module.exports.get = function(user1, user2, newest, callback) {
       }
   
       // Get messages newer than newest
-      var newer = [];
       var numMess = result[0].numMess;
-      if (newest <= numMess) {
-        for (var i = newest; i <= numMess; i++) {
-          newer.push("'" + thread + ":" + i + "'");
-        }
 
-        query = "SELECT * FROM messages WHERE id IN (" + newer.join(", ") + ")";
-        console.log(query);
-        dbConn.query(query, (err, results, fields) => {
-          if (err) {
-            return console.error(err.message);
-          }
-          callback(results);
-        });
-      }
+      query = "SELECT JSON_ARRAYAGG(JSON_OBJECT('sender', sender, 'recipient', recipient, 'timestamp', time, 'content', content)) FROM messages" + 
+              " WHERE (sender='" + user1 + "' AND recipient='" + user2 + "') OR (sender='" + user2 + "' AND recipient='" + user1 + "') AND time>='" + newest + "'";
+      console.log(query);
+      dbConn.query(query, (err, results, fields) => {
+        if (err) {
+          return console.error(err.message);
+        }
+        callback(Object.values(results[0])[0]);
+      });
 
       // End connection
       dbConn.end(function (err) {

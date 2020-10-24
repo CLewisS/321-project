@@ -23,18 +23,14 @@ public class GetService extends AppCompatActivity {
         setContentView(R.layout.activity_get_service);
         /*<-----------------Hard code for now--------------------------->**/
         TextView txv = (TextView)findViewById(R.id.DescSearch);
-        txv.setText("Going to search for All of the available events");
+        txv.setText("Based On your previous recording, \n" +
+                    "We Suggest the following Searching Conditions: \n" +
+                    "Type: Sorting");
     }
 
     public void searchResult(View view){
         Intent getResult = new Intent(this,SearchResult.class);
         startActivity(getResult);
-
-        /*The prototype of GET*/
-        /*
-        String url = "OUR URL:PORT" + "/" + condition
-        Pass the url to the new activity
-        */
     }
 
 

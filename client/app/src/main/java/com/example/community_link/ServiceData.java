@@ -19,6 +19,7 @@ public class ServiceData implements Serializable{
     private String description;
     private double longi;
     private double lat;
+    private int id;
 
     public ServiceData(){
         longi = -123.116226;
@@ -54,7 +55,8 @@ public class ServiceData implements Serializable{
     }
 
     public String toString(){
-        return "Owner: " + this.owner + "\n" +
+        return  "ID: " + id + "\n" +
+                "Owner: " + this.owner + "\n" +
                 "Date: " + this.date + "\n" +
                 "Time: " + this.time  + "\n" +
                 "Event Name: " + this.name + "\n" +

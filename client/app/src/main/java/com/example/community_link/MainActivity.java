@@ -72,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     public void requestExample(View view) {
         Intent requestExample = new Intent(this, RequestExample.class);
         startActivity(requestExample);
+    }
 
+    public void browseService(View view){
+        Intent browseService = new Intent(this,BrowseServiceCond.class);
+        startActivity(browseService);
     }
 }

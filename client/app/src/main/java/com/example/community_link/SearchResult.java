@@ -27,7 +27,7 @@ public class SearchResult extends AppCompatActivity {
         /*<--------------HARDCODING----------------------->*/
         ServiceData sd1 = new ServiceData();
         sd1.setDescription("An O(n) Sorting Algorithm, iterating the array and remove " +
-                            "the not-in-order elements");
+                "the not-in-order elements");
         sd1.setType("Sorting");
         sd1.setDate(1938,6,4);
         sd1.setName("Joseph Vissarionovich Stalin");
@@ -36,7 +36,7 @@ public class SearchResult extends AppCompatActivity {
 
         ServiceData sd2 = new ServiceData();
         sd2.setDescription("An O(1) Sorting Algorithm, simply claimint the array is already" +
-                            "sorted, and those who against are CNN and CHINESE media");
+                "sorted, and those who against are CNN and CHINESE media");
         sd2.setType("Sorting");
         sd2.setDate(2017,1,20);
         sd2.setName("Donald John Trump");
@@ -48,7 +48,7 @@ public class SearchResult extends AppCompatActivity {
         /*<--------------HARDCODING----------------------->*/
 
         txv = (TextView) findViewById(R.id.owner);
-        txv.setText("Owner");
+        txv.setText(sdList.get(i).toString());
     }
 
     public void goPrev(View view){

@@ -30,6 +30,7 @@ import java.util.List;
 
 public class BrowseResult extends CommunityLinkActivity {
 
+    //private userProfile user;
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
     private FusedLocationProviderClient fusedLocationClient;
     private static final int REQUEST_CODE = 101;
@@ -50,18 +51,46 @@ public class BrowseResult extends CommunityLinkActivity {
         /*<--------------HARDCODING----------------------->*/
         //txv = (TextView) findViewById(R.id.browseResult);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Location isn't working yet
+        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         //getLocation();
 
         // Retrieve search criteria for services
         Bundle searchCriteria = getIntent().getExtras();
 
-        JSONObject conditions = getSearchConditionJSON(searchCriteria);
+        if (searchCriteria.getBoolean("suggestions")) {
+            getSuggestions();
+        } else {
+            JSONObject conditions = getSearchConditionJSON(searchCriteria);
+            System.out.println(conditions);
 
-        System.out.println(conditions);
+            getServices(conditions);
+        }
 
-        getServices(conditions);
+    }
 
+    private void getSuggestions() {
+        System.out.println("Getting suggestions");
+        /*<--Get Suggestion Feature-->*/
+        /*
+        JsonObject suggestion = user.getSuggestion();
+         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                //add to ArrayList
+            }
+        };
+
+        Response.ErrorListener errorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("HTTP response didn't work");
+                System.out.println(error.toString());
+            }
+        };
+
+        CommunityLinkApp.requestManager.getServices(suggestion, getServicesResponseCallback, errorCallback);
+         */
     }
 
     private void getServices(JSONObject conditions) {

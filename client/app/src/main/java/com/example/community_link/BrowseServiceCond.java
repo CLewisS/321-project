@@ -13,28 +13,36 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class BrowseServiceCond extends CommunityLinkActivity {
+    //private userProfile user;
+    //private String url = "http://nazokunvm.eastus.cloudapp.azure.com:8080/testReading";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_service_cond);
+
+        /*<--The Suggest Service Logic starts-->*/
+        /* Set Text: USER Suggestion:
+
+         */
     }
 
-
+    /* Get suggestions button event */
     public void suggestionsResult(View view) {
         Intent suggestionsResult = getSuggestionsCriteria();
+        suggestionsResult.putExtra("suggestions", true);
 
         startActivity(suggestionsResult);
     }
 
     private Intent getSuggestionsCriteria() {
         Intent suggestionsResult = new Intent(this, BrowseResult.class);
-
+/*
         suggestionsResult.putExtra("title", "name");
         suggestionsResult.putExtra("currLat", 49.246);
         suggestionsResult.putExtra("currLong", -123.116);
         suggestionsResult.putExtra("dist", 25);
-
+*/
         CharSequence message = "Based On your previous recording, \n" +
                 "We Suggest the following Searching Conditions: \n" +
                 "Type: Sorting";
@@ -45,12 +53,15 @@ public class BrowseServiceCond extends CommunityLinkActivity {
         return suggestionsResult;
     }
 
+    /* Search services button event */
     public void browseResult(View view){
         Intent browseResult = getSearchCriteria();
+        browseResult.putExtra("suggestions", false);
 
         startActivity(browseResult);
     }
 
+    /* Get the input from the user */
     private Intent getSearchCriteria() {
         Intent browseResult = new Intent(this, BrowseResult.class);
 

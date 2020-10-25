@@ -26,8 +26,14 @@ module.exports.getMessages = function(req, res) {
   //*****************************************
 
   var queryString = req.query;
+  var newest;
+  if (queryString.hasOwnProperty("timestamp")) {
+    newest = queryString.newest;
+  } else {
+    newest = queryString.newest;
+  }
 
-  db.get(queryString.user1, queryString.user2, queryString.newest, (messages) => {
+  db.get(queryString.user1, queryString.user2, newest, (messages) => {
 
     res.json(JSON.parse(messages));
     console.log(messages);

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 
-public class AddService extends AppCompatActivity {
+public class AddService extends CommunityLinkActivity {
     private TimePicker picker;
     private Button btnGet;
     private TextView tvw;

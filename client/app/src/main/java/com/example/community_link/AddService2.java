@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AddService2 extends AppCompatActivity {
+public class AddService2 extends CommunityLinkActivity {
 
     ServiceData sd;
     DatePicker picker;

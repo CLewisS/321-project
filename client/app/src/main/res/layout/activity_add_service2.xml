@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".AddService2">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/navbar_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
@@ -33,12 +39,11 @@
         android:id="@+id/datePicker1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
         android:onClick="test"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/include" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowseResult extends AppCompatActivity {
+public class BrowseResult extends CommunityLinkActivity {
 
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
     private FusedLocationProviderClient fusedLocationClient;
@@ -56,10 +56,15 @@ public class BrowseResult extends AppCompatActivity {
         // Retrieve search criteria for services
         Bundle searchCriteria = getIntent().getExtras();
 
-        JSONObject conditions = getConditionJSON(searchCriteria);
+        JSONObject conditions = getSearchConditionJSON(searchCriteria);
 
         System.out.println(conditions);
 
+        getServices(conditions);
+
+    }
+
+    private void getServices(JSONObject conditions) {
         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -87,7 +92,6 @@ public class BrowseResult extends AppCompatActivity {
                         View resultView = getServiceResultView(sdList.get(i));
                         serviceResults.addView(resultView);
                     }
-                    //txv.setText(sdList.get(i).toString());
                 }
             }
         };
@@ -101,12 +105,9 @@ public class BrowseResult extends AppCompatActivity {
         };
 
         CommunityLinkApp.requestManager.getServices(conditions, getServicesResponseCallback, errorCallback);
-
-        /*<--------------HARDCODING----------------------->*/
-
     }
 
-    private JSONObject getConditionJSON(Bundle searchCriteria) {
+    private JSONObject getSearchConditionJSON(Bundle searchCriteria) {
 
         float currLat = searchCriteria.getFloat("currLat", NO_VAL);
         float currLong = searchCriteria.getFloat("currLong", NO_VAL);

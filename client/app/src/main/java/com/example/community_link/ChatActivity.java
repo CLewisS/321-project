@@ -51,7 +51,7 @@ import java.util.Locale;
 
 
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends CommunityLinkActivity {
     private Button sendButton;
     private EditText userInput;
 
@@ -86,7 +86,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         context = this;
 
         //setup local user parameters

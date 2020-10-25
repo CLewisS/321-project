@@ -31,7 +31,7 @@ public class ServiceData implements Serializable{
     }
 
     public void setDate(int year, int month, int day){
-        this.date = year+"-"+month+"-"+day;
+        this.date = year+"-"+(month + 1)+"-"+day;
         SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
         Date date = new Date(year, month, day-1);
         String dow = simpledateformat.format(date);
@@ -64,6 +64,46 @@ public class ServiceData implements Serializable{
                 "Type: " + this.type + "\n" +
                 "Description: " + this.description + "\n" +
                 "Coordinate: (" + this.lat + "," + this.longi + ")";
+    }
+
+    public double getLongi () {
+        return this.longi;
+    }
+
+    public double getLat() {
+        return this.lat;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDow() {
+        return dow;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public String toJSON(){

@@ -31,7 +31,7 @@ public class ServiceData implements Serializable{
     }
 
     public void setDate(int year, int month, int day){
-        this.date = year+"-"+month+"-"+day;
+        this.date = year+"-"+(month + 1)+"-"+day;
         SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
         Date date = new Date(year, month, day-1);
         String dow = simpledateformat.format(date);

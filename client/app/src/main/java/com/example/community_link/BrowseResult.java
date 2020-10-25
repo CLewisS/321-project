@@ -8,6 +8,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.text.SymbolTable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -29,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class BrowseResult extends AppCompatActivity {
     private TextView txv;
     private int size;
     private Location userLoc;
+    private final float NO_VAL = 6379;
 
 
     @SuppressLint("SetTextI18n")
@@ -51,36 +54,15 @@ public class BrowseResult extends AppCompatActivity {
         setContentView(R.layout.activity_browse_result);
 
         /*<--------------HARDCODING----------------------->*/
-        txv = (TextView) findViewById(R.id.browseResult);
+        //txv = (TextView) findViewById(R.id.browseResult);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         //getLocation();
 
         // Retrieve search criteria for services
-        Float currLat = getIntent().getExtras().getFloat("currLat",49);
-        Float currLong = getIntent().getExtras().getFloat("currLong", -123);
-        double dist = getIntent().getExtras().getFloat("dist", 15);
-        double latDiff = dist / 111;
-        double longDiff = dist / (Math.cos(Math.toRadians(currLat)) * 111);
-        double latMin = currLat - latDiff;
-        double latMax = currLat + latDiff;
-        double longMin = currLong - longDiff;
-        double longMax = currLong + longDiff;
+        Bundle searchCriteria = getIntent().getExtras();
 
-        String title = getIntent().getExtras().getString("title");
-        System.out.println("Title: " + title);
-
-        JSONObject conditions = new JSONObject();
-        try {
-            conditions.put("date-min", "2020-10-15");
-            conditions.put("name", title);
-            conditions.put("lat-min", latMin);
-            conditions.put("lat-max", latMax);
-            conditions.put("longi-min", longMin);
-            conditions.put("longi-max", longMax);
-        }catch(JSONException e) {
-            e.printStackTrace();
-        }
+        JSONObject conditions = getConditionJSON(searchCriteria);
 
         System.out.println(conditions);
 
@@ -106,7 +88,8 @@ public class BrowseResult extends AppCompatActivity {
                     Intent browseService = new Intent(getApplicationContext(), BrowseServiceCond.class);
                     startActivity(browseService);
                 } else {
-                    txv.setText(sdList.get(i).toString());
+                    showService(sdList.get(i));
+                    //txv.setText(sdList.get(i).toString());
                 }
             }
         };
@@ -125,19 +108,106 @@ public class BrowseResult extends AppCompatActivity {
 
     }
 
+    private JSONObject getConditionJSON(Bundle searchCriteria) {
+
+        float currLat = searchCriteria.getFloat("currLat", NO_VAL);
+        float currLong = searchCriteria.getFloat("currLong", NO_VAL);
+        float dist = searchCriteria.getFloat("dist", NO_VAL);
+
+        String dateMin = searchCriteria.getString("date-min");
+        String dateMax = searchCriteria.getString("date-max");
+        System.out.println(dateMax + dateMin);
+
+        String timeMin = searchCriteria.getString("time-min");
+        String timeMax = searchCriteria.getString("time-max");
+        System.out.println(timeMin + " " + timeMax);
+
+        String title = getIntent().getExtras().getString("title");
+        System.out.println("Title: " + title);
+
+        JSONObject conditions = new JSONObject();
+        try {
+            conditions.put("date-min", dateMin);
+            conditions.put("date-max", dateMax);
+
+            if (timeMin != null && !timeMin.isEmpty()) {
+                conditions.put("time-min", timeMin);
+            }
+            if (timeMax != null && !timeMax.isEmpty()) {
+                conditions.put("time-max", timeMax);
+            }
+            if (title != null && !title.isEmpty()) {
+                conditions.put("name", title);
+            }
+            if (currLat != NO_VAL && dist != NO_VAL) {
+                float latDiff = dist / 111;
+                float latMin = currLat - latDiff;
+                float latMax = currLat + latDiff;
+                conditions.put("lat-min", latMin);
+                conditions.put("lat-max", latMax);
+            }
+            if (currLong != NO_VAL && dist != NO_VAL) {
+                float longDiff =  dist / (float)(Math.cos(Math.toRadians(currLat)) * 111);
+                float longMin = currLong - longDiff;
+                float longMax = currLong + longDiff;
+                conditions.put("longi-min", longMin);
+                conditions.put("longi-max", longMax);
+            }
+
+        }catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        return conditions;
+
+    }
+
+    private void showService(ServiceData sd) {
+        System.out.println(sdList.get(i));
+        TextView serviceTitle = findViewById(R.id.serviceResultTitle);
+        serviceTitle.setText(sd.getName());
+
+        TextView owner = findViewById(R.id.ownerResult);
+        owner.setText(sd.getOwner());
+
+        TextView dow = findViewById(R.id.dowResult);
+        String dowString = sd.getDow() + ", ";
+        dow.setText(dowString);
+
+        TextView dateResult = findViewById(R.id.dateResult);
+        String date = sd.getDate().split("T")[0];
+        String [] dateSplit = date.split("-");
+        String month = dateSplit[0];
+        String day = dateSplit[1];
+        String year = dateSplit[2];
+        dateResult.setText(month + " " + day + ", " + year);
+    }
+
     public void goPrev(View view){
         if(i != 0){
             i--;
+            showService(sdList.get(i));
+        } else {
+            CharSequence message = "You are at the beginning of the services found";
+            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
         }
-        txv.setText(sdList.get(i).toString());
+
 
     }
 
     public void goNext(View view){
         if(i != size-1) {
             i++;
+            showService(sdList.get(i));
+        } else {
+            CharSequence message = "Sorry, no more services meet the search criteria";
+            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
         }
-        txv.setText(sdList.get(i).toString());
+
     }
 
     //This isn't working for some reason

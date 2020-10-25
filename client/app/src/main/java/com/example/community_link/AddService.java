@@ -1,7 +1,5 @@
 package com.example.community_link;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
@@ -24,7 +22,7 @@ public class AddService extends CommunityLinkActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_service);
-        picker=(TimePicker)findViewById(R.id.datePicker1);
+        picker=(TimePicker)findViewById(R.id.datePicker);
         picker.setIs24HourView(true);
         btnGet=(Button)findViewById(R.id.button2);
         TextView txvPN = findViewById(R.id.textViewProjectName);

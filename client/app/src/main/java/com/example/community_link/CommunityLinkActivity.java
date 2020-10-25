@@ -58,7 +58,7 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     public void addService(View view) {
-        Intent addService = new Intent(this, AddService.class);
+        Intent addService = new Intent(this, AddService2.class);
         startActivity(addService);
     }
 

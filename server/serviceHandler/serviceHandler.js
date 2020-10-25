@@ -9,7 +9,7 @@
 //const { S_IFDIR } = require("constants");
 
 
-var db = require("../dbInterface/serviceDB.js");
+// var db = require("../dbInterface/serviceDB.js");
 var reqData = require("./requestData.js");
 
 module.exports.getServices = function (req, res) {
@@ -20,9 +20,9 @@ module.exports.getServices = function (req, res) {
 
   console.log(conditions);
 
-  db.get(conditions, (services) => { 
-    res.json(services);
-  });
+  // db.get(conditions, (services) => { 
+  //   res.json(services);
+  // });
 }
 
 
@@ -35,9 +35,9 @@ module.exports.addService = function (req, res) {
 
   console.log(service);
 
-  db.add(service, (id) => {
-    res.json(id);
-  });
+  // db.add(service, (id) => {
+  //   res.json(id);
+  // });
 
 /*  } else {
   

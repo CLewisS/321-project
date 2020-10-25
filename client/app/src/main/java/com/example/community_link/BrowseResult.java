@@ -1,36 +1,30 @@
 package com.example.community_link;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.icu.text.SymbolTable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +82,11 @@ public class BrowseResult extends AppCompatActivity {
                     Intent browseService = new Intent(getApplicationContext(), BrowseServiceCond.class);
                     startActivity(browseService);
                 } else {
-                    showService(sdList.get(i));
+                    LinearLayout serviceResults = findViewById(R.id.serviceResults);
+                    for (int i = 0; i < size; i++) {
+                        View resultView = getServiceResultView(sdList.get(i));
+                        serviceResults.addView(resultView);
+                    }
                     //txv.setText(sdList.get(i).toString());
                 }
             }
@@ -162,31 +160,40 @@ public class BrowseResult extends AppCompatActivity {
 
     }
 
-    private void showService(ServiceData sd) {
+    private View getServiceResultView(ServiceData sd) {
+        LayoutInflater inflater = LayoutInflater.from(BrowseResult.this);
+        View serviceView = inflater.inflate(R.layout.service_result, null);
+
         System.out.println(sdList.get(i));
-        TextView serviceTitle = findViewById(R.id.serviceResultTitle);
+        TextView serviceTitle = serviceView.findViewById(R.id.serviceResultTitle);
         serviceTitle.setText(sd.getName());
 
-        TextView owner = findViewById(R.id.ownerResult);
-        owner.setText(sd.getOwner());
+        TextView owner = serviceView.findViewById(R.id.ownerResult);
+        owner.setText("Provided by: " + sd.getOwner());
 
-        TextView dow = findViewById(R.id.dowResult);
-        String dowString = sd.getDow() + ", ";
-        dow.setText(dowString);
-
-        TextView dateResult = findViewById(R.id.dateResult);
+        TextView dateResult = serviceView.findViewById(R.id.dateTimeResult);
         String date = sd.getDate().split("T")[0];
         String [] dateSplit = date.split("-");
+        String dow = sd.getDow();
         String month = dateSplit[0];
         String day = dateSplit[1];
         String year = dateSplit[2];
-        dateResult.setText(month + " " + day + ", " + year);
+        String time = sd.getTime();
+        dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + time);
+
+        TextView locationResult = serviceView.findViewById(R.id.locationResult);
+        locationResult.setText("Location: (" + sd.getLat() + ", " +sd.getLongi() + ")");
+
+        TextView descriptionResult = serviceView.findViewById(R.id.descriptionResult);
+        descriptionResult.setText(sd.getDescription());
+
+        return serviceView;
     }
 
     public void goPrev(View view){
         if(i != 0){
             i--;
-            showService(sdList.get(i));
+            //showService(sdList.get(i));
         } else {
             CharSequence message = "You are at the beginning of the services found";
             Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
@@ -200,7 +207,7 @@ public class BrowseResult extends AppCompatActivity {
     public void goNext(View view){
         if(i != size-1) {
             i++;
-            showService(sdList.get(i));
+            //showService(sdList.get(i));
         } else {
             CharSequence message = "Sorry, no more services meet the search criteria";
             Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);

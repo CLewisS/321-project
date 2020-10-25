@@ -4,60 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context=".BrowseResult">
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="8dp">
 
-        <TextView
-            android:id="@+id/serviceResultTitle"
+        <LinearLayout
+            android:id="@+id/serviceResults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="36sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/dowResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/dateResult"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/ownerTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Provided by: " />
-
-            <TextView
-                android:id="@+id/ownerResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-    </LinearLayout>
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingRight="8dp" />
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -66,13 +34,6 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-            android:id="@+id/mapButt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="viewOnMap"
-            android:text="View on Map" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -80,21 +41,24 @@
 
             <Button
                 android:id="@+id/goPrevBrowse"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="275dp"
-                android:layout_marginRight="275dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:onClick="goPrev"
                 android:text="Prev" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2" />
+
             <Button
                 android:id="@+id/goNextBrowse"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:onClick="goNext"
                 android:text="Next" />
 

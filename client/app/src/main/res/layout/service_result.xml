@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:orientation="vertical"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/serviceResultTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="#D5C4ED"
+            android:gravity="center_horizontal"
+            android:text="Service"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/dateTimeResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Monday, October 26, 2020 starts at 12:00:00"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/locationResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Location: (49.675, -123.234)" />
+
+        <TextView
+            android:id="@+id/ownerResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Provided by: A nice person" />
+
+        <TextView
+            android:id="@+id/descriptionResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:text="There will be a service provided for you. Don't worry about bringing anything that will all be sorted out." />
+
+        <Button
+            android:id="@+id/mapButt2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="viewOnMap"
+            android:text="View on Map" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

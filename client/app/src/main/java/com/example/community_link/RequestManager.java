@@ -40,7 +40,7 @@ public class RequestManager {
             "time-min", "time-max",
             "lat-min", "lat-max",
             "longi-min", "longi-max",
-            "type"));
+            "type", "name", "dow", "owner"));
 
     private static final ArrayList<String> validmessageConditions = new ArrayList<>(Arrays.asList("user1", "user2", "newest"));
 

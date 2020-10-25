@@ -68,6 +68,7 @@ public class MainActivity extends CommunityLinkActivity {
                     }
                 });
     }
+    // Moved to CommunityLinkActivity class
 /*
     public void toolbarMenu(View view) {
         CharSequence message = "Sorry, this functionality (menu) isn't implemented yet";

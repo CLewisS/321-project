@@ -108,7 +108,10 @@ module.exports.get = function(user1, user2, newest, callback) {
 
     console.log("Connected to MySQL server");
 
-    var thread = user1 + ":" + user2;
+    var users = [user1, user2];
+    users.sort();
+
+    var thread = users[0] + ":" + users[1];
 
     var query = "SELECT numMess FROM threads WHERE thread='" + thread + "'";
 

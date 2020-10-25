@@ -2,11 +2,15 @@ package com.example.community_link;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,11 +42,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +49,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static android.content.ContentValues.TAG;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -72,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
     //server IO portal used for chat Backend
     private DiskBasedCache chatNetCache;
     RequestManager chatPortal;
-    chatFireBaseMessagingService pushedMessageServer;
+    MyFirebaseMessagingService pushedMessageServer;
 
     //a local file storing the chat log
     private List<chatMessage> chatLog;
@@ -117,7 +115,7 @@ public class ChatActivity extends AppCompatActivity {
         //network parameters
         chatNetCache = new DiskBasedCache(context.getCacheDir());
         chatPortal = new RequestManager(chatNetCache);
-        pushedMessageServer = new chatFireBaseMessagingService();
+
 
         //Json library (Gson helper)
         gson = new Gson();
@@ -155,6 +153,15 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver),
+                new IntentFilter("pushNdata")
+        );
+        pushedMessageServer = new MyFirebaseMessagingService();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -185,7 +192,6 @@ public class ChatActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        checkForUpdate();
 
         //chat view
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
@@ -196,40 +202,47 @@ public class ChatActivity extends AppCompatActivity {
         lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
         int latestChatPosition = chatLog.size() - 1;
         chatAdapter.notifyItemInserted(latestChatPosition);
-
-
         recyclerView.setAdapter(chatAdapter);
         recyclerView.smoothScrollToPosition(latestChatPosition);
-    }
 
-
-    //the function used to put current chat history into the local cache
-    private void updateLog() {
-
-        chatLogFile = new File(context.getFilesDir(), chatDataLogFile);
-        try {
-            //Create a new cache file in case of missing
-            if(chatLogFile.createNewFile()) System.out.println("Chat: chat log file created");
-            else System.out.println("Chat: chat log file found");
-
-            //write the chat history to cache file
-            FileOutputStream fout = context.openFileOutput(chatDataLogFile, Context.MODE_PRIVATE);
-            OutputStreamWriter writer = new OutputStreamWriter(fout);
-            writer.write(gson.toJson(chatLog));
-            writer.flush();
-            writer.close();
-            fout.close();
-        } catch (FileNotFoundException e) {
-            //this should not happen... but just in case, do something
-            System.out.println("Chat:updateLog chat log file vanished while writing");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Chat:updateLog chat log file IO error-ed");
-            e.printStackTrace();
+        //handles the push notification
+        if(getIntent().getStringExtra("pushNdata") != null){
+            String newPushedString = getIntent().getStringExtra("pushNdata");
+            chatMessage newPushedMessage = gson.fromJson(newPushedString, chatMessage.class);
+            putAndOrder(new chatMessage[]{newPushedMessage});
         }
+        checkForUpdate();
+
+        //push notification setup at last when everything is ready
+
     }
 
-    private void checkForUpdate() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        updateLog();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            chatMessage newMessage = gson.fromJson(intent.getExtras().getString("pushNdata"), chatMessage.class);
+            if(newMessage != null){
+                putAndOrder(new chatMessage[]{newMessage});
+            }
+            intent.removeExtra("pushNdata");
+        }
+    };
+
+    //Http GET request for updating chats
+    public void checkForUpdate() {
         //format request message
         JSONObject jsonMessage = new JSONObject();
         try {
@@ -263,7 +276,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     //function to generate and send message as a JSON object to server
-    private void sendMessage(String message) {
+    public void sendMessage(String message) {
         //guard for empty sends
         if(message.equals("") || message.equals(" ")){return;}
 
@@ -296,85 +309,19 @@ public class ChatActivity extends AppCompatActivity {
             };
             chatPortal.addMessage(jsonMessage, addMessageResponseCallback, errorCallback);
         } catch (JSONException e) {
+            System.out.println("chat:sendMessage: JSON components malfunctions");
             e.printStackTrace();
         }
 
-
         //check for server updates
-        checkForUpdate();
+        //checkForUpdate();
 
         //adding successfully sent message to display
         putAndOrder(new chatMessage[]{localMessage});
     }
 
-    //this is the supporting function for toolbar "return to main" button
-    public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivityForResult(myIntent, 0);
-        return true;
-    }
-
-
-    private class chatFireBaseMessagingService extends FirebaseMessagingService {
-        /**
-         * Called if FCM registration token is updated. This may occur if the security of
-         * the previous token had been compromised. Note that this is called when the
-         * FCM registration token is initially generated so this is where you would retrieve
-         * the token.
-         */
-        @Override
-        public void onNewToken(String token) {
-            Log.d("chat:PushNotification", "Refreshed token: " + token);
-
-            // If you want to send messages to this application instance or
-            // manage this apps subscriptions on the server side, send the
-            // FCM registration token to your app server.
-            //sendRegistrationToServer(token);
-            user.deviceToken = token;
-            //TODO: device token should be sent here
-
-        }
-
-        @Override
-        public void onMessageReceived(RemoteMessage remoteMessage) {
-            Log.d("chat:PushNotification", "From: " + remoteMessage.getFrom());
-
-            // Check if message contains a data payload.
-            if (remoteMessage.getData().size() > 0) {
-                Log.d("chat:PushNotification", "Message data payload: " + remoteMessage.getData());
-
-                // Handle message received
-                String sender = "", recipient = "" , timestamp = "", content = "";
-                if(remoteMessage.getData().containsKey("sender")){
-                    sender = remoteMessage.getData().get("sender");
-                }
-                if(remoteMessage.getData().containsKey("recipient")){
-                    recipient = remoteMessage.getData().get("recipient");
-                }
-                if(remoteMessage.getData().containsKey("timestamp")){
-                    timestamp = remoteMessage.getData().get("timestamp");
-                }
-                if(remoteMessage.getData().containsKey("content")){
-                    timestamp = remoteMessage.getData().get("content");
-                }
-                if(sender.length()+recipient.length()+timestamp.length()+content.length() < 4){
-                    Log.d("chat:PushNotification", "Message data corrupted");
-                }else{
-                    chatMessage newMessage = new chatMessage(sender, recipient, timestamp, content);
-                    putAndOrder(new chatMessage[]{newMessage});
-                }
-
-            }
-
-            // Check if message contains a notification payload.
-            if (remoteMessage.getNotification() != null) {
-                Log.d("chat:PushNotification", "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            }
-        }
-    }
-
-
-    private void putAndOrder(chatMessage[] newMessages){
+    //function for properly ordering the chat entries and display them
+    public void putAndOrder(chatMessage[] newMessages){
         ArrayList<chatMessage> receivedMessages = new ArrayList<chatMessage>(Arrays.asList(newMessages));
         for(int j=0; j<chatLog.size(); j++){
             for(int i=0; i<receivedMessages.size(); i++){
@@ -389,11 +336,49 @@ public class ChatActivity extends AppCompatActivity {
                 receivedMessages.remove(receivedMessages.size()-1);
             }
         }
-        updateLog();
+        //updateLog();
+        recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        chatAdapter = new chatRecycleViewAdapter(chatLog, user.id);
+
         lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
         int latestChatPosition = chatLog.size() - 1;
         chatAdapter.notifyItemInserted(latestChatPosition);
+        recyclerView.setAdapter(chatAdapter);
         recyclerView.smoothScrollToPosition(latestChatPosition);
     }
 
+    //the function used to put current chat history into the local cache
+    public void updateLog() {
+
+        chatLogFile = new File(context.getFilesDir(), chatDataLogFile);
+        try {
+            //Create a new cache file in case of missing
+            if(chatLogFile.createNewFile()) System.out.println("Chat: chat log file created");
+            else System.out.println("Chat: chat log file found");
+
+            //write the chat history to cache file
+            FileOutputStream fout = context.openFileOutput(chatDataLogFile, Context.MODE_PRIVATE);
+            OutputStreamWriter writer = new OutputStreamWriter(fout);
+            writer.write(gson.toJson(chatLog));
+            writer.flush();
+            writer.close();
+            fout.close();
+        } catch (FileNotFoundException e) {
+            //this should not happen... but just in case, do something
+            System.out.println("Chat:updateLog chat log file vanished while writing");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Chat:updateLog chat log file IO error-ed");
+            e.printStackTrace();
+        }
+    }
+
+    //this is the supporting function for toolbar "return to main" button
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
+    }
 }

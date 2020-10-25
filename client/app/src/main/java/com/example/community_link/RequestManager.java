@@ -42,7 +42,7 @@ public class RequestManager {
             "longi-min", "longi-max",
             "type", "name", "dow", "owner"));
 
-    private static final ArrayList<String> validmessageConditions = new ArrayList<>(Arrays.asList("user1", "user2", "newest"));
+    private static final ArrayList<String> validmessageConditions = new ArrayList<>(Arrays.asList("user1", "user2", "newest", "timestamp"));
 
     public RequestManager(DiskBasedCache cache) {
 
@@ -73,6 +73,7 @@ public class RequestManager {
         }
 
         queryString.deleteCharAt(queryString.length() - 1);
+        System.out.println("Query string: " + queryString);
 
         return queryString.toString();
     }

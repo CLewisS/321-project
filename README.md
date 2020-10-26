@@ -12,6 +12,17 @@ Handling of the received messages is done in the method *onMessageReceived* in t
 
 ### Interface
 
+#### UserInfo
+   - User Attributes:
+      -userID (number): The unique id of each user.
+      -userName (string): The User Name of the user.
+      -passward (string): The passward of the user account.
+      -deviceIdentity (string): The current using deviceIdentity.
+      -servicesTake[] (list): A list filled with services' id. Those services are booked by user, and not been done yet.
+      -servicesPost[] (list): A list filled with services' id. Those services are posted by user, and not been done yet. 
+
+
+
 #### HTTP Request Methods
   - POST /service: Add a new service. Must contain a JSON object of the service values. The response contains the unique identifier for the service.
 

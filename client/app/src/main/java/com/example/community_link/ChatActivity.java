@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
     //User profiles are to be implemented as App global
     public userProfile user;
     public userProfile target;
-    public String lastUpdate;
+    public String lastUpdate = "0";
 
     //server IO portal used for chat Backend
     private DiskBasedCache chatNetCache;
@@ -143,12 +143,11 @@ public class ChatActivity extends AppCompatActivity {
         chatAdapter = new chatRecycleViewAdapter(chatLog, user.id);
         recyclerView.setAdapter(chatAdapter);
 
-        //TODO: get rid of these inline testing stuff later
-        //local testing purposes----
-        chatLog.add(new chatMessage("local", "else", "021", "Hello"));
-        chatLog.add(new chatMessage("local", "else", "022", "Hello ha"));
-        chatLog.add(new chatMessage("else", "local", "088", "what?"));
-        //END of TEST----
+//        //TODO: get rid of these inline testing stuff later
+//        //local testing purposes----
+//        chatLog.add(new chatMessage(user.id, target.id, "000", "Hi, this is" + user.id));
+//        chatLog.add(new chatMessage(target.id, user.id, "001", "Hi, this is" + target.id));
+//        //END of TEST----
 
     }
 
@@ -164,6 +163,9 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(chatLog == null){
+            chatLog = new ArrayList<chatMessage>();
+        }
 
         //load the past chat log from the app local storage/ create one if not available.
         chatLogFile = new File(context.getFilesDir(), chatDataLogFile);
@@ -199,8 +201,11 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         chatAdapter = new chatRecycleViewAdapter(chatLog, user.id);
 
-        lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
-        int latestChatPosition = chatLog.size() - 1;
+        int latestChatPosition = 0;
+        if(chatLog.size()>0){
+            lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
+            latestChatPosition = chatLog.size() - 1;
+        }
         chatAdapter.notifyItemInserted(latestChatPosition);
         recyclerView.setAdapter(chatAdapter);
         recyclerView.smoothScrollToPosition(latestChatPosition);
@@ -322,7 +327,19 @@ public class ChatActivity extends AppCompatActivity {
 
     //function for properly ordering the chat entries and display them
     public void putAndOrder(chatMessage[] newMessages){
+        if(newMessages == null || newMessages.length == 0){
+            return;
+        }
+
         ArrayList<chatMessage> receivedMessages = new ArrayList<chatMessage>(Arrays.asList(newMessages));
+        if(chatLog == null){
+            chatLog = new ArrayList<chatMessage>();
+        }
+
+        if(chatLog.size() == 0){
+            chatLog.add(receivedMessages.get(0));
+            receivedMessages.remove(0);
+        }
         for(int j=0; j<chatLog.size(); j++){
             for(int i=0; i<receivedMessages.size(); i++){
                 if(receivedMessages.get(i).timestamp.compareTo(chatLog.get(j).timestamp) < 0){
@@ -335,7 +352,11 @@ public class ChatActivity extends AppCompatActivity {
                 chatLog.add(receivedMessages.get(receivedMessages.size()-1));
                 receivedMessages.remove(receivedMessages.size()-1);
             }
+            if(receivedMessages.size() == 0){
+                break;
+            }
         }
+
         //updateLog();
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
         layoutManager = new LinearLayoutManager(this);
@@ -351,6 +372,10 @@ public class ChatActivity extends AppCompatActivity {
 
     //the function used to put current chat history into the local cache
     public void updateLog() {
+        if(chatLog == null || chatLog.size() == 0){
+            System.out.println("Chat: empty chat log, cache file not needed");
+            return;
+        }
 
         chatLogFile = new File(context.getFilesDir(), chatDataLogFile);
         try {

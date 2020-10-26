@@ -43,8 +43,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d("chat:PushNotification", "Message data payload: " + remoteMessage.getData());
 
+            String sender = remoteMessage.getData().get("sender");
+            String recipient = remoteMessage.getData().get("recipient");
+            String timestamp = remoteMessage.getData().get("timestamp");
+            String content = remoteMessage.getData().get("content");
+
+            if(sender == null || recipient == null || timestamp== null || content == null){
+                System.out.println("chat:PushNotification Message received is not complete, ignoring the message.");
+                return;
+            }
+
+            chatMessage newMessage =  new chatMessage(sender, recipient, timestamp, content);
             Intent intent = new Intent("pushNdata");
-            intent.putExtra("pushNdata", remoteMessage.getData().toString());
+            intent.putExtra("pushNdata", newMessage.toJson().toString());
             broadcaster.sendBroadcast(intent);
         }
 

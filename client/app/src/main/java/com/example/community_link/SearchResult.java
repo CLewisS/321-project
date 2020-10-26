@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class SearchResult extends AppCompatActivity {
-
+    //private userProfile user;
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
     private int i = 0;
     private TextView txv;
@@ -46,6 +46,27 @@ public class SearchResult extends AppCompatActivity {
         sdList.add(sd1);
         sdList.add(sd2);
         /*<--------------HARDCODING----------------------->*/
+
+        /*<--Get Suggestion Feature-->*/
+        /*
+        JsonObject suggestion = user.getSuggestion();
+         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                //add to ArrayList
+            }
+        };
+
+        Response.ErrorListener errorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("HTTP response didn't work");
+                System.out.println(error.toString());
+            }
+        };
+
+        CommunityLinkApp.requestManager.getServices(suggestion, getServicesResponseCallback, errorCallback);
+         */
 
         txv = (TextView) findViewById(R.id.owner);
         txv.setText(sdList.get(i).toString());

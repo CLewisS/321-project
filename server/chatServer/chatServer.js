@@ -28,7 +28,7 @@ module.exports.getMessages = function(req, res) {
   var queryString = req.query;
   var newest;
   if (queryString.hasOwnProperty("timestamp")) {
-    newest = queryString.newest;
+    newest = queryString.timestamp;
   } else {
     newest = queryString.newest;
   }

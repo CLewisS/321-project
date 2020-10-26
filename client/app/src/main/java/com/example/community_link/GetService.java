@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 
 public class GetService extends AppCompatActivity {
-
-    private String url = "http://nazokunvm.eastus.cloudapp.azure.com:8080/testReading";
+    //private userProfile user;
+    //private String url = "http://nazokunvm.eastus.cloudapp.azure.com:8080/testReading";
     private ServiceData serviceData = new ServiceData();
 
     @SuppressLint("SetTextI18n")
@@ -26,6 +26,11 @@ public class GetService extends AppCompatActivity {
         txv.setText("Based On your previous recording, \n" +
                     "We Suggest the following Searching Conditions: \n" +
                     "Type: Sorting");
+
+        /*<--The Suggest Service Logic starts-->*/
+        /* Set Text: USER Suggestion:
+
+        */
     }
 
     public void searchResult(View view){

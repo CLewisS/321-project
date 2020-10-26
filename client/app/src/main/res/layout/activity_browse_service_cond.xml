@@ -4,203 +4,224 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="0dp"
     tools:context=".BrowseServiceCond">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <include
+            android:id="@+id/include"
+            layout="@layout/navbar_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/serviceTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Service Title:"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/titleInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Service Title"
-                android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/currentLoc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Current Location"
-                android:textStyle="bold" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="4dp"
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/currLat"
+                <TextView
+                    android:id="@+id/serviceTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Latitude"
-                    android:inputType="numberSigned|numberDecimal" />
+                    android:text="Service Title:"
+                    android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/currLong"
+                    android:id="@+id/titleInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ems="10"
-                    android:hint="Longitude"
-                    android:inputType="numberSigned|numberDecimal" />
-            </LinearLayout>
+                    android:hint="Service Title"
+                    android:inputType="textPersonName" />
 
-            <TextView
-                android:id="@+id/distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Distance from current location:"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/currentLoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Current Location"
+                    android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/distanceInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Distance"
-                android:inputType="number" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/dateTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Date:"
-                android:textStyle="bold" />
+                    <EditText
+                        android:id="@+id/currLat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Latitude"
+                        android:inputType="numberSigned|numberDecimal" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/currLong"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Longitude"
+                        android:inputType="numberSigned|numberDecimal" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Distance from current location:"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/distanceInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Distance"
+                    android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/dateTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date:"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/dateTitle2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="From:" />
+
+                        <DatePicker
+                            android:id="@+id/dateMin"
+                            style="@android:style/Widget.DatePicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_weight="1"
+                            android:calendarViewShown="false"
+                            android:datePickerMode="spinner"
+                            android:visibility="visible"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/dateTitle3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="To:" />
+
+                        <DatePicker
+                            android:id="@+id/dateMax"
+                            style="@android:style/Widget.DatePicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_weight="1"
+                            android:calendarViewShown="false"
+                            android:datePickerMode="spinner"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/timeTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Time:"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/dateTitle2"
+                    <EditText
+                        android:id="@+id/timeMin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="From:" />
+                        android:ems="10"
+                        android:hint="From: hh:mm"
+                        android:inputType="text" />
 
-                    <DatePicker
-                        android:id="@+id/dateMin"
-                        style="@android:style/Widget.DatePicker"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/timeMax"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:layout_weight="1"
-                        android:calendarViewShown="false"
-                        android:datePickerMode="spinner"
-                        android:onClick="date"
-                        android:visibility="visible"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:ems="10"
+                        android:hint="To: hh:mm"
+                        android:inputType="text" />
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/dateTitle3"
+                    <Button
+                        android:id="@+id/suggestButt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="To:" />
+                        android:onClick="suggestionsResult"
+                        android:text="Suggestions" />
 
-                    <DatePicker
-                        android:id="@+id/dateMax"
-                        style="@android:style/Widget.DatePicker"
-                        android:layout_width="wrap_content"
+                    <Space
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/browseForService"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:calendarViewShown="false"
-                        android:datePickerMode="spinner"
-                        android:onClick="date"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:onClick="browseResult"
+                        android:text="Search" />
                 </LinearLayout>
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/timeTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Time:"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/timeMin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="From: hh:mm"
-                    android:inputType="text" />
-
-                <EditText
-                    android:id="@+id/timeMax"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="To: hh:mm"
-                    android:inputType="text" />
-
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/browseForService"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:onClick="browseResult"
-                    android:text="Search"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

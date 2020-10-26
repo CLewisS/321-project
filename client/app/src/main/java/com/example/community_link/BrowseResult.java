@@ -28,8 +28,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowseResult extends AppCompatActivity {
+public class BrowseResult extends CommunityLinkActivity {
 
+    //private userProfile user;
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
     private FusedLocationProviderClient fusedLocationClient;
     private static final int REQUEST_CODE = 101;
@@ -50,16 +51,49 @@ public class BrowseResult extends AppCompatActivity {
         /*<--------------HARDCODING----------------------->*/
         //txv = (TextView) findViewById(R.id.browseResult);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Location isn't working yet
+        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         //getLocation();
 
         // Retrieve search criteria for services
         Bundle searchCriteria = getIntent().getExtras();
 
-        JSONObject conditions = getConditionJSON(searchCriteria);
+        if (searchCriteria.getBoolean("suggestions")) {
+            getSuggestions();
+        } else {
+            JSONObject conditions = getSearchConditionJSON(searchCriteria);
+            System.out.println(conditions);
 
-        System.out.println(conditions);
+            getServices(conditions);
+        }
 
+    }
+
+    private void getSuggestions() {
+        System.out.println("Getting suggestions");
+        /*<--Get Suggestion Feature-->*/
+        /*
+        JsonObject suggestion = user.getSuggestion();
+         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                //add to ArrayList
+            }
+        };
+
+        Response.ErrorListener errorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("HTTP response didn't work");
+                System.out.println(error.toString());
+            }
+        };
+
+        CommunityLinkApp.requestManager.getServices(suggestion, getServicesResponseCallback, errorCallback);
+         */
+    }
+
+    private void getServices(JSONObject conditions) {
         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -87,7 +121,6 @@ public class BrowseResult extends AppCompatActivity {
                         View resultView = getServiceResultView(sdList.get(i));
                         serviceResults.addView(resultView);
                     }
-                    //txv.setText(sdList.get(i).toString());
                 }
             }
         };
@@ -101,12 +134,9 @@ public class BrowseResult extends AppCompatActivity {
         };
 
         CommunityLinkApp.requestManager.getServices(conditions, getServicesResponseCallback, errorCallback);
-
-        /*<--------------HARDCODING----------------------->*/
-
     }
 
-    private JSONObject getConditionJSON(Bundle searchCriteria) {
+    private JSONObject getSearchConditionJSON(Bundle searchCriteria) {
 
         float currLat = searchCriteria.getFloat("currLat", NO_VAL);
         float currLong = searchCriteria.getFloat("currLong", NO_VAL);

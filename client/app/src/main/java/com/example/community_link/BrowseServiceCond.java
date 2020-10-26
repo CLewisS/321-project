@@ -5,37 +5,65 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
-public class BrowseServiceCond extends AppCompatActivity {
+public class BrowseServiceCond extends CommunityLinkActivity {
+    //private userProfile user;
+    //private String url = "http://nazokunvm.eastus.cloudapp.azure.com:8080/testReading";
 
-    private Intent browseResult;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_service_cond);
-        browseResult = new Intent(this,BrowseResult.class);
 
-        /*<Hardcoding for now>*/
+        /*<--The Suggest Service Logic starts-->*/
+        /* Set Text: USER Suggestion:
 
+         */
     }
 
-    // This currently isn't doing anything
-    public void date(View view) {
-        DatePicker dp = (DatePicker) view;
-        String date = dp.getYear() + "-" + (dp.getMonth() + 1) + "-" + dp.getDayOfMonth();
+    /* Get suggestions button event */
+    public void suggestionsResult(View view) {
+        Intent suggestionsResult = getSuggestionsCriteria();
+        suggestionsResult.putExtra("suggestions", true);
 
-        if ("dateMin".equals(view.getId())) {
-            browseResult.putExtra("date-min", date);
-        } else if ("dateMax".equals(view.getId())) {
-            browseResult.putExtra("date-max", date);
-        }
+        startActivity(suggestionsResult);
     }
 
+    private Intent getSuggestionsCriteria() {
+        Intent suggestionsResult = new Intent(this, BrowseResult.class);
+/*
+        suggestionsResult.putExtra("title", "name");
+        suggestionsResult.putExtra("currLat", 49.246);
+        suggestionsResult.putExtra("currLong", -123.116);
+        suggestionsResult.putExtra("dist", 25);
+*/
+        CharSequence message = "Based On your previous recording, \n" +
+                "We Suggest the following Searching Conditions: \n" +
+                "Type: Sorting";
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+
+        return suggestionsResult;
+    }
+
+    /* Search services button event */
     public void browseResult(View view){
+        Intent browseResult = getSearchCriteria();
+        browseResult.putExtra("suggestions", false);
+
+        startActivity(browseResult);
+    }
+
+    /* Get the input from the user */
+    private Intent getSearchCriteria() {
+        Intent browseResult = new Intent(this, BrowseResult.class);
 
         // Adding search criteria to intent this is a mess right now
         EditText title = findViewById(R.id.titleInput);
@@ -73,8 +101,7 @@ public class BrowseServiceCond extends AppCompatActivity {
         browseResult.putExtra("time-min", timeMin.getText().toString());
         browseResult.putExtra("time-max", timeMax.getText().toString());
 
-
-        startActivity(browseResult);
+        return browseResult;
     }
 
 

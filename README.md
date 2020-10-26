@@ -20,6 +20,7 @@ Handling of the received messages is done in the method *onMessageReceived* in t
       - deviceIdentity (string): The current using deviceIdentity.
       - servicesTake[] (list): A list filled with services' id. Those services are booked by user, and not been done yet.
       - servicesPost[] (list): A list filled with services' id. Those services are posted by user, and not been done yet. 
+      - serviceTaken[] (list): A list filled with all of the services taken by the user.
 
 
 

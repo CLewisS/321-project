@@ -37,10 +37,13 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     public void toolbarMenu(View view) {
-
-        popup.showAsDropDown(view);
-        popup.update(600, 900);
-        popup.setTouchable(true);
+        if (popup.isShowing()) {
+            popup.dismiss();
+        } else {
+            popup.showAsDropDown(view);
+            popup.update(600, 900);
+            popup.setTouchable(true);
+        }
     }
 
     public void toolbarProfile(View view) {

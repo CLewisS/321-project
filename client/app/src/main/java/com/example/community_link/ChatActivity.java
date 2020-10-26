@@ -30,6 +30,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -90,8 +91,8 @@ public class ChatActivity extends CommunityLinkActivity {
 
         //setup local user parameters
         //TODO: Config these to use the real runtime data
-        user = new userProfile("local");
-        target = new userProfile("else");
+        user = new userProfile("else");
+        target = new userProfile("local");
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -256,9 +257,9 @@ public class ChatActivity extends CommunityLinkActivity {
             Log.i("JSON", jsonMessage.toString());
 
             //http GET
-            Response.Listener getMessageResponseCallback = new Response.Listener<JSONObject>() {
+            Response.Listener getMessageResponseCallback = new Response.Listener<JSONArray>() {
                 @Override
-                public void onResponse(JSONObject response) {
+                public void onResponse(JSONArray response) {
                     Log.d("response", response.toString());
                     //decode and put newly gotten messages to the chat list
                     chatMessage[] newMessages = gson.fromJson(response.toString(), chatMessage[].class);

@@ -108,7 +108,7 @@ public class MainActivity extends CommunityLinkActivity {
     }*/
 
     public void browseService(View view){
-        Intent browseService = new Intent(this,BrowseServiceCond.class);
+        Intent browseService = new Intent(this,BrowseActivity.class);
         startActivity(browseService);
     }
 

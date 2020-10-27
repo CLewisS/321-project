@@ -19,15 +19,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".BrowseResult"
-                  android:parentActivityName=".BrowseServiceCond">
+        <activity android:name=".BrowseActivity"
+                  android:parentActivityName=".MainActivity">
         </activity>
 
         <activity android:name=".ChatActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
-
-        <activity android:name=".BrowseServiceCond"
             android:parentActivityName=".MainActivity">
         </activity>
 
@@ -60,16 +56,7 @@
             android:name=".GetService"
             android:parentActivityName=".MainActivity"></activity>
         <activity
-            android:name=".AddService2"
-            android:parentActivityName=".MainActivity">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-        <activity
-            android:name=".AddService"
+            android:name=".AddServiceActivity"
             android:parentActivityName=".MainActivity">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->

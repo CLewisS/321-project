@@ -1,34 +1,36 @@
 package com.example.community_link;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class BrowseResult extends CommunityLinkActivity {
+public class BrowseActivity extends CommunityLinkActivity {
 
     //private userProfile user;
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
@@ -39,6 +41,8 @@ public class BrowseResult extends CommunityLinkActivity {
     private int size;
     private Location userLoc;
     private final float NO_VAL = 6379;
+    private PopupWindow filtersPopup;
+    private View filterLayout;
 
 
     @SuppressLint("SetTextI18n")
@@ -46,7 +50,12 @@ public class BrowseResult extends CommunityLinkActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_browse_result);
+        setContentView(R.layout.activity_browse);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        filterLayout = inflater.inflate(R.layout.filters_layout, null);
+
+        filtersPopup = new PopupWindow(filterLayout);
 
         /*<--------------HARDCODING----------------------->*/
         //txv = (TextView) findViewById(R.id.browseResult);
@@ -57,7 +66,7 @@ public class BrowseResult extends CommunityLinkActivity {
 
         // Retrieve search criteria for services
         Bundle searchCriteria = getIntent().getExtras();
-
+/*
         if (searchCriteria.getBoolean("suggestions")) {
             getSuggestions();
         } else {
@@ -65,9 +74,37 @@ public class BrowseResult extends CommunityLinkActivity {
             System.out.println(conditions);
 
             getServices(conditions);
-        }
+        }*/
+
+        Spinner dateFilters = (Spinner) filterLayout.findViewById(R.id.dateFilter);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.times_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateFilters.setAdapter(adapter);
 
     }
+
+    public void search(View view) {
+        sdList.clear();
+
+        if (filtersPopup.isShowing()) {
+            filtersPopup.dismiss();
+        }
+
+        JSONObject conditions = getSearchConditionJSON();
+        getServices(conditions);
+    }
+
+    public void filters(View view) {
+        if (filtersPopup.isShowing()) {
+            filtersPopup.dismiss();
+        } else {
+            filtersPopup.showAsDropDown(view);
+            filtersPopup.update(view.getWidth(), 950);
+            filtersPopup.setTouchable(true);
+        }
+    }
+
 
     private void getSuggestions() {
         System.out.println("Getting suggestions");
@@ -113,17 +150,13 @@ public class BrowseResult extends CommunityLinkActivity {
                     errorToast.setGravity(Gravity.CENTER, 0, 0);
                     errorToast.show();
 
-                    Intent browseService = new Intent(getApplicationContext(), BrowseServiceCond.class);
-                    startActivity(browseService);
                 } else {
-                    LinearLayout serviceResults = findViewById(R.id.serviceResults);
-                    for (int i = 0; i < size; i++) {
-                        View resultView = getServiceResultView(sdList.get(i));
-                        serviceResults.addView(resultView);
-                    }
+                    displayServices();
                 }
             }
         };
+
+
 
         Response.ErrorListener errorCallback = new Response.ErrorListener() {
             @Override
@@ -136,6 +169,74 @@ public class BrowseResult extends CommunityLinkActivity {
         CommunityLinkApp.requestManager.getServices(conditions, getServicesResponseCallback, errorCallback);
     }
 
+    private void displayServices() {
+        LinearLayout serviceResults = findViewById(R.id.serviceResults);
+        serviceResults.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View resultView = getServiceResultView(sdList.get(i));
+            serviceResults.addView(resultView);
+        }
+    }
+
+    private JSONObject getSearchConditionJSON() {
+        EditText serviceSearch = findViewById(R.id.serviceSearch);
+        String title = serviceSearch.getText().toString();
+        String date = getSpinnerDate();
+
+
+        JSONObject conditions = new JSONObject();
+        try {
+
+            if (title != null && !title.isEmpty()) {
+                conditions.put("name", title);
+            }
+
+            String currDate = getCurrDate();
+            System.out.println(currDate);
+            conditions.put("date-min", currDate);
+
+            if (!date.isEmpty()) {
+                conditions.put("date-max", date);
+            }
+
+
+        }catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        return conditions;
+
+    }
+
+    private String getCurrDate() {
+        DateFormat dateForm = new SimpleDateFormat("YYYY-MM-dd");
+        return dateForm.format(Calendar.getInstance().getTime());
+
+    }
+
+    private String getSpinnerDate() {
+        Spinner dateFilter = filterLayout.findViewById(R.id.dateFilter);
+        String date = dateFilter.getSelectedItem().toString();
+        DateFormat dateForm = new SimpleDateFormat("YYYY-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        System.out.println(date);
+
+        if ("Today".equals(date)) {
+            return dateForm.format(calendar.getTime());
+        } else if ("This week".equals(date)) {
+            calendar.add(Calendar.DATE, 7);
+            return dateForm.format(calendar.getTime());
+        } else if ("This month".equals(date)) {
+            calendar.add(Calendar.DATE, 30);
+            return dateForm.format(calendar.getTime());
+        } else if ("This year".equals(date)) {
+            calendar.add(Calendar.DATE, 365);
+            return dateForm.format(calendar.getTime());
+        }
+
+        return "";
+    }
+/*
     private JSONObject getSearchConditionJSON(Bundle searchCriteria) {
 
         float currLat = searchCriteria.getFloat("currLat", NO_VAL);
@@ -188,10 +289,10 @@ public class BrowseResult extends CommunityLinkActivity {
 
         return conditions;
 
-    }
+    }*/
 
     private View getServiceResultView(ServiceData sd) {
-        LayoutInflater inflater = LayoutInflater.from(BrowseResult.this);
+        LayoutInflater inflater = LayoutInflater.from(BrowseActivity.this);
         View serviceView = inflater.inflate(R.layout.service_result, null);
 
         System.out.println(sdList.get(i));

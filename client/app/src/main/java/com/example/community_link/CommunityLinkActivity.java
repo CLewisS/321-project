@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -61,7 +60,7 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     public void addService(View view) {
-        Intent addService = new Intent(this, AddService2.class);
+        Intent addService = new Intent(this, AddServiceActivity.class);
         startActivity(addService);
     }
 
@@ -77,7 +76,7 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     public void browseService(View view){
-        Intent browseService = new Intent(this,BrowseServiceCond.class);
+        Intent browseService = new Intent(this,BrowseActivity.class);
         startActivity(browseService);
     }
 

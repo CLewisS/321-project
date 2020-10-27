@@ -1,45 +1,32 @@
 package com.example.community_link;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AddService2 extends CommunityLinkActivity {
+public class AddServiceActivity extends CommunityLinkActivity {
     private TimePicker tPicker;
-    private Button btnGet;
-    ServiceData sd = new ServiceData();
-    DatePicker picker;
+    private ServiceData sd = new ServiceData();
+    private DatePicker picker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_service2);
+        setContentView(R.layout.activity_add_service);
         tPicker=(TimePicker)findViewById(R.id.timePicker);
         tPicker.setIs24HourView(true);
-        btnGet=(Button)findViewById(R.id.button2);
     }
 
     public void test(View view){
@@ -67,8 +54,7 @@ public class AddService2 extends CommunityLinkActivity {
 
         picker=(DatePicker)findViewById(R.id.datePicker);
         sd.setDate(picker.getYear(),picker.getMonth(),picker.getDayOfMonth());
-        //TextView txv = findViewById(R.id.textView2);
-        //txv.setText(sd.toJSON());
+
         postToServer();
 
         CharSequence toastMess = "Your service was added!";
@@ -81,8 +67,8 @@ public class AddService2 extends CommunityLinkActivity {
      * Uncomment the postToServer() above,
      **/
 
-    private void postToServer(){
-        final TextView txv = findViewById(R.id.textView2);
+    private void postToServer() {
+
         JSONObject service = new JSONObject();
         try {
             service = new JSONObject(sd.toJSON());
@@ -94,7 +80,6 @@ public class AddService2 extends CommunityLinkActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("response", response.toString());
-                txv.setText(response.toString());
             }
         };
 

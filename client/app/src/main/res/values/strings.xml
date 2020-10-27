@@ -7,4 +7,13 @@
     <string name="A_Dev_Placeholder">Place Holder Text</string>
     <string name="chatModule_Title">Begin Chatting</string>
 
+    <string-array name="times_array">
+        <item>Any Date</item>
+        <item>Today</item>
+        <item>This week</item>
+        <item>This month</item>
+        <item>This year</item>
+    </string-array>
+
+
 </resources>

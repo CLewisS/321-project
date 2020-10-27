@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context=".BrowseResult">
+    tools:context=".BrowseActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,6 +17,37 @@
             layout="@layout/navbar_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/serviceSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Search Services"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/searchButt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="search"
+                android:text="S" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/filtersButt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="filters"
+            android:text="Filters"
+            android:textAllCaps="false" />
 
         <ScrollView
             android:layout_width="match_parent"

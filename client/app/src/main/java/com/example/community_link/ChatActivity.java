@@ -66,7 +66,7 @@ public class ChatActivity extends CommunityLinkActivity {
     //User profiles are to be implemented as App global
     public userProfile user;
     public userProfile target;
-    public String lastUpdate = "0";
+    public String lastUpdate = "2020-09-01 12:12:12";
 
     //server IO portal used for chat Backend
     private DiskBasedCache chatNetCache;

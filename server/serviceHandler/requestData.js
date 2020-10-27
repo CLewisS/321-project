@@ -144,6 +144,23 @@ var isCorrectType = function (key, value) {
  * Parameters:
  *    - service: An object which contains all the attribute values to create a service
  */
+module.exports.serviceIsValid = function (service) {
+
+  const keys = Object.keys(service);
+  for(var key of keys){
+    if(!serviceAttributes.includes(key) || !isCorrectType(key, service[key])){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
+/* Checks if service object properties are valid.
+ * Parameters:
+ *    - service: An object which contains all the attribute values to create a service
+ */
 var serviceIsValid = function (service) {
 
   const keys = Object.keys(service);

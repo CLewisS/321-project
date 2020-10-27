@@ -44,6 +44,53 @@
       console.log("Adding service: POST /service");
     }
 
+
+    var update_service = function () {
+
+      const Http = new XMLHttpRequest();
+
+      var originbody = { name: 'A service',
+                   dow: 'Monday',
+                   date: '2020-10-17',
+                   time: '12:57:33',
+                   lat:   49.56911,
+                   longi: 123.456,
+                   owner: 'Brendon',
+                   type:  'food',
+                   description: 'This is a description'
+                 };
+
+      var updatebody = { name: 'A update service',
+                   dow: 'Tuesday',
+                   date: '2020-10-17',
+                   time: '12:57:33',
+                   lat:   49.56911,
+                   longi: 123.456,
+                   owner: 'Brendon',
+                   type:  'study',
+                   description: 'This is a update description'
+                 };
+      // you can change the id here based on your database table
+      Http.open("PUT", '/service?id=2');
+      Http.setRequestHeader('Content-Type', 'application/json');
+      
+      Http.send(JSON.stringify(updatebody));
+      console.log("update service: PUT /service");
+    }
+
+
+
+    var delete_service = function () {
+
+      const Http = new XMLHttpRequest();
+      
+      Http.open("DELETE", '/service?id=1');
+      Http.send();
+
+      console.log("Getting services: GET /service");
+    }
+
+
     var get_new_messages = function () {
 
        const Http = new XMLHttpRequest();
@@ -74,6 +121,8 @@
 
   <button onclick='get_services()'> Get Services </button>
   <button onclick='add_service()'> Add Service </button>
+  <button onclick='update_service()'> Update Services </button>
+  <button onclick='delete_service()'> Delete Service </button>
   <button onclick='get_new_messages()'> Get Messages </button>
   <button onclick='add_message()'> Add Message </button>
 

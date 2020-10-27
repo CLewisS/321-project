@@ -107,29 +107,6 @@ module.exports.get = function(conditions, callback) {
 
     var sqlConds = conditions;
 
-/*    for (var [key, value] of Object.entries(conditions)) {
-
-      if (value.hasOwnProperty("min")) {
-        if (key === "lat" || key === "longi") {
-          sqlConds.push(key + " >= " + value["min"]);
-        } else {
-          sqlConds.push(key + " >=" + "'" + value["min"] + "'");
-        }
-      }
-
-      if (value.hasOwnProperty("max")) {
-        if (key == "lat" || key == "longi") {
-          sqlConds.push(key + " <= " + value["max"]);
-        } else {
-          sqlConds.push(key + " <=" + "'" + value["max"] + "'");
-        }
-      }
-      
-      if (key === "type") {
-        sqlConds.push("type='" + value + "'");
-      }
-    }*/
-
     query += sqlConds.join(" AND ");
   
     console.log(query);
@@ -155,3 +132,131 @@ module.exports.get = function(conditions, callback) {
   });
 
 };
+
+
+
+
+/* Delete the service from the service database. 
+ *
+ * Parameters:
+ *   - serviceID: The ID represented the serviced user want to delete.
+ *
+ *   - callback: A callback function that is called once the services have been deleted.
+ *               The retrieved services are passed as an argument.
+ */
+module.exports.delete = function(serviceID, callback) {
+  console.log("Getting Services from DB");
+
+  var dbConn = mysql.createConnection(dbConfig.serviceDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    // Build SQL query
+    var query = `DELETE FROM services WHERE id = ` + serviceID;
+  
+    console.log(query);
+
+    // Get services
+    dbConn.query(query, (err, result, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+  
+      callback(result);
+    });
+
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+
+};
+
+
+
+
+
+
+
+
+
+/* Update a service in the services database
+ *
+ * Parameters:
+ *   -serviceID: The ID of the service is gona be updated.
+ *   - service: The updated services. 
+ *              Must be a JSON object.
+ *
+ *   - callback: A callback function that is called once the service  has been updated.
+ *               The unique identifier of the inserted service is passed as an argument.
+ */
+
+module.exports.update = function (serviceID, service, callback) {
+
+  console.log("Adding Service to DB");
+
+
+  var dbConn = mysql.createConnection(dbConfig.serviceDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    // Get Service Values  
+    try {
+      if (Object.values(service).length != 8) throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
+    } catch (err) {
+      return console.error(err);
+    }
+    var values = [service.name, 
+                  service.date, 
+                  service.time, 
+                  service.lat, 
+                  service.longi, 
+                  service.owner, 
+                  service.type, 
+                  service.description];
+    
+    // Insert service into database
+    var query = `UPDATE services SET name = ?, date = ?, time = ?, lat = ?, longi = ?, owner = ?,
+    type = ?, description = ? WHERE id = ` + serviceID;
+  
+    dbConn.query(query, values, (err, results, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+  
+      console.log("Updated");
+
+      callback(results);
+    });
+
+
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+
+}; 

@@ -28,6 +28,12 @@ app.get("/service", serviceHandler.getServices);
 
 app.post("/service", serviceHandler.addService);
 
+app.put("/service", serviceHandler.updateService);
+
+app.delete("/service", serviceHandler.deleteService);
+
+
+
 app.post("/chat", chatServer.addMessage);
 
 app.get("/chat", chatServer.getMessages);

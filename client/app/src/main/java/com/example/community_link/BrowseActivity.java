@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -57,24 +59,11 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         filtersPopup = new PopupWindow(filterLayout);
 
-        /*<--------------HARDCODING----------------------->*/
-        //txv = (TextView) findViewById(R.id.browseResult);
 
         // Location isn't working yet
         //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         //getLocation();
 
-        // Retrieve search criteria for services
-        Bundle searchCriteria = getIntent().getExtras();
-/*
-        if (searchCriteria.getBoolean("suggestions")) {
-            getSuggestions();
-        } else {
-            JSONObject conditions = getSearchConditionJSON(searchCriteria);
-            System.out.println(conditions);
-
-            getServices(conditions);
-        }*/
 
         Spinner dateFilters = (Spinner) filterLayout.findViewById(R.id.dateFilter);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -83,6 +72,16 @@ public class BrowseActivity extends CommunityLinkActivity {
         dateFilters.setAdapter(adapter);
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (filtersPopup.isShowing()) {
+            filtersPopup.dismiss();
+        }
+    }
+
+    /* Button onclick functions */
 
     public void search(View view) {
         sdList.clear();
@@ -102,11 +101,18 @@ public class BrowseActivity extends CommunityLinkActivity {
             filtersPopup.showAsDropDown(view);
             filtersPopup.update(view.getWidth(), 950);
             filtersPopup.setTouchable(true);
+            filtersPopup.setFocusable(true);
         }
     }
 
+    public void viewOnMap(View view) {
+        int index = (Integer) view.getTag();
+        Intent mapActivity = new Intent(this, MapActivity.class);
+        mapActivity.putExtra("service", sdList.get(index));
+        startActivity(mapActivity);
+    }
 
-    private void getSuggestions() {
+    public void getSuggestions(View view) {
         System.out.println("Getting suggestions");
         /*<--Get Suggestion Feature-->*/
         /*
@@ -129,6 +135,8 @@ public class BrowseActivity extends CommunityLinkActivity {
         CommunityLinkApp.requestManager.getServices(suggestion, getServicesResponseCallback, errorCallback);
          */
     }
+
+    /* HTTP request functions */
 
     private void getServices(JSONObject conditions) {
         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
@@ -169,18 +177,17 @@ public class BrowseActivity extends CommunityLinkActivity {
         CommunityLinkApp.requestManager.getServices(conditions, getServicesResponseCallback, errorCallback);
     }
 
-    private void displayServices() {
-        LinearLayout serviceResults = findViewById(R.id.serviceResults);
-        serviceResults.removeAllViews();
-        for (int i = 0; i < size; i++) {
-            View resultView = getServiceResultView(sdList.get(i));
-            serviceResults.addView(resultView);
-        }
-    }
 
     private JSONObject getSearchConditionJSON() {
         EditText serviceSearch = findViewById(R.id.serviceSearch);
         String title = serviceSearch.getText().toString();
+
+        EditText timeMinET = filterLayout.findViewById(R.id.timeMin);
+        String timeMin = timeMinET.getText().toString();
+
+        EditText timeMaxET = filterLayout.findViewById(R.id.timeMax);
+        String timeMax = timeMaxET.getText().toString();
+
         String date = getSpinnerDate();
 
 
@@ -199,6 +206,14 @@ public class BrowseActivity extends CommunityLinkActivity {
                 conditions.put("date-max", date);
             }
 
+            if (!timeMin.isEmpty()) {
+                conditions.put("time-min", timeMin);
+            }
+
+            if (!timeMax.isEmpty()) {
+                conditions.put("time-max", timeMax);
+            }
+
 
         }catch(JSONException e) {
             e.printStackTrace();
@@ -207,6 +222,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         return conditions;
 
     }
+
 
     private String getCurrDate() {
         DateFormat dateForm = new SimpleDateFormat("YYYY-MM-dd");
@@ -238,21 +254,6 @@ public class BrowseActivity extends CommunityLinkActivity {
     }
 /*
     private JSONObject getSearchConditionJSON(Bundle searchCriteria) {
-
-        float currLat = searchCriteria.getFloat("currLat", NO_VAL);
-        float currLong = searchCriteria.getFloat("currLong", NO_VAL);
-        float dist = searchCriteria.getFloat("dist", NO_VAL);
-
-        String dateMin = searchCriteria.getString("date-min");
-        String dateMax = searchCriteria.getString("date-max");
-        System.out.println(dateMax + dateMin);
-
-        String timeMin = searchCriteria.getString("time-min");
-        String timeMax = searchCriteria.getString("time-max");
-        System.out.println(timeMin + " " + timeMax);
-
-        String title = getIntent().getExtras().getString("title");
-        System.out.println("Title: " + title);
 
         JSONObject conditions = new JSONObject();
         try {
@@ -291,7 +292,10 @@ public class BrowseActivity extends CommunityLinkActivity {
 
     }*/
 
-    private View getServiceResultView(ServiceData sd) {
+    /* View manipulation functions */
+
+    private View getServiceResultView(int i) {
+        ServiceData sd = sdList.get(i);
         LayoutInflater inflater = LayoutInflater.from(BrowseActivity.this);
         View serviceView = inflater.inflate(R.layout.service_result, null);
 
@@ -318,35 +322,22 @@ public class BrowseActivity extends CommunityLinkActivity {
         TextView descriptionResult = serviceView.findViewById(R.id.descriptionResult);
         descriptionResult.setText(sd.getDescription());
 
+        Button mapButt = serviceView.findViewById(R.id.mapButt2);
+        mapButt.setTag(i);
+
         return serviceView;
     }
 
-    public void goPrev(View view){
-        if(i != 0){
-            i--;
-            //showService(sdList.get(i));
-        } else {
-            CharSequence message = "You are at the beginning of the services found";
-            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+
+    private void displayServices() {
+        LinearLayout serviceResults = findViewById(R.id.serviceResults);
+        serviceResults.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View resultView = getServiceResultView(i);
+            serviceResults.addView(resultView);
         }
-
-
     }
 
-    public void goNext(View view){
-        if(i != size-1) {
-            i++;
-            //showService(sdList.get(i));
-        } else {
-            CharSequence message = "Sorry, no more services meet the search criteria";
-            Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }
-
-    }
 
     //This isn't working for some reason
 /*
@@ -370,9 +361,4 @@ public class BrowseActivity extends CommunityLinkActivity {
         });
     }*/
 
-    public void viewOnMap(View view) {
-        Intent mapActivity = new Intent(this, MapActivity.class);
-        mapActivity.putExtra("service", sdList.get(i));
-        startActivity(mapActivity);
-    }
 }

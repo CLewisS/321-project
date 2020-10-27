@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#E6BBB0F6"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/currentLoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1E0FB"
+                android:backgroundTint="#E1E0FB"
+                android:padding="4dp"
+                android:text="Current Location"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="#E1E0FB"
+                android:backgroundTint="#E1E0FB"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <EditText
+                    android:id="@+id/currLat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Latitude"
+                    android:inputType="numberSigned|numberDecimal" />
+
+                <EditText
+                    android:id="@+id/currLong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Longitude"
+                    android:inputType="numberSigned|numberDecimal" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1E0FB"
+                android:backgroundTint="#E1E0FB"
+                android:padding="4dp"
+                android:text="Distance from current location:"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/distanceInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="#E1E0FB"
+                android:backgroundTint="#DEDDFF"
+                android:ems="10"
+                android:hint="Distance"
+                android:inputType="number"
+                android:padding="4dp" />
+
+            <TextView
+                android:id="@+id/dateTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1E0FB"
+                android:backgroundTint="#E1E0FB"
+                android:padding="4dp"
+                android:text="Date range:"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/dateFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="#E1E0FB"
+                android:backgroundTint="#E1E0FB"
+                android:padding="4dp" />
+
+            <TextView
+                android:id="@+id/timeTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E1E0FB"
+                android:backgroundTint="#E1E0FB"
+                android:padding="4dp"
+                android:text="Time:"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#E1E0FB"
+                android:backgroundTint="#E1E0FB"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <EditText
+                    android:id="@+id/timeMin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="From: hh:mm"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/timeMax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="To: hh:mm"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

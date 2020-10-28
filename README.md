@@ -12,15 +12,14 @@ Handling of the received messages is done in the method *onMessageReceived* in t
 
 ### Interface
 
-#### UserInfo
+#### User Info
    - User Attributes:
       - userID (number): The unique id of each user.
-      - userName (string): The User Name of the user.
-      - passward (string): The passward of the user account.
-      - deviceIdentity (string): The current using deviceIdentity.
-      - servicesTake[] (list): A list filled with services' id. Those services are booked by user, and not been done yet.
-      - servicesPost[] (list): A list filled with services' id. Those services are posted by user, and not been done yet. 
-      - serviceTaken[] (list): A list filled with all of the services taken by the user.
+      - username (string): The User Name of the user.
+      - password (string): The password of the user account.
+      - deviceToken (string): The users current FCM device registration token.
+      - servicesPosted[] (list): A list filled with services' id. Those services are posted by user, and not been done yet. 
+      - servicesUsed[] (list): A list filled with all of the ids of services used by the user.
 
 
 

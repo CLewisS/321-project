@@ -65,11 +65,6 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
 
-    public void getService(View view) {
-        Intent getService = new Intent(this, GetService.class);
-        startActivity(getService);
-    }
-
     public void requestExample(View view) {
         Intent requestExample = new Intent(this, RequestExample.class);
         startActivity(requestExample);

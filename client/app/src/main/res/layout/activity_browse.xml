@@ -10,7 +10,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <include
             android:id="@+id/include"
@@ -32,19 +36,36 @@
                 android:hint="Search Services"
                 android:inputType="textPersonName" />
 
-            <Button
-                android:id="@+id/searchButt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="search"
-                android:text="S" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="4">
+
+                <ImageView
+                    android:id="@+id/searchImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#BAB6CF"
+                    app:srcCompat="@drawable/search" />
+
+                <Button
+                    android:id="@+id/searchButt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#716E7E"
+                    android:backgroundTint="#00BAB6CF"
+                    android:onClick="search" />
+            </FrameLayout>
+
         </LinearLayout>
 
         <Button
             android:id="@+id/filtersButt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:background="#BAB6CF"
             android:onClick="filters"
             android:text="Filters"
             android:textAllCaps="false" />
@@ -53,6 +74,8 @@
             android:id="@+id/suggestionsButt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:background="#BAB6CF"
             android:onClick="getSuggestions"
             android:text="Get suggestions"
             android:textAllCaps="false" />

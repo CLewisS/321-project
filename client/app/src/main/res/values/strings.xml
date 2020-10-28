@@ -7,13 +7,57 @@
     <string name="A_Dev_Placeholder">Place Holder Text</string>
     <string name="chatModule_Title">Begin Chatting</string>
 
-    <string-array name="times_array">
+    <string-array name="hours_array">
+        <item>hh</item>
+        <item>00</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+    </string-array>
+
+    <string-array name="mins_array">
+        <item>mm</item>
+        <item>00</item>
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+    </string-array>
+
+    <string-array name="dists_array">
+        <item>Any Distance</item>
+        <item>5 km</item>
+        <item>10 km</item>
+        <item>15 km</item>
+        <item>25 km</item>
+        <item>50 km</item>
+    </string-array>
+
+    <string-array name="dates_array">
         <item>Any Date</item>
         <item>Today</item>
         <item>This week</item>
         <item>This month</item>
         <item>This year</item>
     </string-array>
-
 
 </resources>

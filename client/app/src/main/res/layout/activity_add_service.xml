@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:paddingBottom="16dp"
     tools:context=".AddServiceActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <include
@@ -24,102 +22,119 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginBottom="32dp">
+            android:background="#DDD8F1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:orientation="vertical">
+                android:background="#00FFFFFF"
+                android:orientation="vertical"
+                android:paddingBottom="32dp">
 
-                <TableLayout
+                <TextView
+                    android:id="@+id/tvProjectName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/droid_sans"
+                    android:text="Title:"
+                    android:textColor="#000000"
+                    android:textSize="18dp"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/titleErr"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp">
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter title." />
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/etProjectName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:background="#FFFFFF"
+                    android:backgroundTint="#FFFFFF"
+                    android:ems="10"
+                    android:inputType="textPersonName" />
 
-                        <TextView
-                            android:id="@+id/tvProjectName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="42dp"
-                            android:text="Service Title:"
-                            android:textSize="18dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName2"
-                            app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName2"
-                            app:layout_constraintHorizontal_bias="0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName2"
-                            app:layout_constraintVertical_bias="0" />
+                <TextView
+                    android:id="@+id/tvType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/droid_sans"
+                    android:text="Category:"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
 
-                        <EditText
-                            android:id="@+id/etProjectName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="Title"
-                            android:inputType="textPersonName"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </TableRow>
+                <TextView
+                    android:id="@+id/typeErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter category." />
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/etType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:background="#FFFFFF"
+                    android:backgroundTint="#FFFFFF"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:shadowColor="#FFFFFF" />
 
-                        <TextView
-                            android:id="@+id/tvType"
-                            android:layout_width="wrap_content"
-                            android:layout_height="46dp"
-                            android:text="Service Category:"
-                            android:textSize="18dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/editTextType"
-                            app:layout_constraintEnd_toStartOf="@+id/editTextType" />
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/droid_sans"
+                    android:text="Description:"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
 
-                        <EditText
-                            android:id="@+id/etType"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="Category"
-                            android:inputType="textPersonName"
-                            app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName2"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
-                            app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
-                    </TableRow>
+                <TextView
+                    android:id="@+id/descriptionErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter a description." />
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                <EditText
+                    android:id="@+id/etDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:background="#FFFFFF"
+                    android:backgroundTint="#FFFFFF"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:shadowColor="#FFFFFF" />
 
-                        <TextView
-                            android:id="@+id/tvDesc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="78dp"
-                            android:text="Service Description:"
-                            android:textSize="18dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/editTextDesc"
-                            app:layout_constraintEnd_toStartOf="@+id/editTextDesc"
-                            app:layout_constraintHorizontal_bias="0.565"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textViewType" />
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/droid_sans"
+                    android:text="Date:"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
 
-                        <EditText
-                            android:id="@+id/etDesc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="77dp"
-                            android:ems="10"
-                            android:hint="Description"
-                            android:inputType="textImeMultiLine"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/editTextType" />
-                    </TableRow>
-
-                </TableLayout>
+                <TextView
+                    android:id="@+id/dateErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter date." />
 
                 <DatePicker
                     android:id="@+id/datePicker"
@@ -131,27 +146,90 @@
                     android:datePickerMode="spinner"
                     android:onClick="test" />
 
-                <TimePicker
-                    android:id="@+id/timePicker"
+                <TextView
+                    android:id="@+id/tvTime"
                     android:layout_width="match_parent"
-                    android:layout_height="194dp"
-                    android:layout_margin="16dp"
-                    android:timePickerMode="spinner"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.496"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/addServiceButt"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="16dp"
-                    android:gravity="center_horizontal"
-                    android:onClick="test"
-                    android:text="Add service"
-                    android:textAllCaps="false" />
+                    android:fontFamily="@font/droid_sans"
+                    android:text="Time:"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/timeErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter time." />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="32dp"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/hourAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=":"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/minAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/addServiceButt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#CEF8FD"
+                        android:onClick="submit"
+                        android:text="Add service"
+                        android:textAllCaps="false" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/cancelButt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:onClick="cancel"
+                        android:text="Cancel"
+                        android:textAllCaps="false" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -52,19 +52,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="Old stuff:" />
-
-        <Button
-            android:id="@+id/getSuggestButt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:backgroundTint="#AFA2F1"
-            android:minHeight="48dp"
-            android:onClick="getService"
-            android:text="Get Suggestions "
-            android:textAllCaps="false"
-            android:textSize="24sp" />
+            android:text="Old Stuff:"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/reqExButt"

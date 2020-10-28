@@ -19,6 +19,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
+        <activity android:name=".AddServiceActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
+
         <activity android:name=".BrowseActivity"
                   android:parentActivityName=".MainActivity">
         </activity>
@@ -28,7 +32,7 @@
         </activity>
 
         <activity android:name=".MapActivity"></activity>
-        
+
         <activity android:name=".RequestExample" />
 
         <meta-data
@@ -37,6 +41,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -49,21 +56,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".SearchResult"
-            android:parentActivityName=".GetService"></activity>
-        <activity
-            android:name=".GetService"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity
-            android:name=".AddServiceActivity"
-            android:parentActivityName=".MainActivity">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

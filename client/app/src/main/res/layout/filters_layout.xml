@@ -17,45 +17,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/currentLoc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#E1E0FB"
-                android:backgroundTint="#E1E0FB"
-                android:padding="4dp"
-                android:text="Current Location"
-                android:textColor="#000000"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="#E1E0FB"
-                android:backgroundTint="#E1E0FB"
-                android:orientation="horizontal"
-                android:padding="4dp">
-
-                <EditText
-                    android:id="@+id/currLat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Latitude"
-                    android:inputType="numberSigned|numberDecimal" />
-
-                <EditText
-                    android:id="@+id/currLong"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Longitude"
-                    android:inputType="numberSigned|numberDecimal" />
-            </LinearLayout>
-
-            <TextView
                 android:id="@+id/distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,16 +27,12 @@
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/distanceInput"
+            <Spinner
+                android:id="@+id/distanceFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="#E1E0FB"
-                android:backgroundTint="#DEDDFF"
-                android:ems="10"
-                android:hint="Distance"
-                android:inputType="number"
                 android:padding="4dp" />
 
             <TextView
@@ -139,4 +96,5 @@
 
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>

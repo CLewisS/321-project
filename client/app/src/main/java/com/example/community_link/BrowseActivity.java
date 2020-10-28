@@ -1,7 +1,9 @@
 package com.example.community_link;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -17,9 +19,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -34,17 +42,21 @@ import java.util.List;
 
 public class BrowseActivity extends CommunityLinkActivity {
 
+    // Constants
+    private static final int LAT_MIN = 0;
+    private static final int LAT_MAX = 1;
+    private static final int LONG_MIN = 2;
+    private static final int LONG_MAX = 3;
+    private static final int REQUEST_CODE = 101;
+
     //private userProfile user;
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
     private FusedLocationProviderClient fusedLocationClient;
-    private static final int REQUEST_CODE = 101;
-    private int i = 0;
-    private TextView txv;
     private int size;
     private Location userLoc;
-    private final float NO_VAL = 6379;
     private PopupWindow filtersPopup;
     private View filterLayout;
+
 
 
     @SuppressLint("SetTextI18n")
@@ -56,20 +68,12 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         LayoutInflater inflater = LayoutInflater.from(this);
         filterLayout = inflater.inflate(R.layout.filters_layout, null);
-
         filtersPopup = new PopupWindow(filterLayout);
 
+        initFilters();
 
-        // Location isn't working yet
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        //getLocation();
-
-
-        Spinner dateFilters = (Spinner) filterLayout.findViewById(R.id.dateFilter);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.times_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dateFilters.setAdapter(adapter);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLocation();
 
     }
 
@@ -81,10 +85,31 @@ public class BrowseActivity extends CommunityLinkActivity {
         }
     }
 
+    /* Initialize the spinners (dropdown menus) in the filters popup menu
+     *   - There are two spinners: distances and date range
+     */
+    private void initFilters() {
+        // Distance spinner
+        Spinner distFilters = (Spinner) filterLayout.findViewById(R.id.distanceFilter);
+        ArrayAdapter<CharSequence> distAdapter = ArrayAdapter.createFromResource(this,
+                R.array.dists_array, android.R.layout.simple_spinner_item);
+        distAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        distFilters.setAdapter(distAdapter);
+
+        // Date range spinner
+        Spinner dateFilters = (Spinner) filterLayout.findViewById(R.id.dateFilter);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.dates_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateFilters.setAdapter(adapter);
+    }
+
     /* Button onclick functions */
 
     public void search(View view) {
         sdList.clear();
+
+        getLocation();
 
         if (filtersPopup.isShowing()) {
             filtersPopup.dismiss();
@@ -99,7 +124,7 @@ public class BrowseActivity extends CommunityLinkActivity {
             filtersPopup.dismiss();
         } else {
             filtersPopup.showAsDropDown(view);
-            filtersPopup.update(view.getWidth(), 950);
+            filtersPopup.update(view.getWidth(), 700);
             filtersPopup.setTouchable(true);
             filtersPopup.setFocusable(true);
         }
@@ -143,7 +168,7 @@ public class BrowseActivity extends CommunityLinkActivity {
             @Override
             public void onResponse(JSONArray response) {
                 Gson gson = new Gson();
-                for(int index=0;index<response.length();index++) {
+                for(int index=0; index<response.length(); index++) {
                     try {
                         sdList.add(gson.fromJson(response.getString(index), ServiceData.class));
                     } catch (JSONException e) {
@@ -157,6 +182,9 @@ public class BrowseActivity extends CommunityLinkActivity {
                     Toast errorToast = Toast.makeText(getApplicationContext(), errorMess, Toast.LENGTH_LONG);
                     errorToast.setGravity(Gravity.CENTER, 0, 0);
                     errorToast.show();
+
+                    LinearLayout serviceResults = findViewById(R.id.serviceResults);
+                    serviceResults.removeAllViews();
 
                 } else {
                     displayServices();
@@ -198,8 +226,15 @@ public class BrowseActivity extends CommunityLinkActivity {
                 conditions.put("name", title);
             }
 
+            double[] coords = getSpinnerDist();
+            if (coords.length == 4) {
+                conditions.put("lat-min", coords[LAT_MIN]);
+                conditions.put("lat-max", coords[LAT_MAX]);
+                conditions.put("longi-min", coords[LONG_MIN]);
+                conditions.put("longi-max", coords[LONG_MAX]);
+            }
+
             String currDate = getCurrDate();
-            System.out.println(currDate);
             conditions.put("date-min", currDate);
 
             if (!date.isEmpty()) {
@@ -230,6 +265,44 @@ public class BrowseActivity extends CommunityLinkActivity {
 
     }
 
+    private double[] getSpinnerDist() {
+        if (userLoc != null) {
+            Spinner distFilter = filterLayout.findViewById(R.id.distanceFilter);
+            String dist = distFilter.getSelectedItem().toString();
+
+            if ("5 km".equals(dist)) {
+                return getCoords(5);
+            } else if ("10 km".equals(dist)) {
+                return getCoords(10);
+            } else if ("15 km".equals(dist)) {
+                return getCoords(15);
+            } else if ("25 km".equals(dist)) {
+                return getCoords(25);
+            } else if ("50 km".equals(dist)) {
+                return getCoords(50);
+            }
+        }
+
+        return new double[0];
+    }
+
+    private double[] getCoords(int dist) {
+        double[] ret = new double[4];
+
+        double currLat = userLoc.getLatitude();
+        double currLong = userLoc.getLongitude();
+
+        double latDiff = dist / 111.0;
+        System.out.println("LatDiff " + latDiff);
+        ret[LAT_MIN] = currLat - latDiff;
+        ret[LAT_MAX] = currLat + latDiff;
+        double longDiff = dist / (Math.cos(Math.toRadians(currLat)) * 111.0);
+        ret[LONG_MIN] = currLong - longDiff;
+        ret[LONG_MAX] = currLong + longDiff;
+
+        return ret;
+    }
+
     private String getSpinnerDate() {
         Spinner dateFilter = filterLayout.findViewById(R.id.dateFilter);
         String date = dateFilter.getSelectedItem().toString();
@@ -252,45 +325,6 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         return "";
     }
-/*
-    private JSONObject getSearchConditionJSON(Bundle searchCriteria) {
-
-        JSONObject conditions = new JSONObject();
-        try {
-            conditions.put("date-min", dateMin);
-            conditions.put("date-max", dateMax);
-
-            if (timeMin != null && !timeMin.isEmpty()) {
-                conditions.put("time-min", timeMin);
-            }
-            if (timeMax != null && !timeMax.isEmpty()) {
-                conditions.put("time-max", timeMax);
-            }
-            if (title != null && !title.isEmpty()) {
-                conditions.put("name", title);
-            }
-            if (currLat != NO_VAL && dist != NO_VAL) {
-                float latDiff = dist / 111;
-                float latMin = currLat - latDiff;
-                float latMax = currLat + latDiff;
-                conditions.put("lat-min", latMin);
-                conditions.put("lat-max", latMax);
-            }
-            if (currLong != NO_VAL && dist != NO_VAL) {
-                float longDiff =  dist / (float)(Math.cos(Math.toRadians(currLat)) * 111);
-                float longMin = currLong - longDiff;
-                float longMax = currLong + longDiff;
-                conditions.put("longi-min", longMin);
-                conditions.put("longi-max", longMax);
-            }
-
-        }catch(JSONException e) {
-            e.printStackTrace();
-        }
-
-        return conditions;
-
-    }*/
 
     /* View manipulation functions */
 
@@ -299,7 +333,6 @@ public class BrowseActivity extends CommunityLinkActivity {
         LayoutInflater inflater = LayoutInflater.from(BrowseActivity.this);
         View serviceView = inflater.inflate(R.layout.service_result, null);
 
-        System.out.println(sdList.get(i));
         TextView serviceTitle = serviceView.findViewById(R.id.serviceResultTitle);
         serviceTitle.setText(sd.getName());
 
@@ -310,9 +343,9 @@ public class BrowseActivity extends CommunityLinkActivity {
         String date = sd.getDate().split("T")[0];
         String [] dateSplit = date.split("-");
         String dow = sd.getDow();
-        String month = dateSplit[0];
-        String day = dateSplit[1];
-        String year = dateSplit[2];
+        String month = dateSplit[1];
+        String day = dateSplit[2];
+        String year = dateSplit[0];
         String time = sd.getTime();
         dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + time);
 
@@ -328,7 +361,6 @@ public class BrowseActivity extends CommunityLinkActivity {
         return serviceView;
     }
 
-
     private void displayServices() {
         LinearLayout serviceResults = findViewById(R.id.serviceResults);
         serviceResults.removeAllViews();
@@ -338,27 +370,26 @@ public class BrowseActivity extends CommunityLinkActivity {
         }
     }
 
-
     //This isn't working for some reason
-/*
+
     private void getLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-            System.out.println("Couldn't get permission _____________-------------------__________________---------");
-            return;
-        }
-        Task<Location> task = fusedLocationClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    System.out.println("GOT LOCATION _____________-------------------__________________---------");
-                    userLoc = location;
-                    Toast.makeText(getApplicationContext(), userLoc.getLatitude() + "" + userLoc.getLongitude(), Toast.LENGTH_SHORT).show();
+            System.out.println("Couldn't get permission");
+
+        } else {
+            fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        System.out.println("GOT LOCATION " + location);
+                        userLoc = location;
+                    }
                 }
-            }
-        });
-    }*/
+            });
+        }
+    }
 
 }

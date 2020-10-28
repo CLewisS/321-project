@@ -116,6 +116,60 @@
 
       console.log("Adding message: POST /chat");
     }
+
+
+
+
+     var add_user = function () {
+
+      const Http = new XMLHttpRequest();
+
+      var body = {
+              username: "brendon",
+              password: "brendon20000522",
+              deviceToken:"this is a device",
+              servicesUsed: [1,2,3,4,5],
+              servicesPosted: [8,9]
+                 };
+  
+      Http.open("POST", '/user');
+      Http.setRequestHeader('Content-Type', 'application/json');
+      
+      Http.send(JSON.stringify(body));
+      console.log("Adding user: POST /service");
+    }
+
+
+     var delete_user = function () {
+
+       const Http = new XMLHttpRequest();
+      
+      Http.open("DELETE", '/user?userID=3');
+      Http.send();
+
+      console.log("Getting user: GET /user");
+    }
+
+
+    var update_user = function () {
+
+      const Http = new XMLHttpRequest();
+
+      var updatebody = { 
+              username: "brendon",
+              password: "newpassword",
+              deviceToken:"this is a device",
+              servicesUsed: [1,2,3,4,5],
+              servicesPosted: [8,9]
+                 };
+      // you can change the id here based on your database table
+      Http.open("PUT", '/user?userID=2');
+      Http.setRequestHeader('Content-Type', 'application/json');
+      
+      Http.send(JSON.stringify(updatebody));
+      console.log("update user: PUT /user");
+    }
+
   
   </script>
 
@@ -125,6 +179,10 @@
   <button onclick='delete_service()'> Delete Service </button>
   <button onclick='get_new_messages()'> Get Messages </button>
   <button onclick='add_message()'> Add Message </button>
+  <button onclick='add_user()'> Add User </button>
+  <button onclick='delete_user()'> Delete User </button>
+  <button onclick='update_user()'> Update User </button>
+
 
 </body>
 </html>

@@ -108,7 +108,7 @@ public class ChatActivity extends CommunityLinkActivity {
                         user.deviceToken = token;
                         // Log and toast
                         Log.d("UserProfile", token);
-                        Toast.makeText(ChatActivity.this, token, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(ChatActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
 

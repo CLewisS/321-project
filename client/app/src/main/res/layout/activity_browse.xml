@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#DEDBFA"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,21 +26,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="#8B87AF"
+            android:backgroundTint="#8B87AF"
+            android:orientation="horizontal"
+            android:paddingLeft="2dp"
+            android:paddingTop="8dp"
+            android:paddingRight="2dp">
 
             <EditText
                 android:id="@+id/serviceSearch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
+                android:layout_marginRight="8dp"
                 android:layout_weight="1"
+                android:background="#FFFFFF"
+                android:backgroundTint="#F4F2FD"
                 android:ems="10"
-                android:hint="Search Services"
+                android:hint="Browse Services"
                 android:inputType="textPersonName" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="4">
+                android:layout_marginLeft="2dp"
+                android:layout_weight="3.5">
 
                 <ImageView
                     android:id="@+id/searchImg"
@@ -60,30 +70,46 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/filtersButt"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:background="#BAB6CF"
-            android:onClick="filters"
-            android:text="Filters"
-            android:textAllCaps="false" />
+            android:background="#8B87AF"
+            android:backgroundTint="#8B87AF"
+            android:orientation="horizontal"
+            android:paddingLeft="2dp"
+            android:paddingTop="8dp"
+            android:paddingRight="2dp"
+            android:paddingBottom="8dp">
 
-        <Button
-            android:id="@+id/suggestionsButt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:background="#BAB6CF"
-            android:onClick="getSuggestions"
-            android:text="Get suggestions"
-            android:textAllCaps="false" />
+            <Button
+                android:id="@+id/filtersButt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="#BAB6CF"
+                android:onClick="filters"
+                android:text="Filters"
+                android:textAllCaps="false"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/suggestionsButt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="3.5"
+                android:background="#BAB6CF"
+                android:onClick="getSuggestions"
+                android:text="Suggestions"
+                android:textAllCaps="false" />
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp">
+            android:layout_marginLeft="2dp"
+            android:layout_marginBottom="8dp">
 
             <LinearLayout
                 android:id="@+id/serviceResults"

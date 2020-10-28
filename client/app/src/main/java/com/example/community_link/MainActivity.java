@@ -64,7 +64,7 @@ public class MainActivity extends CommunityLinkActivity {
 
                         // Log and toast
                         Log.d(TAG, token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

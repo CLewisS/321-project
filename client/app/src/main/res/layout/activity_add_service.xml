@@ -43,23 +43,23 @@
                     android:textSize="18dp"
                     android:typeface="normal" />
 
-                <TextView
-                    android:id="@+id/titleErr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF0000"
-                    android:textStyle="italic"
-                    tools:text="Please enter title." />
-
                 <EditText
                     android:id="@+id/etProjectName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
                     android:background="#FFFFFF"
                     android:backgroundTint="#FFFFFF"
                     android:ems="10"
                     android:inputType="textPersonName" />
+
+                <TextView
+                    android:id="@+id/titleErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter title." />
 
                 <TextView
                     android:id="@+id/tvType"
@@ -71,24 +71,24 @@
                     android:textColor="#000000"
                     android:textSize="18dp" />
 
-                <TextView
-                    android:id="@+id/typeErr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF0000"
-                    android:textStyle="italic"
-                    tools:text="Please enter category." />
-
                 <EditText
                     android:id="@+id/etType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
                     android:background="#FFFFFF"
                     android:backgroundTint="#FFFFFF"
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:shadowColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/typeErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter category." />
 
                 <TextView
                     android:id="@+id/tvDesc"
@@ -100,24 +100,24 @@
                     android:textColor="#000000"
                     android:textSize="18dp" />
 
-                <TextView
-                    android:id="@+id/descriptionErr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF0000"
-                    android:textStyle="italic"
-                    tools:text="Please enter a description." />
-
                 <EditText
                     android:id="@+id/etDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
                     android:background="#FFFFFF"
                     android:backgroundTint="#FFFFFF"
                     android:ems="10"
                     android:inputType="textMultiLine"
                     android:shadowColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/descriptionErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter a description." />
 
                 <TextView
                     android:id="@+id/tvDate"
@@ -128,23 +128,23 @@
                     android:textColor="#000000"
                     android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/dateErr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF0000"
-                    android:textStyle="italic"
-                    tools:text="Please enter date." />
-
                 <DatePicker
                     android:id="@+id/datePicker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="16dp"
                     android:calendarViewShown="false"
                     android:datePickerMode="spinner"
                     android:onClick="test" />
+
+                <TextView
+                    android:id="@+id/dateErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter date." />
 
                 <TextView
                     android:id="@+id/tvTime"
@@ -155,18 +155,9 @@
                     android:textColor="#000000"
                     android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/timeErr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF0000"
-                    android:textStyle="italic"
-                    tools:text="Please enter time." />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="32dp"
                     android:orientation="horizontal">
 
                     <Spinner
@@ -188,6 +179,15 @@
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/timeErr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    tools:text="Please enter time." />
 
                 <LinearLayout
                     android:layout_width="match_parent"

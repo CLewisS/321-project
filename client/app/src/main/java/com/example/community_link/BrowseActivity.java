@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -343,11 +344,12 @@ public class BrowseActivity extends CommunityLinkActivity {
         String date = sd.getDate().split("T")[0];
         String [] dateSplit = date.split("-");
         String dow = sd.getDow();
-        String month = dateSplit[1];
+        String month = new DateFormatSymbols().getMonths()[Integer.parseInt(dateSplit[1])-1];;
         String day = dateSplit[2];
         String year = dateSplit[0];
         String time = sd.getTime();
-        dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + time);
+        String[] hourMin = time.split(":");
+        dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + hourMin[0] + ":" + hourMin[1]);
 
         TextView locationResult = serviceView.findViewById(R.id.locationResult);
         locationResult.setText("Location: (" + sd.getLat() + ", " +sd.getLongi() + ")");

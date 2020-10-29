@@ -1,8 +1,14 @@
-language: javascript
+language: node_js 
 
-install:
+node_js:
+  - "stable"
+
+cache:
+  directories:
+  - node_modules
+
+before_install:
   - cd tests
-  - npm install
 
 script:
   - npm test 

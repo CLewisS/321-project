@@ -11,7 +11,12 @@ cache:
   - node_modules
 
 before_install:
-  - cd server/tests
+  - cd server/dbInterface
+
+install:
+  - npm install
+  - cd ../tests
+  - npm ci
 
 script:
   - npm test

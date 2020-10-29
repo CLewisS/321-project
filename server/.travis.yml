@@ -1,0 +1,8 @@
+language: javascript
+
+install:
+  - cd tests
+  - npm install
+
+script:
+  - npm test 

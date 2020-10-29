@@ -29,11 +29,11 @@ module.exports.getServices = function (req, res) {
 
 module.exports.addService = function (req, res) {
   console.log("In service handler: add service");
-  
-  var service = reqData.getServiceFromReq(req.body);
-  console.log(service);
+ 
+//  console.log(req.body);
 
-  console.log(service);
+  var service = reqData.getServiceFromReq(req.body);
+  //console.log(service);
 
   db.add(service, (id) => {
     res.json(id);

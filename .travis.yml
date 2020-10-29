@@ -11,7 +11,7 @@ cache:
   - node_modules
 
 before_install:
-  - cd tests
+  - cd server/tests
 
 script:
   - npm test

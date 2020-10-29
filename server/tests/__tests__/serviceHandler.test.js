@@ -27,14 +27,22 @@ test("Service Add: Get JSON", () => {
                    type: 'food',
                    description: 'This is a description'
                 };
-
+  
 
   db.add.mockImplementation((service, callback) => {
     expect(service).toMatchObject(expected);
+    callback({id: 15});
   });
 
+  var res = {
+    data: {},
+    json: function(input) {
+        this.data = input;
+    }
+  };
 
-  serviceHandler.addService(req, {});
+  serviceHandler.addService(req, res);
 
   expect(db.add).toHaveBeenCalled();
+  expect(res.data).toMatchObject({id: 15});
 });

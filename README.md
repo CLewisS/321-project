@@ -14,8 +14,7 @@ Handling of the received messages is done in the method *onMessageReceived* in t
 
 #### User Info
    - User Attributes:
-      - userID (number): The unique id of each user.
-      - username (string): The User Name of the user.
+      - username (string): The User Name of the user. It must be unique.
       - password (string): The password of the user account.
       - deviceToken (string): The users current FCM device registration token.
       - servicesPosted[] (list): A list filled with services' id. Those services are posted by user, and not been done yet. 

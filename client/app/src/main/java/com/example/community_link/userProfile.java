@@ -33,7 +33,7 @@ public class userProfile {
     public JSONObject getSuggestedService(){
         JSONObject suggestion = new JSONObject();
         try {
-
+            
         }catch(JSONException e) {
             e.printStackTrace();
         }

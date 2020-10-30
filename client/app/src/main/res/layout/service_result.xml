@@ -70,5 +70,13 @@
             android:onClick="viewOnMap"
             android:text="View on Map" />
 
+        <Button
+            android:id="@+id/mapButt3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#C0C2FD"
+            android:onClick="getThisService"
+            android:text="Get This Service" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

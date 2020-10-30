@@ -138,8 +138,22 @@ public class BrowseActivity extends CommunityLinkActivity {
         startActivity(mapActivity);
     }
 
+    public void getThisService(View view){
+        int index = (Integer) view.getTag();
+        ServiceData sd = sdList.get(index);
+        int serviceID = sd.getId();
+
+        CharSequence toastMess = "You Got the Service!";
+        Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
     public void getSuggestions(View view) {
-        System.out.println("Getting suggestions");
+        CharSequence toastMess = "Information Not Enough! Take more service before suggesting.";
+        Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
         /*<--Get Suggestion Feature-->*/
         /*
         JsonObject suggestion = user.getSuggestion();

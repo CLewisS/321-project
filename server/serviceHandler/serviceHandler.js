@@ -9,6 +9,7 @@
 //const { S_IFDIR } = require("constants");
 
 
+const { json } = require("body-parser");
 var db = require("../dbInterface/serviceDB.js");
 var reqData = require("./requestData.js");
 
@@ -31,13 +32,18 @@ module.exports.addService = function (req, res) {
   console.log("In service handler: add service");
   
   var service = reqData.getServiceFromReq(req.body);
+  var  insertID ;
   console.log(service);
 
-  console.log(service);
-
-  db.add(service, (id) => {
+  
+db.add(service, (id)=>{
     res.json(id);
-  });
+  })
+  //console.log(res);
+  
+  // db.adduserServices(service, insertID, (id)=>{
+  //   res.json(id);
+  // })
 
 /*  } else {
   
@@ -58,6 +64,8 @@ module.exports.deleteService = function (req, res) {
   if(keys.length!==1 || keys[0]!=="id"){
     throw "The delete service id passed in was wrong.";
   }
+
+  // still need to delete the service in the serviceUser table.
 
   id_num = parseInt(id[keys[0]]);
   console.log(id_num);
@@ -95,3 +103,29 @@ module.exports.updateService = function (req, res) {
   });
 
 };
+
+
+
+
+module.exports.receiveService = function (req, res) {
+  console.log("In service handler: receive service");
+  
+  var receiveInfo = req.body;
+  
+  console.log(receiveInfo);
+
+  db.receive(receiveInfo.receiver,receiveInfo.serviceID , (id)=>{
+    res.json(id);
+  })
+  
+
+/*  } else {
+  
+    console.log("This is not a valid object for create a service.");
+    res.status(400).json({error: "Service object is invalid"});
+
+  }*/
+
+};
+
+

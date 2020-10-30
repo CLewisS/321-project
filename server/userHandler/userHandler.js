@@ -35,8 +35,8 @@ module.exports.addUser = function (req, res) {
   }
   
 
-  db.add(user, (id) => {
-    res.json(id);
+  db.add(user, (username) => {
+    res.json(username);
   });
 
 /*  } else {
@@ -53,17 +53,15 @@ module.exports.addUser = function (req, res) {
 module.exports.deleteUser = function (req, res) {
   console.log("In service handler: delete user");
   console.log(req.query);
-  const id = req.query;
-  const keys = Object.keys(id);
-  if(keys.length!==1 || keys[0]!=="userID"){
-    throw "The delete service id passed in was wrong.";
+  const username = req.query;
+  const keys = Object.keys(username);
+  if(keys.length!==1 || keys[0]!=="username"){
+    throw "The delete username passed in was wrong.";
   }
 
-  id_num = parseInt(id[keys[0]]);
-  console.log(id_num);
   
-  db.delete(id_num, (id) => {
-    res.json(id);
+  db.delete(username.username, (user) => {
+    res.json(user);
   });
  
 };
@@ -78,19 +76,28 @@ module.exports.updateUser = function (req, res) {
   console.log("In service handler: update service");
   var updateUser = req.body;
 
-  const keys = Object.keys(req.query);
-  if(keys.length!==1 || keys[0]!=="userID"){
-    throw "The delete user id passed in was wrong.";
-  }
-
-  var userID = parseInt(req.query["userID"]);
-
   if(!checkData.checkUserInfo(updateUser)){
     throw "This is not a valid User Object.";
  }
 
-  db.update(userID, updateUser, (user) => {
+  db.update(updateUser, (user) => {
     res.json(user);
   });
 
 };
+
+
+
+
+module.exports.loginCheck = function (req, res) {
+
+  console.log("In service handler: check user login.");
+  
+  var loginInfo = req.body;
+  
+  console.log(loginInfo);
+  db.loginCheck(loginInfo , (result)=>{
+    res.json(result);
+  })
+
+}

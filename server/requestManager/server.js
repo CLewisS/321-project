@@ -7,7 +7,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
-//var serviceHandler = require("../serviceHandler/serviceHandler.js");
+var serviceHandler = require("../serviceHandler/serviceHandler.js");
 var userHandler = require("../userHandler/userHandler.js");
 //var chatServer = require("../chatServer/chatServer.js");
 
@@ -25,14 +25,15 @@ var jsonParser = bodyParser.json();
 
 app.use(bodyParser.json());
 
-// app.get("/service", serviceHandler.getServices);
+app.get("/service", serviceHandler.getServices);
 
-// app.post("/service", serviceHandler.addService);
+app.post("/service", serviceHandler.addService);
 
-// app.put("/service", serviceHandler.updateService);
+app.put("/service", serviceHandler.updateService);
 
-// app.delete("/service", serviceHandler.deleteService);
+app.delete("/service", serviceHandler.deleteService);
 
+app.post("/receiveService", serviceHandler.receiveService);
 
 
 // app.post("/chat", chatServer.addMessage);
@@ -45,6 +46,8 @@ app.post("/user", userHandler.addUser);
 app.put("/user", userHandler.updateUser);
 
 app.delete("/user", userHandler.deleteUser);
+
+app.put("/userlogin", userHandler.loginCheck);
 
 
 

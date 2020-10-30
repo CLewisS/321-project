@@ -4,14 +4,14 @@
 var serviceDB = {
   host:"localhost",
   user: "root",
-  password: "password", // Change password to mysql server root user"s password
+  password: "houzi25252525", // Change password to mysql server root user"s password
   database: "services"
 }
 
 var chatDB = {
   host:"localhost",
   user: "root",
-  password: "password", // Change password to mysql server root user"s password
+  password: "houzi25252525", // Change password to mysql server root user"s password
   database: "chat"
 }
 

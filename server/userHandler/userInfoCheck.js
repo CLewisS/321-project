@@ -1,15 +1,12 @@
-const userAttributes = ["username","password","deviceToken","servicesPosted","servicesUsed"];
+const userAttributes = ["username","password","deviceToken"];
 const userStringAttributes = ["username","password","deviceToken"];
-const userListAttributes =  ["servicesPosted","servicesUsed"];
+
 
 
 var checkType = function(key, value){
     if(userStringAttributes.includes(key) && typeof(value)=="string"){
         return true;
     } 
-    if(userListAttributes.includes(key) && typeof(value)=="object"){
-       return true;
-    }
     return false;
 }
 

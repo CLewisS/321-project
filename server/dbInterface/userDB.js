@@ -36,7 +36,7 @@ module.exports.add = function (user, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(user).length != 5) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
+      if (Object.values(user).length != 3) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
     } catch (err) {
       return console.error(err);
     }
@@ -44,22 +44,11 @@ module.exports.add = function (user, callback) {
       user.username,
       user.password,
       user.deviceToken,
-      // user.servicesPosted,
-      // user.servicesUsed
     ];
     
     // Insert service into database
     var query = `INSERT INTO users (username, password, deviceToken )
                  VALUES(?, ?, ?)`;
-
-                //  create table users (
-                //    userID int unsigned not null auto_increment,
-                //    username varchar(150) not null,
-                //    passward varchar(100) not null unique,
-                //    deviceToken varchar(150) not null,
-                //    servicesPosted 
-                //    primary key (userID)
-                //  );
 
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
@@ -68,7 +57,10 @@ module.exports.add = function (user, callback) {
   
       console.log("Inserted");
 
-      callback({id: results.insertId});
+      callback({
+        username: user.username,
+        password: user.password
+      });
     });
 
 
@@ -97,7 +89,7 @@ module.exports.add = function (user, callback) {
  *   - callback: A callback function that is called once the user have been deleted.
  *               The retrieved user are passed as an argument.
  */
-module.exports.delete = function(userID, callback) {
+module.exports.delete = function(username, callback) {
   console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -109,10 +101,11 @@ module.exports.delete = function(userID, callback) {
     }
 
     console.log("Connected to MySQL server");
-
+    
     // Build SQL query
-    var query = `DELETE FROM users WHERE userID = ` + userID;
-
+    var query = `DELETE FROM users WHERE username = ` + `"` + username + `"`;
+  
+    console.log(query);
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
@@ -154,7 +147,7 @@ module.exports.delete = function(userID, callback) {
  *               The unique identifier of the inserted service is passed as an argument.
  */
 
-module.exports.update = function (userID, user, callback) {
+module.exports.update = function ( user, callback) {
 
   console.log("Adding Service to DB");
 
@@ -171,7 +164,7 @@ module.exports.update = function (userID, user, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(user).length != 5) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
+      if (Object.values(user).length != 3) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
     } catch (err) {
       return console.error(err);
     }
@@ -179,12 +172,10 @@ module.exports.update = function (userID, user, callback) {
       user.username,
       user.password,
       user.deviceToken,
-      // user.servicesPosted,
-      // user.servicesUsed
     ];
     
     // Insert service into database
-    var query = `UPDATE users SET username = ?, password = ?, deviceToken = ? WHERE userID = ` + userID;
+    var query = `UPDATE users SET username = ?, password = ?, deviceToken = ? WHERE username = ` + `"`+ user.username + `"`;
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
@@ -193,9 +184,79 @@ module.exports.update = function (userID, user, callback) {
   
       console.log("Updated");
 
-      callback(results);
+      callback({
+        username: user.username,
+        password: user.password
+      });
     });
 
+
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+
+}; 
+
+
+
+
+
+
+
+
+
+
+module.exports.loginCheck = function (loginInfo, callback) {
+
+  console.log("login check");
+
+
+  var dbConn = mysql.createConnection(dbConfig.userDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    // Get Service Values  
+    try {
+      if (Object.values(loginInfo).length != 3) throw "loginInfo has too few [" + Object.values(loginInfo).length + "] values. loginInfo: " + JSON.stringify(loginInfo);
+    } catch (err) {
+      return console.error(err);
+    }
+    var values = [
+      loginInfo.deviceToken
+    ];
+    
+    // Insert service into database
+    var query1 = `Select password from users where username=`  + `"` + loginInfo.username + `"`;
+
+    dbConn.query(query1, (err, results, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log(results[0].password === loginInfo.password);
+      callback(results[0].password === loginInfo.password);
+    });
+
+    var query2 = `UPDATE users SET deviceToken = ? WHERE username = ` + `"` + loginInfo.username + `"`;
+    console.log(query2);
+    dbConn.query(query2,values, (err, results, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+    });
+   
 
     // End connection
     dbConn.end(function (err) {

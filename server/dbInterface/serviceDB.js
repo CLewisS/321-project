@@ -22,6 +22,7 @@ var dbConfig = require("./dbConfig");
 
 module.exports.add = function (service, callback) {
 
+  
   console.log("Adding Service to DB");
 
 
@@ -37,12 +38,13 @@ module.exports.add = function (service, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(service).length != 8) throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
+      if (Object.values(service).length != 9) throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
     } catch (err) {
       return console.error(err);
     }
     var values = [service.name, 
                   service.date, 
+                  service.dow, 
                   service.time, 
                   service.lat, 
                   service.longi, 
@@ -51,8 +53,8 @@ module.exports.add = function (service, callback) {
                   service.description];
     
     // Insert service into database
-    var query = `INSERT INTO services (name, date, time, lat, longi, owner, type, description)
-                 VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
+    var query = `INSERT INTO services (name, date, dow, time, lat, longi, owner, type, description)
+                 VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
@@ -60,24 +62,22 @@ module.exports.add = function (service, callback) {
       }
   
       console.log("Inserted");
-
+      console.log(results);
       callback({id: results.insertId});
     });
 
+ // End connection
+ dbConn.end(function (err) {
+  if (err) {
+    return console.error("error: " + err.message); 
+  }
 
-    // End connection
-    dbConn.end(function (err) {
-      if (err) {
-        return console.error("error: " + err.message); 
-      }
-  
-      console.log("Closed connection to MySQL server");
-    });
+  console.log("Closed connection to MySQL server");
+});
 
-  });
+});
 
 }; 
-
 
 /* Gets services that meet the given conditions from the service database. 
  *
@@ -260,3 +260,121 @@ module.exports.update = function (serviceID, service, callback) {
   });
 
 }; 
+
+
+
+
+
+
+
+
+module.exports.adduserServices = function (service, insertId, callback) {
+
+  console.log("Adding Service to userDB userServices table.");
+
+
+  var dbConn = mysql.createConnection(dbConfig.userDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    var values = [
+      service.owner,
+      "post",
+      insertId.id
+    ];
+    
+    // Insert service into database
+    var query = `INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)`;
+  
+    dbConn.query(query, values, (err, results, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+  
+      console.log("Inserted");
+
+      callback({id: results.insertId});
+    });
+
+
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+
+}; 
+
+
+
+
+
+
+
+module.exports.receive = function (receiver,serviceID, callback) {
+
+  console.log("Adding Service to userDB userServices table.");
+
+
+  var dbConn = mysql.createConnection(dbConfig.userDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    var values = [
+      receiver,
+      "receive",
+      serviceID
+    ];
+    
+    // Insert service into database
+    var query = `INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)`;
+  
+    dbConn.query(query, values, (err, results, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+  
+      console.log("Inserted");
+
+      callback(results);
+    });
+
+
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+
+}; 
+
+
+
+
+
+
+
+
+

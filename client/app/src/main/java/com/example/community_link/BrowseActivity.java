@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -138,15 +139,33 @@ public class BrowseActivity extends CommunityLinkActivity {
         startActivity(mapActivity);
     }
 
-    public void getThisService(View view){
+    public void getThisService(final View view){
         int index = (Integer) view.getTag();
         ServiceData sd = sdList.get(index);
         int serviceID = sd.getId();
 
-        CharSequence toastMess = "You Got the Service!";
-        Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        Response.Listener useServiceCallback = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                CharSequence toastMess = "You Got the Service!";
+                Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        };
+
+        Response.ErrorListener useServiceErrorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                CharSequence toastMess = "You Did Not Got the Service!";
+                Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        };
+
+        CommunityLinkApp.requestManager.useService("Jiang Zemin",serviceID,useServiceCallback,useServiceErrorCallback);
+
     }
 
     public void getSuggestions(View view) {

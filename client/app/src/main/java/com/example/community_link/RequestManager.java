@@ -34,7 +34,8 @@ public class RequestManager {
 
     private RequestQueue requestQueue;
 
-    private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
+    //private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
+    private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:5150"; // MUST BE SET TO SERVER URL
 
     private static final ArrayList<String> validServiceConditions = new ArrayList<>(Arrays.asList("date-min", "date-max",
             "time-min", "time-max",
@@ -155,6 +156,23 @@ public class RequestManager {
         sendPostRequest("/chat", message, addMessageCallback, addMessageErrorCallback);
     }
 
+    /**
+     *  Add a new user.
+     *
+     * @param user A JSON object containing the user attributes.
+     *                User Attributes: username, password, FCM device token
+     *
+     * @param addUserCallback A callback function for a response.
+     * @param addUserErrorCallback A callback function for an error
+     */
+    public void addUser(JSONObject user, Response.Listener addUserCallback, Response.ErrorListener addUserErrorCallback) {
+        sendPostRequest("/user", user, addUserCallback, addUserErrorCallback);
+    }
+
+    public void authenticateUser(JSONObject user, Response.Listener authUserCallback, Response.ErrorListener authUserErrorCallback) {
+        sendPutRequest("/user", user, authUserCallback, authUserErrorCallback);
+    }
+
     private void sendGetRequest(String endpoint, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
 
         // Formulate the request and handle the response.
@@ -168,6 +186,21 @@ public class RequestManager {
 
     private void sendPostRequest(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, serverUrl + endpoint, body,
+                responseCallback,
+                errorCallback) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        requestQueue.add(request);
+
+    }
+
+    private void sendPutRequest(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, serverUrl + endpoint, body,
                 responseCallback,
                 errorCallback) {
             @Override

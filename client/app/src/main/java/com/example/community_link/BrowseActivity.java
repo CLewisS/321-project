@@ -139,7 +139,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         startActivity(mapActivity);
     }
 
-    public void getThisService(final View view){
+    public void getThisService(View view){
         int index = (Integer) view.getTag();
         ServiceData sd = sdList.get(index);
         int serviceID = sd.getId();
@@ -147,20 +147,14 @@ public class BrowseActivity extends CommunityLinkActivity {
         Response.Listener useServiceCallback = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                CharSequence toastMess = "You Got the Service!";
-                Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                System.out.print("Done");
             }
         };
 
         Response.ErrorListener useServiceErrorCallback = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                CharSequence toastMess = "You Did Not Got the Service!";
-                Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                System.out.print("Died");
             }
         };
 
@@ -392,6 +386,8 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         Button mapButt = serviceView.findViewById(R.id.mapButt2);
         mapButt.setTag(i);
+        Button getButt = serviceView.findViewById(R.id.getThisService);
+        getButt.setTag(i);
 
         return serviceView;
     }

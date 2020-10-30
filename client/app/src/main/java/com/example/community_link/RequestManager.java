@@ -78,6 +78,18 @@ public class RequestManager {
         return queryString.toString();
     }
 
+    public void useService(String username, int serviceID, Response.Listener useServiceCallback, Response.ErrorListener useServiceErrorCallback) {
+        JSONObject userService = new JSONObject();
+        try {
+            userService.put("username", username);
+            userService.put("serviceID", serviceID);
+        }  catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        sendPostRequest("/service/use", userService, useServiceCallback, useServiceErrorCallback);
+    }
+
 
     /**
      *  Gets services that meet the specified conditions.

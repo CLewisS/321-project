@@ -60,4 +60,11 @@
         <item>This year</item>
     </string-array>
 
+    <string-array name="type_array">
+        <item>Other Services</item>
+        <item>Food</item>
+        <item>Housing</item>
+        <item>Selling</item>
+    </string-array>
+
 </resources>

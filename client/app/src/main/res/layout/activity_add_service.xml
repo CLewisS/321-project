@@ -70,15 +70,10 @@
                     android:textColor="#000000"
                     android:textSize="18dp" />
 
-                <EditText
-                    android:id="@+id/etType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:backgroundTint="#FFFFFF"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:shadowColor="#FFFFFF" />
+                <Spinner
+                    android:id="@+id/type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/typeErr"
@@ -228,6 +223,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
+
+
+
                 </LinearLayout>
 
             </LinearLayout>

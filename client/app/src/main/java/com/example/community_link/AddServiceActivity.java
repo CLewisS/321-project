@@ -30,6 +30,7 @@ public class AddServiceActivity extends CommunityLinkActivity {
         setContentView(R.layout.activity_add_service);
 
         initTime();
+        initType();
     }
 
     private void initTime() {
@@ -46,6 +47,14 @@ public class AddServiceActivity extends CommunityLinkActivity {
                 R.array.mins_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         min.setAdapter(adapter);
+    }
+
+    private void initType(){
+        Spinner type = (Spinner) findViewById(R.id.type_spinner);
+        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(this,
+                R.array.type_array, android.R.layout.simple_spinner_item);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        type.setAdapter(typeAdapter);
     }
 
     private int getHour() {
@@ -68,6 +77,11 @@ public class AddServiceActivity extends CommunityLinkActivity {
         }
 
         return Integer.parseInt(min);
+    }
+
+    private String getType(){
+        Spinner typeSpinner = findViewById(R.id.type_spinner);
+        return typeSpinner.getSelectedItem().toString();
     }
 
     private void clearErrs() {
@@ -94,8 +108,7 @@ public class AddServiceActivity extends CommunityLinkActivity {
         EditText titleIn = (EditText) findViewById(R.id.etProjectName);
         String title = titleIn.getText().toString();
 
-        EditText typeIn = (EditText) findViewById(R.id.etType);
-        String type = typeIn.getText().toString();
+        String type = getType();
 
         EditText editDesc = (EditText) findViewById(R.id.etDesc);
         String desc = editDesc.getText().toString();

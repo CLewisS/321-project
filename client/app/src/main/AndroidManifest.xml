@@ -18,21 +18,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".AddServiceActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
-
-        <activity android:name=".BrowseActivity"
-                  android:parentActivityName=".MainActivity">
-        </activity>
-
-        <activity android:name=".ChatActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
-
-        <activity android:name=".MapActivity"></activity>
-
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".SignupActivity" />
+        <activity
+            android:name=".AddServiceActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".BrowseActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ChatActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".MapActivity" />
         <activity android:name=".RequestExample" />
 
         <meta-data

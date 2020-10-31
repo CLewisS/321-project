@@ -167,7 +167,7 @@ public class BrowseActivity extends CommunityLinkActivity {
             }
         };
 
-        CommunityLinkApp.requestManager.useService("Jiang Zemin",serviceID,useServiceCallback,useServiceErrorCallback);
+        CommunityLinkApp.requestManager.useService(CommunityLinkApp.user.getUsername(),serviceID,useServiceCallback,useServiceErrorCallback);
 
     }
 

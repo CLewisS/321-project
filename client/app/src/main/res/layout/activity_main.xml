@@ -53,6 +53,46 @@
             android:textAllCaps="false"
             android:textSize="24sp" />
 
+        <Button
+
+            android:id="@+id/signupActivityButt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="#85ADFF"
+            android:onClick="signup"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp"
+            android:text="Sign up"
+            android:textAllCaps="false"
+            android:textSize="24sp" />
+
+        <Button
+
+            android:id="@+id/loginActivityButt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="#85ADFF"
+            android:onClick="login"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp"
+            android:text="Log in"
+            android:textAllCaps="false"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="deleteUser"
+            android:text="Button" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

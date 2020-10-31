@@ -153,9 +153,9 @@ public class BrowseActivity extends CommunityLinkActivity {
         ServiceData sd = sdList.get(index);
         int serviceID = sd.getId();
 
-        Response.Listener useServiceCallback = new Response.Listener<JSONArray>() {
+        Response.Listener useServiceCallback = new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
                 System.out.print("Done");
             }
         };
@@ -166,8 +166,8 @@ public class BrowseActivity extends CommunityLinkActivity {
                 System.out.print("Died");
             }
         };
-
-        CommunityLinkApp.requestManager.useService(CommunityLinkApp.user.getUsername(),serviceID,useServiceCallback,useServiceErrorCallback);
+        //CommunityLinkApp.user.getUsername()
+        CommunityLinkApp.requestManager.useService("NazoTest",serviceID,useServiceCallback,useServiceErrorCallback);
 
     }
 
@@ -202,7 +202,7 @@ public class BrowseActivity extends CommunityLinkActivity {
             }
         };
 
-        CommunityLinkApp.requestManager.getUserUsedService("Jiang Zemin",
+        CommunityLinkApp.requestManager.getUserUsedService("NazoTest",
                 usedServiceResponse, errorCallback);
 
 
@@ -218,16 +218,13 @@ public class BrowseActivity extends CommunityLinkActivity {
 
             double[] ret = new double[4];
 
-            double currLat = averageLat;
-            double currLong = averageLon;
-
             double latDiff = 5.0 / 111.0;
             System.out.println("LatDiff " + latDiff);
-            ret[LAT_MIN] = currLat - latDiff;
-            ret[LAT_MAX] = currLat + latDiff;
-            double longDiff = 5.0 / (Math.cos(Math.toRadians(currLat)) * 111.0);
-            ret[LONG_MIN] = currLong - longDiff;
-            ret[LONG_MAX] = currLong + longDiff;
+            ret[LAT_MIN] = averageLat - latDiff;
+            ret[LAT_MAX] = averageLat + latDiff;
+            double longDiff = 5.0 / (Math.cos(Math.toRadians(averageLat)) * 111.0);
+            ret[LONG_MIN] = averageLon - longDiff;
+            ret[LONG_MAX] = averageLon + longDiff;
 
             JSONObject conditions = new JSONObject();
             try {

@@ -96,13 +96,8 @@ public class RequestManager {
 
     public void getUserUsedService(String username, Response.Listener usedServiceCallBack, Response.ErrorListener usedServiceError){
         StringBuilder endpoint = new StringBuilder();
-        JSONObject conditions = new JSONObject();
-        try{
-            conditions.put("username",username);
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
-        endpoint.append("/service/use" + conditionsToQueryString(conditions, validServiceConditions));
+
+        endpoint.append("/service/use/use?username=" + username);
         sendGetRequest(endpoint.toString(), usedServiceCallBack, usedServiceError);
     }
 

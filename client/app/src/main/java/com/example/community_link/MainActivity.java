@@ -117,5 +117,15 @@ public class MainActivity extends CommunityLinkActivity {
         startActivity(enterChat);
     }
 
+    public void signup(View view){
+        Intent signup = new Intent(this, SignupActivity.class);
+        startActivity(signup);
+    }
+
+    public void login(View view){
+        Intent login = new Intent(this, LoginActivity.class);
+        startActivity(login);
+    }
+
 
 }

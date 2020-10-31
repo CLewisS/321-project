@@ -11,12 +11,30 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONObject;
 
-public class userProfile {
-    public String id;
+public class UserProfile {
+    public String username;
+    private String password;
     public String deviceToken;
-    public userProfile(String ID){
-        id = ID;
-        deviceToken = "unInitialized";
+    public UserProfile(String username, String password){
+        this.username = username;
+        this.password = password;
+        this.deviceToken = "";
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getDeviceToken() {
+        return this.deviceToken;
+    }
+
+    public boolean equals(UserProfile other) {
+        return this.username.equals(other.getUsername()) && this.password.equals(other.getPassword());
     }
 
     /** The following part is the prototype of Suggestion Service

@@ -1,12 +1,10 @@
 package com.example.community_link;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -25,17 +22,13 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -64,8 +57,8 @@ public class ChatActivity extends CommunityLinkActivity {
 
     //TODO: fix these globals
     //User profiles are to be implemented as App global
-    public userProfile user;
-    public userProfile target;
+    public UserProfile user;
+    public UserProfile target;
     public String lastUpdate = "2020-09-01 12:12:12";
 
     //server IO portal used for chat Backend
@@ -91,8 +84,8 @@ public class ChatActivity extends CommunityLinkActivity {
 
         //setup local user parameters
         //TODO: Config these to use the real runtime data
-        user = new userProfile("else");
-        target = new userProfile("local");
+        user = new UserProfile("else", "password");
+        target = new UserProfile("local", "password");
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -140,7 +133,7 @@ public class ChatActivity extends CommunityLinkActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         chatLog = new ArrayList<chatMessage>();
-        chatAdapter = new chatRecycleViewAdapter(chatLog, user.id);
+        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
         recyclerView.setAdapter(chatAdapter);
 
 //        //TODO: get rid of these inline testing stuff later
@@ -199,7 +192,7 @@ public class ChatActivity extends CommunityLinkActivity {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new chatRecycleViewAdapter(chatLog, user.id);
+        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
 
         int latestChatPosition = 0;
         if(chatLog.size()>0){
@@ -251,8 +244,8 @@ public class ChatActivity extends CommunityLinkActivity {
         //format request message
         JSONObject jsonMessage = new JSONObject();
         try {
-            jsonMessage.put("user1", user.id);
-            jsonMessage.put("user2", target.id);
+            jsonMessage.put("user1", user.username);
+            jsonMessage.put("user2", target.username);
             jsonMessage.put("timestamp", lastUpdate);
             Log.i("JSON", jsonMessage.toString());
 
@@ -287,13 +280,13 @@ public class ChatActivity extends CommunityLinkActivity {
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        chatMessage localMessage = new chatMessage(user.id, target.id, time, message);
+        chatMessage localMessage = new chatMessage(user.username, target.username, time, message);
 
         //send the JSON Message
         JSONObject jsonMessage = new JSONObject();
         try {
-            jsonMessage.put("sender", user.id);
-            jsonMessage.put("recipient", target.id);
+            jsonMessage.put("sender", user.username);
+            jsonMessage.put("recipient", target.username);
             jsonMessage.put("timestamp", time);
             jsonMessage.put("content", message);
             Log.i("JSON", jsonMessage.toString());
@@ -361,7 +354,7 @@ public class ChatActivity extends CommunityLinkActivity {
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new chatRecycleViewAdapter(chatLog, user.id);
+        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
 
         lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
         int latestChatPosition = chatLog.size() - 1;

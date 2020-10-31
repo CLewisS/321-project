@@ -170,7 +170,7 @@ public class RequestManager {
     }
 
     public void authenticateUser(JSONObject user, Response.Listener authUserCallback, Response.ErrorListener authUserErrorCallback) {
-        sendPutRequest("/user", user, authUserCallback, authUserErrorCallback);
+        sendPutRequest("/user/login", user, authUserCallback, authUserErrorCallback);
     }
 
     private void sendGetRequest(String endpoint, Response.Listener responseCallback, Response.ErrorListener errorCallback) {

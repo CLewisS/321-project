@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -30,6 +32,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +43,12 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 public class BrowseActivity extends CommunityLinkActivity {
 
@@ -53,6 +61,7 @@ public class BrowseActivity extends CommunityLinkActivity {
 
     //private userProfile user;
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
+    private List<ServiceData> usedList = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationClient;
     private int size;
     private Location userLoc;
@@ -162,18 +171,26 @@ public class BrowseActivity extends CommunityLinkActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void getSuggestions(View view) {
-        CharSequence toastMess = "Information Not Enough! Take more service before suggesting.";
-        Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-        /*<--Get Suggestion Feature-->*/
-        /*
-        JsonObject suggestion = user.getSuggestion();
-         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
+
+        List<Double> latList = new ArrayList<>();
+        List<Double> lonList = new ArrayList<>();
+        final int[] numUsed = new int[1];
+        usedList.clear();
+
+        Response.Listener usedServiceResponse = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                //add to ArrayList
+                Gson gson = new Gson();
+                for (int index = 0; index < response.length(); index++) {
+                    try {
+                        usedList.add(gson.fromJson(response.getString(index), ServiceData.class));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                numUsed[0] = usedList.size();
             }
         };
 
@@ -185,8 +202,25 @@ public class BrowseActivity extends CommunityLinkActivity {
             }
         };
 
-        CommunityLinkApp.requestManager.getServices(suggestion, getServicesResponseCallback, errorCallback);
-         */
+        CommunityLinkApp.requestManager.getUserUsedService("Jiang Zemin",
+                usedServiceResponse, errorCallback);
+
+
+        if(numUsed[0] > 2){
+            for(ServiceData sd: usedList){
+                latList.add(sd.getLat());
+                lonList.add(sd.getLongi());
+            }
+            OptionalDouble averageLat = latList.stream().mapToDouble(x -> x).average();
+            OptionalDouble averageLon = lonList.stream().mapToDouble(x -> x).average();
+
+        }
+        else {
+            CharSequence toastMess = "Information Not Enough! Take more service before suggesting.";
+            Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     /* HTTP request functions */
@@ -232,7 +266,6 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         CommunityLinkApp.requestManager.getServices(conditions, getServicesResponseCallback, errorCallback);
     }
-
 
     private JSONObject getSearchConditionJSON() {
         EditText serviceSearch = findViewById(R.id.serviceSearch);
@@ -285,7 +318,6 @@ public class BrowseActivity extends CommunityLinkActivity {
         return conditions;
 
     }
-
 
     private String getCurrDate() {
         DateFormat dateForm = new SimpleDateFormat("YYYY-MM-dd");
@@ -422,5 +454,6 @@ public class BrowseActivity extends CommunityLinkActivity {
             });
         }
     }
+
 
 }

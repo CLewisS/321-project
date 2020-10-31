@@ -1,6 +1,7 @@
 package com.example.community_link;
 
 import android.app.Application;
+import android.app.VoiceInteractor;
 import android.media.MediaDrm;
 import android.net.Network;
 import android.util.Log;
@@ -89,6 +90,18 @@ public class RequestManager {
         }
 
         sendPostRequest("/service/use", userService, useServiceCallback, useServiceErrorCallback);
+    }
+
+    public void getUserUsedService(String username, Response.Listener usedServiceCallBack, Response.ErrorListener usedServiceError){
+        StringBuilder endpoint = new StringBuilder();
+        JSONObject conditions = new JSONObject();
+        try{
+            conditions.put("username",username);
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+        endpoint.append("/service/use" + conditionsToQueryString(conditions, validServiceConditions));
+        sendGetRequest(endpoint.toString(), usedServiceCallBack, usedServiceError);
     }
 
 

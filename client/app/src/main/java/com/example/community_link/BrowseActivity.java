@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -63,7 +64,6 @@ public class BrowseActivity extends CommunityLinkActivity {
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
     private List<ServiceData> usedList = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationClient;
-    private int size;
     private Location userLoc;
     private PopupWindow filtersPopup;
     private View filterLayout;
@@ -127,7 +127,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         }
 
         JSONObject conditions = getSearchConditionJSON();
-        getServices(conditions);
+        getServicesBrowse(conditions);
     }
 
     public void filters(View view) {
@@ -152,6 +152,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         int index = (Integer) view.getTag();
         ServiceData sd = sdList.get(index);
         int serviceID = sd.getId();
+        Log.w("get this service", String.valueOf(serviceID));
 
         Response.Listener useServiceCallback = new Response.Listener<JSONObject>() {
             @Override
@@ -166,18 +167,27 @@ public class BrowseActivity extends CommunityLinkActivity {
                 System.out.print("Died");
             }
         };
-        //CommunityLinkApp.user.getUsername()
-        CommunityLinkApp.requestManager.useService("NazoTest",serviceID,useServiceCallback,useServiceErrorCallback);
+
+        CommunityLinkApp.requestManager.useService(CommunityLinkApp.user.getUsername(),serviceID,useServiceCallback,useServiceErrorCallback);
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void getSuggestions(View view) {
+        if(CommunityLinkApp.userLoggedIn()) {
+            getSuggestedServices();
+        } else {
+            CharSequence toastMess = "You are not logged in.";
+            Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+    }
 
-        List<Double> latList = new ArrayList<>();
-        List<Double> lonList = new ArrayList<>();
-        final int[] numUsed = new int[1];
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void getSuggestedServices(){
         usedList.clear();
+        sdList.clear();
 
         Response.Listener usedServiceResponse = new Response.Listener<JSONArray>() {
             @Override
@@ -190,7 +200,16 @@ public class BrowseActivity extends CommunityLinkActivity {
                         e.printStackTrace();
                     }
                 }
-                numUsed[0] = usedList.size();
+
+                if (usedList.size() == 0){
+                    CharSequence toastMess = "Sorry, in order to get suggestions you need to use more services.";
+                    Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                } else {
+                    JSONObject conditions = getSuggestedConditions();
+                    getServicesSuggest(conditions);
+                }
             }
         };
 
@@ -202,59 +221,48 @@ public class BrowseActivity extends CommunityLinkActivity {
             }
         };
 
-        CommunityLinkApp.requestManager.getUserUsedService("NazoTest",
+        CommunityLinkApp.requestManager.getUserUsedService(CommunityLinkApp.user.getUsername(),
                 usedServiceResponse, errorCallback);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private JSONObject getSuggestedConditions() {
+        List<Double> latList = new ArrayList<>();
+        List<Double> lonList = new ArrayList<>();
 
-        if(numUsed[0] > 2){
-            for(ServiceData sd: usedList){
-                latList.add(sd.getLat());
-                lonList.add(sd.getLongi());
+        for (ServiceData sd : usedList) {
+            latList.add(sd.getLat());
+            lonList.add(sd.getLongi());
+        }
+        OptionalDouble lat = latList.stream().mapToDouble(x -> x).average();
+        OptionalDouble lon = lonList.stream().mapToDouble(x -> x).average();
+        double averageLat = lat.isPresent() ? lat.getAsDouble() : 0;
+        double averageLon = lon.isPresent() ? lon.getAsDouble() : 0;
+        int avgDist = 5;
+
+        double[] coords = getCoords(avgDist, averageLat, averageLon);
+
+        JSONObject conditions = new JSONObject();
+        try {
+            if (coords.length == 4) {
+                conditions.put("lat-min", coords[LAT_MIN]);
+                conditions.put("lat-max", coords[LAT_MAX]);
+                conditions.put("longi-min", coords[LONG_MIN]);
+                conditions.put("longi-max", coords[LONG_MAX]);
             }
-            OptionalDouble lat = latList.stream().mapToDouble(x -> x).average();
-            OptionalDouble lon = lonList.stream().mapToDouble(x -> x).average();
-            double averageLat = lat.isPresent() ? lat.getAsDouble() : 0;
-            double averageLon = lon.isPresent() ? lon.getAsDouble() : 0;
 
-            double[] ret = new double[4];
-
-            double latDiff = 5.0 / 111.0;
-            System.out.println("LatDiff " + latDiff);
-            ret[LAT_MIN] = averageLat - latDiff;
-            ret[LAT_MAX] = averageLat + latDiff;
-            double longDiff = 5.0 / (Math.cos(Math.toRadians(averageLat)) * 111.0);
-            ret[LONG_MIN] = averageLon - longDiff;
-            ret[LONG_MAX] = averageLon + longDiff;
-
-            JSONObject conditions = new JSONObject();
-            try {
-                double[] coords = getSpinnerDist();
-                if (coords.length == 4) {
-                    conditions.put("lat-min", ret[LAT_MIN]);
-                    conditions.put("lat-max", ret[LAT_MAX]);
-                    conditions.put("longi-min", ret[LONG_MIN]);
-                    conditions.put("longi-max", ret[LONG_MAX]);
-                }
-
-                String currDate = getCurrDate();
-                conditions.put("date-min", currDate);
-            }catch(JSONException e) {
-                e.printStackTrace();
-            }
-            getServices(conditions);
+            String currDate = getCurrDate();
+            conditions.put("date-min", currDate);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        else {
-            CharSequence toastMess = "Information Not Enough! Take more service before suggesting.";
-            Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }
+        return conditions;
     }
 
     /* HTTP request functions */
 
-    private void getServices(JSONObject conditions) {
+    private void getServicesBrowse(JSONObject conditions) {
         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -266,8 +274,8 @@ public class BrowseActivity extends CommunityLinkActivity {
                         e.printStackTrace();
                     }
                 }
-                size = sdList.size();
-                if (size == 0) {
+
+                if (sdList.size() == 0) {
                     System.out.println("No services");
                     CharSequence errorMess = "Sorry, no services found. Please enter different search criteria";
                     Toast errorToast = Toast.makeText(getApplicationContext(), errorMess, Toast.LENGTH_LONG);
@@ -339,7 +347,6 @@ public class BrowseActivity extends CommunityLinkActivity {
                 conditions.put("time-max", timeMax);
             }
 
-
         }catch(JSONException e) {
             e.printStackTrace();
         }
@@ -359,27 +366,27 @@ public class BrowseActivity extends CommunityLinkActivity {
             Spinner distFilter = filterLayout.findViewById(R.id.distanceFilter);
             String dist = distFilter.getSelectedItem().toString();
 
+            double currLat = userLoc.getLatitude();
+            double currLong = userLoc.getLongitude();
+
             if ("5 km".equals(dist)) {
-                return getCoords(5);
+                return getCoords(5, currLat, currLong);
             } else if ("10 km".equals(dist)) {
-                return getCoords(10);
+                return getCoords(10, currLat, currLong);
             } else if ("15 km".equals(dist)) {
-                return getCoords(15);
+                return getCoords(15, currLat, currLong);
             } else if ("25 km".equals(dist)) {
-                return getCoords(25);
+                return getCoords(25, currLat, currLong);
             } else if ("50 km".equals(dist)) {
-                return getCoords(50);
+                return getCoords(50, currLat, currLong);
             }
         }
 
         return new double[0];
     }
 
-    private double[] getCoords(int dist) {
+    private double[] getCoords(int dist, double currLat, double currLong) {
         double[] ret = new double[4];
-
-        double currLat = userLoc.getLatitude();
-        double currLong = userLoc.getLongitude();
 
         double latDiff = dist / 111.0;
         System.out.println("LatDiff " + latDiff);
@@ -413,6 +420,49 @@ public class BrowseActivity extends CommunityLinkActivity {
         }
 
         return "";
+    }
+
+    private void getServicesSuggest(JSONObject conditions) {
+        Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Gson gson = new Gson();
+                for(int index=0; index<response.length(); index++) {
+                    try {
+                        sdList.add(gson.fromJson(response.getString(index), ServiceData.class));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (sdList.size() == 0) {
+                    System.out.println("No services");
+                    CharSequence errorMess = "Sorry, no suggested services found.";
+                    Toast errorToast = Toast.makeText(getApplicationContext(), errorMess, Toast.LENGTH_LONG);
+                    errorToast.setGravity(Gravity.CENTER, 0, 0);
+                    errorToast.show();
+
+                    LinearLayout serviceResults = findViewById(R.id.serviceResults);
+                    serviceResults.removeAllViews();
+
+                } else {
+                    //Log.w("Suggestions", "Got suggested Services " + sdList);
+                    displayServices();
+                }
+            }
+        };
+
+
+
+        Response.ErrorListener errorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("HTTP response didn't work");
+                System.out.println(error.toString());
+            }
+        };
+
+        CommunityLinkApp.requestManager.getServices(conditions, getServicesResponseCallback, errorCallback);
     }
 
     /* View manipulation functions */
@@ -456,7 +506,7 @@ public class BrowseActivity extends CommunityLinkActivity {
     private void displayServices() {
         LinearLayout serviceResults = findViewById(R.id.serviceResults);
         serviceResults.removeAllViews();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < sdList.size(); i++) {
             View resultView = getServiceResultView(i);
             serviceResults.addView(resultView);
         }

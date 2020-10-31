@@ -95,10 +95,8 @@ public class RequestManager {
     }
 
     public void getUserUsedService(String username, Response.Listener usedServiceCallBack, Response.ErrorListener usedServiceError){
-        StringBuilder endpoint = new StringBuilder();
-
-        endpoint.append("/service/use/use?username=" + username);
-        sendGetRequest(endpoint.toString(), usedServiceCallBack, usedServiceError);
+        String endpoint = "/service/use?username=" + username + "&status=receive";
+        sendGetRequest(endpoint , usedServiceCallBack, usedServiceError);
     }
 
     public void deleteUser(Response.Listener deleteUserCallback, Response.ErrorListener deleteUserErrorCallback) {

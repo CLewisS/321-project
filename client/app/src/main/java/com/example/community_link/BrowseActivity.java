@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -29,6 +32,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +43,12 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 public class BrowseActivity extends CommunityLinkActivity {
 
@@ -52,6 +61,7 @@ public class BrowseActivity extends CommunityLinkActivity {
 
     //private userProfile user;
     private List<ServiceData> sdList = new ArrayList<ServiceData>();
+    private List<ServiceData> usedList = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationClient;
     private int size;
     private Location userLoc;
@@ -138,15 +148,49 @@ public class BrowseActivity extends CommunityLinkActivity {
         startActivity(mapActivity);
     }
 
-    public void getSuggestions(View view) {
-        System.out.println("Getting suggestions");
-        /*<--Get Suggestion Feature-->*/
-        /*
-        JsonObject suggestion = user.getSuggestion();
-         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
+    public void getThisService(View view){
+        int index = (Integer) view.getTag();
+        ServiceData sd = sdList.get(index);
+        int serviceID = sd.getId();
+
+        Response.Listener useServiceCallback = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                //add to ArrayList
+                System.out.print("Done");
+            }
+        };
+
+        Response.ErrorListener useServiceErrorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.print("Died");
+            }
+        };
+
+        CommunityLinkApp.requestManager.useService(CommunityLinkApp.user.getUsername(),serviceID,useServiceCallback,useServiceErrorCallback);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void getSuggestions(View view) {
+
+        List<Double> latList = new ArrayList<>();
+        List<Double> lonList = new ArrayList<>();
+        final int[] numUsed = new int[1];
+        usedList.clear();
+
+        Response.Listener usedServiceResponse = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Gson gson = new Gson();
+                for (int index = 0; index < response.length(); index++) {
+                    try {
+                        usedList.add(gson.fromJson(response.getString(index), ServiceData.class));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                numUsed[0] = usedList.size();
             }
         };
 
@@ -158,8 +202,25 @@ public class BrowseActivity extends CommunityLinkActivity {
             }
         };
 
-        CommunityLinkApp.requestManager.getServices(suggestion, getServicesResponseCallback, errorCallback);
-         */
+        CommunityLinkApp.requestManager.getUserUsedService("Jiang Zemin",
+                usedServiceResponse, errorCallback);
+
+
+        if(numUsed[0] > 2){
+            for(ServiceData sd: usedList){
+                latList.add(sd.getLat());
+                lonList.add(sd.getLongi());
+            }
+            //OptionalDouble averageLat = latList.stream().mapToDouble(x -> x).average();
+            //OptionalDouble averageLon = lonList.stream().mapToDouble(x -> x).average();
+
+        }
+        else {
+            CharSequence toastMess = "Information Not Enough! Take more service before suggesting.";
+            Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     /* HTTP request functions */
@@ -205,7 +266,6 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         CommunityLinkApp.requestManager.getServices(conditions, getServicesResponseCallback, errorCallback);
     }
-
 
     private JSONObject getSearchConditionJSON() {
         EditText serviceSearch = findViewById(R.id.serviceSearch);
@@ -258,7 +318,6 @@ public class BrowseActivity extends CommunityLinkActivity {
         return conditions;
 
     }
-
 
     private String getCurrDate() {
         DateFormat dateForm = new SimpleDateFormat("YYYY-MM-dd");
@@ -359,6 +418,8 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         Button mapButt = serviceView.findViewById(R.id.mapButt2);
         mapButt.setTag(i);
+        Button getButt = serviceView.findViewById(R.id.getThisService);
+        getButt.setTag(i);
 
         return serviceView;
     }
@@ -393,5 +454,6 @@ public class BrowseActivity extends CommunityLinkActivity {
             });
         }
     }
+
 
 }

@@ -16,11 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONObject;
 
 
 public class MainActivity extends CommunityLinkActivity {
@@ -106,6 +110,25 @@ public class MainActivity extends CommunityLinkActivity {
         Intent requestExample = new Intent(this, RequestExample.class);
         startActivity(requestExample);
     }*/
+
+    public void deleteUser(View view) {
+        Response.Listener responseCallback = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("response", response.toString());
+            }
+        };
+
+        Response.ErrorListener errorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("HTTP response didn't work");
+                System.out.println(error.toString());
+            }
+        };
+
+        CommunityLinkApp.requestManager.deleteUser(responseCallback, errorCallback);
+    }
 
     public void browseService(View view){
         Intent browseService = new Intent(this,BrowseActivity.class);

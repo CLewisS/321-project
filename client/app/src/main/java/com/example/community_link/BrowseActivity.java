@@ -211,10 +211,42 @@ public class BrowseActivity extends CommunityLinkActivity {
                 latList.add(sd.getLat());
                 lonList.add(sd.getLongi());
             }
-            OptionalDouble averageLat = latList.stream().mapToDouble(x -> x).average();
-            OptionalDouble averageLon = lonList.stream().mapToDouble(x -> x).average();
+            OptionalDouble lat = latList.stream().mapToDouble(x -> x).average();
+            OptionalDouble lon = lonList.stream().mapToDouble(x -> x).average();
+            double averageLat = lat.isPresent() ? lat.getAsDouble() : 0;
+            double averageLon = lon.isPresent() ? lon.getAsDouble() : 0;
 
+            double[] ret = new double[4];
+
+            double currLat = averageLat;
+            double currLong = averageLon;
+
+            double latDiff = 5.0 / 111.0;
+            System.out.println("LatDiff " + latDiff);
+            ret[LAT_MIN] = currLat - latDiff;
+            ret[LAT_MAX] = currLat + latDiff;
+            double longDiff = 5.0 / (Math.cos(Math.toRadians(currLat)) * 111.0);
+            ret[LONG_MIN] = currLong - longDiff;
+            ret[LONG_MAX] = currLong + longDiff;
+
+            JSONObject conditions = new JSONObject();
+            try {
+                double[] coords = getSpinnerDist();
+                if (coords.length == 4) {
+                    conditions.put("lat-min", ret[LAT_MIN]);
+                    conditions.put("lat-max", ret[LAT_MAX]);
+                    conditions.put("longi-min", ret[LONG_MIN]);
+                    conditions.put("longi-max", ret[LONG_MAX]);
+                }
+
+                String currDate = getCurrDate();
+                conditions.put("date-min", currDate);
+            }catch(JSONException e) {
+                e.printStackTrace();
+            }
+            getServices(conditions);
         }
+
         else {
             CharSequence toastMess = "Information Not Enough! Take more service before suggesting.";
             Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);

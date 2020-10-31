@@ -35,7 +35,7 @@ public class RequestManager {
 
     private RequestQueue requestQueue;
 
-    private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
+    private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:5150"; // MUST BE SET TO SERVER URL
     //private static final String serverUrlNz = "http://nazokunvm.eastus.cloudapp.azure.com:8080";      //For Alex's use only
 
     private static final ArrayList<String> validServiceConditions = new ArrayList<>(Arrays.asList("date-min", "date-max",

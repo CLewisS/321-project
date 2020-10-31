@@ -238,7 +238,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         OptionalDouble lon = lonList.stream().mapToDouble(x -> x).average();
         double averageLat = lat.isPresent() ? lat.getAsDouble() : 0;
         double averageLon = lon.isPresent() ? lon.getAsDouble() : 0;
-        int avgDist = 5;
+        int avgDist = 15;
 
         double[] coords = getCoords(avgDist, averageLat, averageLon);
 

@@ -165,7 +165,8 @@ public class AddServiceActivity extends CommunityLinkActivity {
         } else {
             sd.setTime(hour, minute);
             sd.setEventName(title);
-            sd.setName(CommunityLinkApp.user.getUsername());
+            //sd.setName(CommunityLinkApp.user.getUsername());
+            sd.setName("Test Name");
             sd.setType(type);
             sd.setDescription(desc);
             sd.setLat(userLoc.getLatitude());

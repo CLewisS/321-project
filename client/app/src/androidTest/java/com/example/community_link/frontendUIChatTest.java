@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class HelloWorldEspressoTest {
+public class frontendUIChatTest {
 
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =

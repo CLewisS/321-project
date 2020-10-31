@@ -54,6 +54,10 @@ public class ServiceData implements Serializable{
         this.description = description;
     }
 
+    public void setLongi(double longi){ this.longi = longi;}
+
+    public void setLat(double lat){ this.lat = lat;}
+
     public String toString(){
         return  "ID: " + id + "\n" +
                 "Owner: " + this.owner + "\n" +

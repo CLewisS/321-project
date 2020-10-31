@@ -37,13 +37,12 @@ module.exports.addService = function (req, res) {
 
   
 db.add(service, (id)=>{
+  db.adduserServices(service, id);
     res.json(id);
   })
   //console.log(res);
   
-  // db.adduserServices(service, insertID, (id)=>{
-  //   res.json(id);
-  // })
+  
 
 /*  } else {
   

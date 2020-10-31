@@ -246,7 +246,11 @@ module.exports.loginCheck = function (loginInfo, callback) {
         return console.error(err.message);
       }
       console.log(results[0].password === loginInfo.password);
-      callback(results[0].password === loginInfo.password);
+      if (results[0].password === loginInfo.password){
+        callback(200);
+      }else{
+        callback(401);
+      }
     });
 
     var query2 = `UPDATE users SET deviceToken = ? WHERE username = ` + `"` + loginInfo.username + `"`;

@@ -268,7 +268,7 @@ module.exports.update = function (serviceID, service, callback) {
 
 
 
-module.exports.adduserServices = function (service, insertId, callback) {
+module.exports.adduserServices = function (service, insertId) {
 
   console.log("Adding Service to userDB userServices table.");
 
@@ -288,7 +288,7 @@ module.exports.adduserServices = function (service, insertId, callback) {
       "post",
       insertId.id
     ];
-    
+    console.log(insertId.id);
     // Insert service into database
     var query = `INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)`;
   
@@ -299,7 +299,7 @@ module.exports.adduserServices = function (service, insertId, callback) {
   
       console.log("Inserted");
 
-      callback({id: results.insertId});
+     
     });
 
 

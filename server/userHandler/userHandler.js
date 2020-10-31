@@ -97,7 +97,7 @@ module.exports.loginCheck = function (req, res) {
   
   console.log(loginInfo);
   db.loginCheck(loginInfo , (result)=>{
-    res.json(result);
+    res.send(result);
   })
 
 }

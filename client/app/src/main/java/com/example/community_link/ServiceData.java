@@ -67,7 +67,7 @@ public class ServiceData implements Serializable{
                 "Day of Week: " + this.dow + "\n" +
                 "Type: " + this.type + "\n" +
                 "Description: " + this.description + "\n" +
-                "Coordinate: (" + this.lat + "," + this.longi + ")";
+                "Coordinate: (" + this.lat + "," + this.longi + ")\n";
     }
 
     public double getLongi () {

@@ -1,6 +1,7 @@
 package com.example.community_link;
 
 import android.app.Application;
+import android.app.VoiceInteractor;
 import android.media.MediaDrm;
 import android.net.Network;
 import android.util.Log;
@@ -34,7 +35,9 @@ public class RequestManager {
 
     private RequestQueue requestQueue;
 
-    private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
+    //private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
+    private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:5150"; // MUST BE SET TO SERVER URL
+   // private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
     //private static final String serverUrlNz = "http://nazokunvm.eastus.cloudapp.azure.com:8080";      //For Alex's use only
 
     private static final ArrayList<String> validServiceConditions = new ArrayList<>(Arrays.asList("date-min", "date-max",
@@ -91,6 +94,15 @@ public class RequestManager {
         sendPostRequest("/service/use", userService, useServiceCallback, useServiceErrorCallback);
     }
 
+    public void getUserUsedService(String username, Response.Listener usedServiceCallBack, Response.ErrorListener usedServiceError){
+        String endpoint = "/service/use?username=" + username + "&status=receive";
+        sendGetRequest(endpoint , usedServiceCallBack, usedServiceError);
+    }
+
+    public void deleteUser(Response.Listener deleteUserCallback, Response.ErrorListener deleteUserErrorCallback) {
+        sendDeleteRequest("/user?username=" + CommunityLinkApp.user.getUsername(), new JSONObject(), deleteUserCallback, deleteUserErrorCallback);
+    }
+
 
     /**
      *  Gets services that meet the specified conditions.
@@ -136,6 +148,7 @@ public class RequestManager {
      * @param addServiceErrorCallback A callback function for an error
      */
     public void addService(JSONObject service, Response.Listener addServiceCallback, Response.ErrorListener addServiceErrorCallback) {
+        Log.w("ADD SERVICE", service.toString());
         sendPostRequest("/service", service, addServiceCallback, addServiceErrorCallback);
     }
 
@@ -168,6 +181,23 @@ public class RequestManager {
         sendPostRequest("/chat", message, addMessageCallback, addMessageErrorCallback);
     }
 
+    /**
+     *  Add a new user.
+     *
+     * @param user A JSON object containing the user attributes.
+     *                User Attributes: username, password, FCM device token
+     *
+     * @param addUserCallback A callback function for a response.
+     * @param addUserErrorCallback A callback function for an error
+     */
+    public void addUser(JSONObject user, Response.Listener addUserCallback, Response.ErrorListener addUserErrorCallback) {
+        sendPostRequest("/user", user, addUserCallback, addUserErrorCallback);
+    }
+
+    public void authenticateUser(JSONObject user, Response.Listener authUserCallback, Response.ErrorListener authUserErrorCallback) {
+        sendPutRequest("/user/login", user, authUserCallback, authUserErrorCallback);
+    }
+
     private void sendGetRequest(String endpoint, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
 
         // Formulate the request and handle the response.
@@ -193,7 +223,41 @@ public class RequestManager {
         requestQueue.add(request);
 
     }
-    /* This function is for Alex's use only
+
+    private void sendPutRequest(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, serverUrl + endpoint, body,
+                responseCallback,
+                errorCallback) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        requestQueue.add(request);
+
+    }
+
+    private void sendDeleteRequest(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.DELETE, serverUrl + endpoint, body,
+                responseCallback,
+                errorCallback) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        requestQueue.add(request);
+
+    }
+
+/*
+    private void sendPutRequest(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, serverUrl + endpoint, body,
+     //This function is for Alex's use only
     private void sendPostRequestNz(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, serverUrlNz + endpoint, body,
                 responseCallback,
@@ -206,7 +270,9 @@ public class RequestManager {
         };
 
         requestQueue.add(request);
-    }
 
-     */
+    }
+    }*/
+
+     
 }

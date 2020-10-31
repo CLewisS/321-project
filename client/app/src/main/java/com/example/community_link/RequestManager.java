@@ -35,6 +35,7 @@ public class RequestManager {
     private RequestQueue requestQueue;
 
     private static final String serverUrl = "http://ec2-3-13-46-252.us-east-2.compute.amazonaws.com:8080"; // MUST BE SET TO SERVER URL
+    //private static final String serverUrlNz = "http://nazokunvm.eastus.cloudapp.azure.com:8080";      //For Alex's use only
 
     private static final ArrayList<String> validServiceConditions = new ArrayList<>(Arrays.asList("date-min", "date-max",
             "time-min", "time-max",
@@ -76,6 +77,18 @@ public class RequestManager {
         System.out.println("Query string: " + queryString);
 
         return queryString.toString();
+    }
+
+    public void useService(String username, int serviceID, Response.Listener useServiceCallback, Response.ErrorListener useServiceErrorCallback) {
+        JSONObject userService = new JSONObject();
+        try {
+            userService.put("username", username);
+            userService.put("serviceID", serviceID);
+        }  catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        sendPostRequest("/service/use", userService, useServiceCallback, useServiceErrorCallback);
     }
 
 
@@ -180,4 +193,20 @@ public class RequestManager {
         requestQueue.add(request);
 
     }
+    /* This function is for Alex's use only
+    private void sendPostRequestNz(String endpoint, JSONObject body, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, serverUrlNz + endpoint, body,
+                responseCallback,
+                errorCallback) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+        };
+
+        requestQueue.add(request);
+    }
+
+     */
 }

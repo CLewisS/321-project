@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -138,8 +139,34 @@ public class BrowseActivity extends CommunityLinkActivity {
         startActivity(mapActivity);
     }
 
+    public void getThisService(View view){
+        int index = (Integer) view.getTag();
+        ServiceData sd = sdList.get(index);
+        int serviceID = sd.getId();
+
+        Response.Listener useServiceCallback = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                System.out.print("Done");
+            }
+        };
+
+        Response.ErrorListener useServiceErrorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.print("Died");
+            }
+        };
+
+        CommunityLinkApp.requestManager.useService("Jiang Zemin",serviceID,useServiceCallback,useServiceErrorCallback);
+
+    }
+
     public void getSuggestions(View view) {
-        System.out.println("Getting suggestions");
+        CharSequence toastMess = "Information Not Enough! Take more service before suggesting.";
+        Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
         /*<--Get Suggestion Feature-->*/
         /*
         JsonObject suggestion = user.getSuggestion();
@@ -359,6 +386,8 @@ public class BrowseActivity extends CommunityLinkActivity {
 
         Button mapButt = serviceView.findViewById(R.id.mapButt2);
         mapButt.setTag(i);
+        Button getButt = serviceView.findViewById(R.id.getThisService);
+        getButt.setTag(i);
 
         return serviceView;
     }

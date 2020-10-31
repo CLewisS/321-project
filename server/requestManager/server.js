@@ -25,27 +25,24 @@ var jsonParser = bodyParser.json();
 
 app.use(bodyParser.json());
 
-app.get("/service", serviceHandler.getServices);
+app.route("/service")
+  .get(serviceHandler.getServices)
+  .post(serviceHandler.addService)
+  .put(serviceHandler.updateService)
+  .delete(serviceHandler.deleteService);
 
-app.post("/service", serviceHandler.addService);
+app.route("/service/use")
+  .post(serviceHandler.receiveService)
+  .get(serviceHandler.getReceivedServices);
 
-app.put("/service", serviceHandler.updateService);
+app.route("/chat")
+  .post(chatServer.addMessage)
+  .get(chatServer.getMessages);
 
-app.delete("/service", serviceHandler.deleteService);
-
-app.post("/service/use", serviceHandler.receiveService);
-
-
-app.post("/chat", chatServer.addMessage);
-
-app.get("/chat", chatServer.getMessages);
-
-
-app.post("/user", userHandler.addUser);
-
-app.put("/user", userHandler.updateUser);
-
-app.delete("/user", userHandler.deleteUser);
+app.route("/user")
+  .post(userHandler.addUser)
+  .put(userHandler.updateUser)
+  .delete(userHandler.deleteUser);
 
 app.put("/user/login", userHandler.loginCheck);
 

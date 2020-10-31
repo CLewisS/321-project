@@ -36,7 +36,7 @@ module.exports.add = function (user, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(user).length != 3) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
+      if (Object.values(user).length < 2) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
     } catch (err) {
       return console.error(err);
     }
@@ -215,7 +215,7 @@ module.exports.update = function ( user, callback) {
 
 module.exports.loginCheck = function (loginInfo, callback) {
 
-  console.log("login check");
+  console.log("login check " + JSON.stringify(loginInfo));
 
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -245,9 +245,10 @@ module.exports.loginCheck = function (loginInfo, callback) {
       if (err) {
         return console.error(err.message);
       }
+      console.log(JSON.stringify(loginInfo));
       console.log(results[0].password === loginInfo.password);
       if (results[0].password === loginInfo.password){
-        callback(200);
+        callback({username: loginInfo.username, password: loginInfo.password});
       }else{
         callback(401);
       }

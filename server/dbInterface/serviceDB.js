@@ -342,6 +342,8 @@ module.exports.receive = function (receiver,serviceID, callback) {
       "receive",
       serviceID
     ];
+
+    console.log(values);
     
     // Insert service into database
     var query = `INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)`;

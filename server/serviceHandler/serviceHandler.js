@@ -9,7 +9,6 @@
 //const { S_IFDIR } = require("constants");
 
 
-const { json } = require("body-parser");
 var db = require("../dbInterface/serviceDB.js");
 var reqData = require("./requestData.js");
 
@@ -30,10 +29,10 @@ module.exports.getServices = function (req, res) {
 
 module.exports.addService = function (req, res) {
   console.log("In service handler: add service");
+  console.log("service " + JSON.stringify(req.body));
   
   var service = reqData.getServiceFromReq(req.body);
   var  insertID ;
-  console.log(service);
 
   
 db.add(service, (id)=>{
@@ -111,9 +110,9 @@ module.exports.receiveService = function (req, res) {
   
   var receiveInfo = req.body;
   
-  console.log(receiveInfo);
+  console.log("Body " + JSON.stringify(receiveInfo));
 
-  db.receive(receiveInfo.receiver,receiveInfo.serviceID , (id)=>{
+  db.receive(receiveInfo.username, receiveInfo.serviceID , (id)=>{
     res.json(id);
   })
   

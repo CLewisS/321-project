@@ -19,6 +19,11 @@ module.exports.getServiceFromReq = function(body) {
     service = body;
   }
 
+  if (service.hasOwnProperty("id")) {
+    delete service.id;
+  }
+
+  console.log("get from req " + JSON.stringify(service));
   if (!serviceIsValid(service)) {
     throw "Service is invalid";
   }
@@ -144,31 +149,16 @@ var isCorrectType = function (key, value) {
  * Parameters:
  *    - service: An object which contains all the attribute values to create a service
  */
-module.exports.serviceIsValid = function (service) {
-
-  const keys = Object.keys(service);
-  for(var key of keys){
-    if(!serviceAttributes.includes(key) || !isCorrectType(key, service[key])){
-      return false;
-    }
-  }
-
-  return true;
-}
-
-
-/* Checks if service object properties are valid.
- * Parameters:
- *    - service: An object which contains all the attribute values to create a service
- */
 var serviceIsValid = function (service) {
-
   const keys = Object.keys(service);
   for(var key of keys){
     if(!serviceAttributes.includes(key) || !isCorrectType(key, service[key])){
+  console.log("Is valid " + key);
       return false;
     }
   }
 
   return true;
 }
+
+module.exports.serviceIsValid = serviceIsValid;

@@ -9,10 +9,10 @@ var bodyParser = require("body-parser");
 var app = express();
 var serviceHandler = require("../serviceHandler/serviceHandler.js");
 var userHandler = require("../userHandler/userHandler.js");
-//var chatServer = require("../chatServer/chatServer.js");
+var chatServer = require("../chatServer/chatServer.js");
 
 
-const PORT = 8080;
+const PORT = 5150;
 
 //*******************
 // JUST FOR DEBUGGING
@@ -33,12 +33,12 @@ app.put("/service", serviceHandler.updateService);
 
 app.delete("/service", serviceHandler.deleteService);
 
-app.post("/receiveService", serviceHandler.receiveService);
+app.post("/service/use", serviceHandler.receiveService);
 
 
-// app.post("/chat", chatServer.addMessage);
+app.post("/chat", chatServer.addMessage);
 
-// app.get("/chat", chatServer.getMessages);
+app.get("/chat", chatServer.getMessages);
 
 
 app.post("/user", userHandler.addUser);
@@ -47,7 +47,7 @@ app.put("/user", userHandler.updateUser);
 
 app.delete("/user", userHandler.deleteUser);
 
-app.put("/userlogin", userHandler.loginCheck);
+app.put("/user/login", userHandler.loginCheck);
 
 
 

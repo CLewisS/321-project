@@ -91,13 +91,13 @@ module.exports.updateUser = function (req, res) {
 
 module.exports.loginCheck = function (req, res) {
 
-  console.log("In service handler: check user login.");
+  console.log("In service handler: check user login. " + JSON.stringify(req.body));
   
   var loginInfo = req.body;
   
   console.log(loginInfo);
   db.loginCheck(loginInfo , (result)=>{
-    res.send(result);
+    res.json(result);
   })
 
 }

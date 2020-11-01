@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
@@ -25,6 +26,7 @@ public class frontendAddTest {
     @Test
     public void MainUIChatEntryButtonTest() {
         onView(withId(R.id.browseServiceButt)).perform(click());
+        onView(withId(R.id.browseServiceButt)).check(doesNotExist());
     }
 
 }

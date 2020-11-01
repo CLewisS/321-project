@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -28,7 +29,6 @@ import org.json.JSONObject;
 
 
 public class MainActivity extends CommunityLinkActivity {
-    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private static final String TAG = "MainActivity";
     public static Boolean running;
 
@@ -38,18 +38,60 @@ public class MainActivity extends CommunityLinkActivity {
         setContentView(R.layout.activity_main);
 
         getFCMToken();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         running = true;
+        if(CommunityLinkApp.userLoggedIn()) {
+            setUserView();
+        } else {
+            setIntro();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         running = false;
+    }
+
+    private void setIntro() {
+        TextView welcome = findViewById(R.id.welcome);
+        TextView loginText = findViewById(R.id.loginText);
+        TextView signupText = findViewById(R.id.signupText);
+        Button loginButt = findViewById(R.id.loginButtIntro);
+        Button signupButt = findViewById(R.id.signupButtIntro);
+        Button chatButt = findViewById(R.id.chatEntry_Button);
+        Button delButt = findViewById(R.id.delButt);
+
+        welcome.setVisibility(View.VISIBLE);
+        loginText.setVisibility(View.VISIBLE);
+        loginButt.setVisibility(View.VISIBLE);
+        signupText.setVisibility(View.VISIBLE);
+        signupButt.setVisibility(View.VISIBLE);
+        chatButt.setVisibility(View.GONE);
+        delButt.setVisibility(View.GONE);
+    }
+
+    private void setUserView() {
+        TextView welcome = findViewById(R.id.welcome);
+        TextView loginText = findViewById(R.id.loginText);
+        TextView signupText = findViewById(R.id.signupText);
+        Button loginButt = findViewById(R.id.loginButtIntro);
+        Button signupButt = findViewById(R.id.signupButtIntro);
+        Button chatButt = findViewById(R.id.chatEntry_Button);
+        Button delButt = findViewById(R.id.delButt);
+
+        welcome.setVisibility(View.GONE);
+        loginText.setVisibility(View.GONE);
+        loginButt.setVisibility(View.GONE);
+        signupText.setVisibility(View.GONE);
+        signupButt.setVisibility(View.GONE);
+        chatButt.setVisibility(View.VISIBLE);
+        delButt.setVisibility(View.VISIBLE);
     }
 
     private void getFCMToken() {
@@ -72,44 +114,6 @@ public class MainActivity extends CommunityLinkActivity {
                     }
                 });
     }
-    // Moved to CommunityLinkActivity class
-/*
-    public void toolbarMenu(View view) {
-        CharSequence message = "Sorry, this functionality (menu) isn't implemented yet";
-        Toast toast = Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-
-        LayoutInflater inflater = LayoutInflater.from(this.getBaseContext());
-        View menu = inflater.inflate(R.layout.menu_layout, null);
-        PopupWindow popup = new PopupWindow(menu);
-        popup.showAsDropDown(view);
-        popup.update(325, 500);
-        System.out.println("Should have popped up " + popup.isShowing() + " " + popup.getWidth() + " " + popup.getHeight());
-    }
-
-    public void toolbarProfile(View view) {
-        CharSequence message = "Sorry, this functionality (profile) isn't implemented yet";
-        Toast toast = Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-    }
-
-    public void addService(View view) {
-        Intent addService = new Intent(this, AddService.class);
-        startActivity(addService);
-    }
-
-
-    public void getService(View view) {
-        Intent getService = new Intent(this, GetService.class);
-        startActivity(getService);
-    }
-
-    public void requestExample(View view) {
-        Intent requestExample = new Intent(this, RequestExample.class);
-        startActivity(requestExample);
-    }*/
 
     public void deleteUser(View view) {
         Response.Listener responseCallback = new Response.Listener<JSONObject>() {
@@ -140,9 +144,5 @@ public class MainActivity extends CommunityLinkActivity {
         startActivity(enterChat);
     }
 
-    public void signup(View view){
-        Intent signup = new Intent(this, SignupActivity.class);
-        startActivity(signup);
-    }
 
 }

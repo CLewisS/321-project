@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <include
@@ -15,19 +16,36 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#DEDBFA"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navbar">
 
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:singleLine="false"
+            android:text="Welcome to Community Link!"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            app:srcCompat="@drawable/chainlink5" />
+
         <Button
-            android:id="@+id/button6"
+            android:id="@+id/browseServiceButt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:layout_weight="1"
             android:backgroundTint="#85ADFF"
             android:hint="@string/button_send"
             android:onClick="browseService"
@@ -37,6 +55,47 @@
             android:textAllCaps="false"
             android:textSize="24sp" />
 
+        <TextView
+            android:id="@+id/loginText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="If you already have an account you can log in here:"
+            android:textAlignment="center"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/loginButtIntro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="#85ADFF"
+            android:onClick="loginPopup"
+            android:text="Log in"
+            android:textAllCaps="false"
+            tools:ignore="OnClick" />
+
+        <TextView
+            android:id="@+id/signupText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="If you don't have an account you can create one here:"
+            android:textAlignment="center"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/signupButtIntro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#85ADFF"
+            android:onClick="signupPopup"
+            android:text="Sign up"
+            android:textAllCaps="false"
+            tools:ignore="OnClick" />
+
         <Button
 
             android:id="@+id/chatEntry_Button"
@@ -44,7 +103,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="0dp"
-            android:layout_weight="1"
             android:backgroundTint="#85ADFF"
             android:onClick="enterChat"
             android:paddingTop="32dp"
@@ -54,29 +112,12 @@
             android:textSize="24sp" />
 
         <Button
-
-            android:id="@+id/signupActivityButt"
+            android:id="@+id/delButt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="#85ADFF"
-            android:onClick="signup"
-            android:paddingTop="32dp"
-            android:paddingBottom="32dp"
-            android:text="Sign up"
-            android:textAllCaps="false"
-            android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="deleteUser"
             android:text="Button" />
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

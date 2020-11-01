@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:backgroundTint="#AFA2F1"
         android:minHeight="48dp"
-        android:onClick="signup"
+        android:onClick="signupPopup"
         android:text="Sign up"
         android:textAllCaps="false"
         android:textSize="24sp" />

@@ -15,12 +15,26 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CommunityLinkActivity extends AppCompatActivity {
+    private final int ALL = 0;
+    private final int EXCEPT_NAV = 1;
+    private final int EXCEPT_PROFILE = 2;
+    private final int EXCEPT_SIGNUP = 3;
+    private final int EXCEPT_LOGIN = 4;
+
     private PopupWindow navPopup;
     private PopupWindow profilePopup;
     private PopupWindow loginPopup;
+    private PopupWindow signupPopup;
     private View profileMenu;
     private View loginView;
+    private View signupView;
 
 
     @Override
@@ -31,56 +45,66 @@ public class CommunityLinkActivity extends AppCompatActivity {
         View menu = inflater.inflate(R.layout.menu_layout, null);
         profileMenu = inflater.inflate(R.layout.profile_menu_layout, null);
         loginView = inflater.inflate(R.layout.login_layout, null);
+        signupView = inflater.inflate(R.layout.signup_layout, null);
 
         navPopup = new PopupWindow(menu);
         profilePopup = new PopupWindow(profileMenu);
         loginPopup = new PopupWindow(loginView);
-        clearPopups();
+        signupPopup = new PopupWindow(signupView);
+        clearPopups(ALL);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        clearPopups();
+        clearPopups(ALL);
     }
 
-    private void clearPopups() {
-        if (navPopup.isShowing()) {
+    private void clearPopups(int except) {
+        if (navPopup.isShowing() && except != EXCEPT_NAV) {
             navPopup.dismiss();
         }
 
-        if (profilePopup.isShowing()) {
+        if (profilePopup.isShowing() && except != EXCEPT_PROFILE) {
             profilePopup.dismiss();
         }
 
-        if (loginPopup.isShowing()) {
+        if (loginPopup.isShowing() && except != EXCEPT_LOGIN) {
             loginPopup.dismiss();
             clearLoginErrs();
             clearLoginInput();
         }
+
+        if (signupPopup.isShowing() && except != EXCEPT_SIGNUP) {
+            signupPopup.dismiss();
+            clearSignupErrs();
+            clearSignupInput();
+        }
     }
 
     public void toolbarMenu(View view) {
-        if (navPopup.isShowing()) {
-            navPopup.dismiss();
+        if(navPopup.isShowing()) {
+            clearPopups(ALL);
         } else {
+            clearPopups(EXCEPT_NAV);
+
             navPopup.showAsDropDown(view);
-            navPopup.update(600, 900);
             navPopup.setTouchable(true);
+            navPopup.update(600, 900);
         }
     }
 
     public void toolbarProfile(View view) {
-        if (profilePopup.isShowing()) {
-            profilePopup.dismiss();
+        if(profilePopup.isShowing()) {
+            clearPopups(ALL);
         } else {
+            clearPopups(EXCEPT_PROFILE);
             setProfileMenu();
 
             profilePopup.showAsDropDown(view, -400, 0);
-            profilePopup.update(600, 400);
             profilePopup.setTouchable(true);
+            profilePopup.update(600, 400);
         }
-
     }
 
     private void setProfileMenu() {
@@ -131,28 +155,38 @@ public class CommunityLinkActivity extends AppCompatActivity {
         startActivity(enterChat);
     }
 
-    public void signup(View view){
-        Intent signup = new Intent(this, SignupActivity.class);
-        startActivity(signup);
+    public void signupPopup(View view){
+        if (signupPopup.isShowing()) {
+            clearPopups(ALL);
+        } else {
+            clearPopups(EXCEPT_SIGNUP);
+
+            View navbar = findViewById(R.id.navbar);
+            signupPopup.showAsDropDown(navbar);
+            signupPopup.setTouchable(true);
+            signupPopup.setFocusable(true);
+            signupPopup.update(navbar.getWidth(), 800);
+        }
     }
 
     public void loginPopup(View view){
-        if(profilePopup.isShowing()) {
-            profilePopup.dismiss();
+        if (loginPopup.isShowing()) {
+            clearPopups(ALL);
+        } else {
+            clearPopups(EXCEPT_LOGIN);
+
+            View navbar = findViewById(R.id.navbar);
+            loginPopup.showAsDropDown(navbar);
+            loginPopup.setTouchable(true);
+            loginPopup.setFocusable(true);
+            loginPopup.update(navbar.getWidth(), 600);
         }
-
-        View navbar = findViewById(R.id.navbar);
-        loginPopup.showAsDropDown(navbar);
-        loginPopup.setTouchable(true);
-        loginPopup.setFocusable(true);
-        loginPopup.update(navbar.getWidth(), 600);
-
     }
 
     public void logout(View view){
         CommunityLinkApp.logout();
         Log.w("Log out", "Clearing popups");
-        clearPopups();
+        clearPopups(ALL);
     }
 
     /* Log in popup code */
@@ -208,7 +242,111 @@ public class CommunityLinkActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Some fields have errors.", Toast.LENGTH_SHORT).show();
         } else {
             CommunityLinkApp.login(username, password);
-            clearPopups();
+            clearPopups(ALL);
+        }
+    }
+
+    /* Sign up popup code */
+    private void clearSignupInput() {
+        EditText usernameInput = (EditText) signupView.findViewById(R.id.usernameSignup);
+        EditText pass1 = (EditText) signupView.findViewById(R.id.passwordSignup);
+        EditText pass2 = (EditText) signupView.findViewById(R.id.passwordSignup2);
+
+        usernameInput.setText("");
+        pass1.setText("");
+        pass2.setText("");
+
+    }
+
+    private void clearSignupErrs() {
+        TextView userErr = signupView.findViewById(R.id.userErrSignup);
+        userErr.setText("");
+        TextView passErr = signupView.findViewById(R.id.passErrSignup);
+        passErr.setText("");
+    }
+
+    private boolean setSignupErrs() {
+        EditText usernameInput = (EditText) signupView.findViewById(R.id.usernameSignup);
+        String username = usernameInput.getText().toString();
+
+        EditText pass1 = (EditText) signupView.findViewById(R.id.passwordSignup);
+        String password1 = pass1.getText().toString();
+
+        EditText pass2 = (EditText) signupView.findViewById(R.id.passwordSignup2);
+        String password2 = pass2.getText().toString();
+
+        boolean err = false;
+        clearSignupErrs();
+
+        if (username.isEmpty()) {
+            TextView userErr = signupView.findViewById(R.id.userErrSignup);
+            userErr.setText("Please enter a username.");
+            err = true;
+        }
+
+        TextView passErr = signupView.findViewById(R.id.passErrSignup);
+        if (password1.isEmpty() || password2.isEmpty()) {
+            passErr.setText("Please enter a password and confirmation.");
+            err = true;
+        } else if (!password1.equals(password2)) {
+            passErr.setText("Password and confirmation don't match.");
+            err = true;
+        }
+
+        return err;
+    }
+
+    /* Tries to add user with username and password to the server.
+     * If a user with username already exists it doesn't add the user.
+     */
+    private void addUser() {
+        EditText usernameInput = (EditText) signupView.findViewById(R.id.usernameSignup);
+        final String username = usernameInput.getText().toString();
+
+        EditText pass1 = (EditText) signupView.findViewById(R.id.passwordSignup);
+        String password = pass1.getText().toString();
+
+        try {
+            JSONObject user = new JSONObject();
+            user.put("username", username);
+            user.put("password", password);
+            Response.Listener getServicesResponseCallback = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(getApplicationContext(), "User added successfully.", Toast.LENGTH_SHORT).show();
+                    try {
+                        CommunityLinkApp.login(response.getString("username"), response.getString("password"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+
+            Response.ErrorListener errorCallback = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Username already exists.", Toast.LENGTH_SHORT).show();
+                    System.out.println("HTTP response didn't work");
+                    System.out.println(error.toString());
+                }
+            };
+
+            CommunityLinkApp.requestManager.addUser(user, getServicesResponseCallback, errorCallback);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void signup(View view) {
+
+        if(setSignupErrs()) {
+            Toast.makeText(getApplicationContext(), "Some fields have errors.", Toast.LENGTH_SHORT).show();
+        } else {
+            addUser();
+            clearPopups(ALL);
         }
 
     }

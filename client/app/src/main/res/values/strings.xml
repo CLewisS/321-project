@@ -6,6 +6,11 @@
     <string name="chatSend">Send</string>
     <string name="A_Dev_Placeholder">Place Holder Text</string>
     <string name="chatModule_Title">Begin Chatting</string>
+    <string name="welcome_string">
+        <br>Welcome to Community Link! </br>
+        <br></br>
+        <br>If you already have an account you can login:</br>
+    </string>
 
     <string-array name="hours_array">
         <item>hh</item>

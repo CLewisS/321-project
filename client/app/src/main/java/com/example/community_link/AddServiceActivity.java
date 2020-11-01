@@ -118,7 +118,7 @@ public class AddServiceActivity extends CommunityLinkActivity {
         timeErr.setText("");
     }
 
-    public void submit(View view) {
+    private boolean setErrs() {
         int hour = getHour();
         int minute = getMin();
 
@@ -155,29 +155,48 @@ public class AddServiceActivity extends CommunityLinkActivity {
             TextView timeErr = findViewById(R.id.timeErr);
             timeErr.setText("Please set the time.");
             err = true;
-
         }
 
+        return err;
+    }
 
+    public void submit(View view) {
+        if (CommunityLinkApp.userLoggedIn()) {
+            int hour = getHour();
+            int minute = getMin();
 
-        if (err) {
-            Toast.makeText(getApplicationContext(), "Some fields are missing information.", Toast.LENGTH_SHORT).show();
+            EditText titleIn = (EditText) findViewById(R.id.etProjectName);
+            String title = titleIn.getText().toString();
+
+            String type = getType();
+
+            EditText editDesc = (EditText) findViewById(R.id.etDesc);
+            String desc = editDesc.getText().toString();
+
+            if (setErrs()) {
+                Toast.makeText(getApplicationContext(), "Some fields are missing information.", Toast.LENGTH_SHORT).show();
+            } else {
+                sd.setTime(hour, minute);
+                sd.setEventName(title);
+                //sd.setName(CommunityLinkApp.user.getUsername());
+                sd.setName(CommunityLinkApp.user.getUsername());
+                sd.setType(type);
+                sd.setDescription(desc);
+                sd.setLat(userLoc.getLatitude());
+                sd.setLongi(userLoc.getLongitude());
+
+                picker = (DatePicker) findViewById(R.id.datePicker);
+                sd.setDate(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
+
+                postToServer();
+
+                CharSequence toastMess = "Your service was added!";
+                Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
         } else {
-            sd.setTime(hour, minute);
-            sd.setEventName(title);
-            //sd.setName(CommunityLinkApp.user.getUsername());
-            sd.setName("Test Name");
-            sd.setType(type);
-            sd.setDescription(desc);
-            sd.setLat(userLoc.getLatitude());
-            sd.setLongi(userLoc.getLongitude());
-
-            picker = (DatePicker) findViewById(R.id.datePicker);
-            sd.setDate(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
-
-            postToServer();
-
-            CharSequence toastMess = "Your service was added!";
+            CharSequence toastMess = "You must be logged in to add a service";
             Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();

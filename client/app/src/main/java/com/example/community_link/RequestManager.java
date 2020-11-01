@@ -198,6 +198,10 @@ public class RequestManager {
         sendPutRequest("/user/login", user, authUserCallback, authUserErrorCallback);
     }
 
+    public void updateUser(JSONObject user, Response.Listener updateUserCallback, Response.ErrorListener updateUserErrorCallback) {
+        sendPutRequest("/user", user, updateUserCallback, updateUserErrorCallback);
+    }
+
     private void sendGetRequest(String endpoint, Response.Listener responseCallback, Response.ErrorListener errorCallback) {
 
         // Formulate the request and handle the response.

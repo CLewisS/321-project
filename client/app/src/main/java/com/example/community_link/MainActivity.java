@@ -145,10 +145,4 @@ public class MainActivity extends CommunityLinkActivity {
         startActivity(signup);
     }
 
-    public void login(View view){
-        Intent login = new Intent(this, LoginActivity.class);
-        startActivity(login);
-    }
-
-
 }

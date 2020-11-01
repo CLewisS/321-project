@@ -27,10 +27,12 @@ public class CommunityLinkApp extends Application {
     public static UserProfile user;
     private static boolean loggedIn;
     private static final String TAG = "APP";
+    private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        context = getApplicationContext();
         DiskBasedCache requestCache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
         requestManager = new RequestManager(requestCache);
         loggedIn = false;
@@ -54,6 +56,21 @@ public class CommunityLinkApp extends Application {
     public static void setNewUser(String username, String password) {
         user = new UserProfile(username, password);
         loggedIn = true;
+
+        CharSequence toastMess = "Successfully logged in";
+        Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+
+    public static void removeCurrUser() {
+        user = null;
+        loggedIn = false;
+
+        CharSequence toastMess = "Successfully logged out";
+        Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     /* Used by the login function to check if the username and password are correct
@@ -66,7 +83,7 @@ public class CommunityLinkApp extends Application {
             user.put("password", password);
             user.put("deviceToken", token);
 
-            Response.Listener getServicesResponseCallback = new Response.Listener<JSONObject>() {
+            Response.Listener serverAuthCallback = new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.w(TAG, "User authenticated");
@@ -87,7 +104,37 @@ public class CommunityLinkApp extends Application {
                 }
             };
 
-            CommunityLinkApp.requestManager.authenticateUser(user, getServicesResponseCallback, errorCallback);
+            CommunityLinkApp.requestManager.authenticateUser(user, serverAuthCallback, errorCallback);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void serverLogout(){
+        try {
+            JSONObject userJSON = new JSONObject();
+            userJSON.put("username", user.getUsername());
+            userJSON.put("password", user.getPassword());
+            userJSON.put("deviceToken", "");
+
+            Response.Listener updateUserCallback = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.w(TAG, "User Logged out");
+                    removeCurrUser();
+                }
+            };
+
+            Response.ErrorListener errorCallback = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.w(TAG, "User Log out problem.");
+                    System.out.println("HTTP response didn't work");
+                    System.out.println(error.toString());
+                }
+            };
+
+            CommunityLinkApp.requestManager.updateUser(userJSON, updateUserCallback, errorCallback);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -117,6 +164,14 @@ public class CommunityLinkApp extends Application {
             Log.w(TAG, "Logged in " + user.getUsername() + " " + user.getPassword());
         }
 
+    }
+
+    public static void logout() {
+        if(userLoggedIn()) {
+            serverLogout();
+        } else {
+            Log.w(TAG, "Error: Tried to log out user when no user was logged in.");
+        }
     }
 
 }

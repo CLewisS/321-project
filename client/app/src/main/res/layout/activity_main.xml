@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/navbar"
         layout="@layout/navbar_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include">
+        app:layout_constraintTop_toBottomOf="@+id/navbar">
 
         <Button
             android:id="@+id/button6"
@@ -66,22 +66,6 @@
             android:paddingTop="32dp"
             android:paddingBottom="32dp"
             android:text="Sign up"
-            android:textAllCaps="false"
-            android:textSize="24sp" />
-
-        <Button
-
-            android:id="@+id/loginActivityButt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="#85ADFF"
-            android:onClick="login"
-            android:paddingTop="32dp"
-            android:paddingBottom="32dp"
-            android:text="Log in"
             android:textAllCaps="false"
             android:textSize="24sp" />
 

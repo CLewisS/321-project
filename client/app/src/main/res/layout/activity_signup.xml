@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".SignupActivity">
     <include
-        android:id="@+id/include"
+        android:id="@+id/navbar"
         layout="@layout/navbar_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -75,7 +75,7 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/signupButt"
+            android:id="@+id/menuSignupButt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="signup"

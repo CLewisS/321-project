@@ -160,6 +160,8 @@ public class CommunityLinkActivity extends AppCompatActivity {
             clearPopups(ALL);
         } else {
             clearPopups(EXCEPT_SIGNUP);
+            clearSignupErrs();
+            clearSignupInput();
 
             View navbar = findViewById(R.id.navbar);
             signupPopup.showAsDropDown(navbar);
@@ -174,6 +176,8 @@ public class CommunityLinkActivity extends AppCompatActivity {
             clearPopups(ALL);
         } else {
             clearPopups(EXCEPT_LOGIN);
+            clearLoginErrs();
+            clearLoginInput();
 
             View navbar = findViewById(R.id.navbar);
             loginPopup.showAsDropDown(navbar);

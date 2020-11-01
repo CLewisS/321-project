@@ -148,28 +148,34 @@ public class BrowseActivity extends CommunityLinkActivity {
         startActivity(mapActivity);
     }
 
-    public void getThisService(View view){
-        int index = (Integer) view.getTag();
-        ServiceData sd = sdList.get(index);
-        int serviceID = sd.getId();
-        Log.w("get this service", String.valueOf(serviceID));
+    public void getThisService(View view) {
+        if (CommunityLinkApp.userLoggedIn()) {
+            int index = (Integer) view.getTag();
+            ServiceData sd = sdList.get(index);
+            int serviceID = sd.getId();
+            Log.w("get this service", String.valueOf(serviceID));
 
-        Response.Listener useServiceCallback = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.print("Done");
-            }
-        };
+            Response.Listener useServiceCallback = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    System.out.print("Done");
+                }
+            };
 
-        Response.ErrorListener useServiceErrorCallback = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.print("Died");
-            }
-        };
+            Response.ErrorListener useServiceErrorCallback = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.print("Died");
+                }
+            };
 
-        CommunityLinkApp.requestManager.useService(CommunityLinkApp.user.getUsername(),serviceID,useServiceCallback,useServiceErrorCallback);
-
+            CommunityLinkApp.requestManager.useService(CommunityLinkApp.user.getUsername(), serviceID, useServiceCallback, useServiceErrorCallback);
+        } else {
+            CharSequence toastMess = "Sorry, you must be logged in to RSVP.";
+            Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

@@ -1,6 +1,7 @@
 package com.example.community_link;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,9 @@ import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -241,11 +245,12 @@ public class CommunityLinkActivity extends AppCompatActivity {
 
         EditText pass = (EditText) loginView.findViewById(R.id.passwordLogin);
         String password = pass.getText().toString();
+        String encyPass = encryPassword(password);
 
         if(setLoginErrs()) {
             Toast.makeText(getApplicationContext(), "Some fields have errors.", Toast.LENGTH_SHORT).show();
         } else {
-            CommunityLinkApp.login(username, password);
+            CommunityLinkApp.login(username, encyPass);
             clearPopups(ALL);
         }
     }
@@ -309,11 +314,12 @@ public class CommunityLinkActivity extends AppCompatActivity {
 
         EditText pass1 = (EditText) signupView.findViewById(R.id.passwordSignup);
         String password = pass1.getText().toString();
+        String encyPass = encryPassword(password);
 
         try {
             JSONObject user = new JSONObject();
             user.put("username", username);
-            user.put("password", password);
+            user.put("password", encyPass);
             Response.Listener getServicesResponseCallback = new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -353,5 +359,24 @@ public class CommunityLinkActivity extends AppCompatActivity {
             clearPopups(ALL);
         }
 
+    }
+
+    private String encryPassword(String password) {
+        MessageDigest messageDigest;
+        StringBuilder sb = new StringBuilder(password);
+        sb.append("IHateELEC221");
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(sb.toString().getBytes());
+            byte[] messageDigestMD5 = messageDigest.digest();
+            StringBuffer stringBuffer = new StringBuffer();
+            for (byte bytes : messageDigestMD5) {
+                stringBuffer.append(String.format("%02x", bytes & 0xff));
+            }
+            return stringBuffer.toString();
+        } catch (NoSuchAlgorithmException exception) {
+            exception.printStackTrace();
+        }
+        return "Wrong";
     }
 }

@@ -13,8 +13,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,14 +44,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
-
-public class ChatActivity extends CommunityLinkActivity {
+public class ChatActivity extends CommunityLinkActivity implements AdapterView.OnItemSelectedListener {
     private Button sendButton;
     private EditText userInput;
+
+    private Button addTargetButton;
+    private EditText addTargetInput;
+
+    private Spinner spinner;
+    private List<String> targetNameList;    //Note: first item used as Hint only.
 
     //msg displays
     private RecyclerView recyclerView;
@@ -58,8 +69,9 @@ public class ChatActivity extends CommunityLinkActivity {
     //TODO: fix these globals
     //User profiles are to be implemented as App global
     public UserProfile user;
-    public UserProfile target;
+    public String targetName;
     public String lastUpdate = "2020-09-01 12:12:12";
+    public String chat_target_pick_hint = "History:";
 
     //server IO portal used for chat Backend
     private DiskBasedCache chatNetCache;
@@ -68,8 +80,9 @@ public class ChatActivity extends CommunityLinkActivity {
 
     //a local file storing the chat log
     private List<chatMessage> chatLog;
+    private Map<String, List<chatMessage>> MasterChatLog;
     private File chatLogFile;
-    public String chatDataLogFile = "chatloglocal.tmp";
+    public String chatDataLogFileSuffix = "_chatloglocal.tmp";
 
     //supportives for IO
     private Gson gson;
@@ -83,10 +96,15 @@ public class ChatActivity extends CommunityLinkActivity {
         context = this;
 
         //setup local user parameters
-        //TODO: Config these to use the real runtime data
-        user = new UserProfile("else", "password");
-        target = new UserProfile("local", "password");
+        //TODO: Config these to use the real runtime data... how to get current user profile?
+        user = new UserProfile("currentUserName", "password");
+        targetName = null;
 
+        MasterChatLog = new HashMap<String, List<chatMessage>>();
+        targetNameList = new ArrayList<String>();
+        targetNameList.add(chat_target_pick_hint);
+
+        //Firebase local token update
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -109,7 +127,6 @@ public class ChatActivity extends CommunityLinkActivity {
         chatNetCache = new DiskBasedCache(context.getCacheDir());
         chatPortal = new RequestManager(chatNetCache);
 
-
         //Json library (Gson helper)
         gson = new Gson();
 
@@ -123,25 +140,25 @@ public class ChatActivity extends CommunityLinkActivity {
             @Override
             public void onClick(View v) {
                 String userMessage = userInput.getText().toString();
-                sendMessage(userMessage);
                 userInput.setText("");
+                sendMessage(userMessage);
             }
         });
 
-        //chat view setup
-        recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        chatLog = new ArrayList<chatMessage>();
-        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
-        recyclerView.setAdapter(chatAdapter);
+        //add target input box
+        addTargetInput = findViewById(R.id.edittext_targetbox);
+        addTargetInput.setText("");
 
-//        //TODO: get rid of these inline testing stuff later
-//        //local testing purposes----
-//        chatLog.add(new chatMessage(user.id, target.id, "000", "Hi, this is" + user.id));
-//        chatLog.add(new chatMessage(target.id, user.id, "001", "Hi, this is" + target.id));
-//        //END of TEST----
-
+        //add target confirm button
+        addTargetButton = findViewById(R.id.button_targetbox_apply);
+        addTargetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newTarget = addTargetInput.getText().toString();
+                addTargetInput.setText("");
+                switchToNewTarget(newTarget);
+            }
+        });
     }
 
     @Override
@@ -156,63 +173,46 @@ public class ChatActivity extends CommunityLinkActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(chatLog == null){
-            chatLog = new ArrayList<chatMessage>();
-        }
 
-        //load the past chat log from the app local storage/ create one if not available.
-        chatLogFile = new File(context.getFilesDir(), chatDataLogFile);
-        if(!chatLogFile.exists()){;
-        }else{
-            //if the chatLog cache exists, go read it and populate the chatlog List.
-            try {
-                FileInputStream fin = new FileInputStream(chatLogFile.getPath());
-                InputStreamReader read = new InputStreamReader(fin);
-                BufferedReader buffreader = new BufferedReader (read) ;
-                StringBuilder sb = new StringBuilder();
-                String readString = buffreader.readLine() ;
-                while ( readString != null ) {
-                    sb.append(readString);
-                    readString = buffreader.readLine() ;
-                }
-                read.close();
-                readString = sb.toString();
-                chatMessage[] holder = gson.fromJson(readString, chatMessage[].class);
-                chatLog = new ArrayList<chatMessage>(Arrays.asList(holder));
-            } catch (FileNotFoundException e) {
-                System.out.println("Chat:OnCreate chat log file exists but not recognized");
-                e.printStackTrace();
-            } catch (IOException e) {
-                System.out.println("Chat:OnCreate chat log file exists but IO error-ed");
-                e.printStackTrace();
+        //Guards
+        if(targetNameList == null || targetNameList.size() < 2|| targetNameList.get(1) == null){
+            if(targetName == null){
+                targetName = user.username; //initialization default to user self-Looping on first creation
             }
+            targetNameList = new ArrayList<String>();
+            targetNameList.add(chat_target_pick_hint);
+            targetNameList.add(targetName);
+        }else{
+            targetName = targetNameList.get(1);
         }
 
-        //chat view
-        recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
-
-        int latestChatPosition = 0;
-        if(chatLog.size()>0){
-            lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
-            latestChatPosition = chatLog.size() - 1;
+        //launch chat view
+        chatLog = loadFromFile(targetName);
+        if(MasterChatLog.containsKey(targetName) && MasterChatLog.get(targetName) != null){
+            mergeChat(chatLog, MasterChatLog.get(targetName).toArray(new chatMessage[0]));
         }
-        chatAdapter.notifyItemInserted(latestChatPosition);
-        recyclerView.setAdapter(chatAdapter);
-        recyclerView.smoothScrollToPosition(latestChatPosition);
+        displayNow();
 
         //handles the push notification
         if(getIntent().getStringExtra("pushNdata") != null){
             String newPushedString = getIntent().getStringExtra("pushNdata");
             chatMessage newPushedMessage = gson.fromJson(newPushedString, chatMessage.class);
-            putAndOrder(new chatMessage[]{newPushedMessage});
+            if(newPushedMessage == null){ return;}  //abort on Hard errors
+
+            if(newPushedMessage.sender.equals(targetName)){
+                putAndOrder(new chatMessage[]{newPushedMessage});
+            }else{
+                //update target name list
+                if(!targetNameList.contains(newPushedMessage.sender)){
+                    targetNameList.add(newPushedMessage.sender);
+                }
+                //then insert received message to its chatlog.
+                if(!MasterChatLog.containsKey(newPushedMessage.sender)){
+                    MasterChatLog.put(newPushedMessage.sender, null);
+                }
+                mergeChat(MasterChatLog.get(newPushedMessage.sender),new chatMessage[]{newPushedMessage});
+            }
         }
-        checkForUpdate();
-
-        //push notification setup at last when everything is ready
-
     }
 
     @Override
@@ -228,12 +228,39 @@ public class ChatActivity extends CommunityLinkActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
     }
 
+    //Spinner: callback on user select
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+        if(position == 0){
+            return;
+        }
+        switchToNewTarget(targetNameList.get(position));
+    }
+
+    //Spinner: callback on user abort
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+        return;
+    }
+
+    //Background Message receiving callback
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             chatMessage newMessage = gson.fromJson(intent.getExtras().getString("pushNdata"), chatMessage.class);
             if(newMessage != null){
-                putAndOrder(new chatMessage[]{newMessage});
+                if(newMessage.sender.equals(targetName)){
+                    putAndOrder(new chatMessage[]{newMessage});
+                }else{
+                    //if its an background update
+                    if(!targetNameList.contains(newMessage.sender)){
+                        targetNameList.add(newMessage.sender);
+                    }
+                    if(!MasterChatLog.containsKey(newMessage.sender)){
+                        MasterChatLog.put(newMessage.sender, null);
+                    }
+                    mergeChat(MasterChatLog.get(newMessage.sender), new chatMessage[]{newMessage});
+                }
             }
             intent.removeExtra("pushNdata");
         }
@@ -245,7 +272,7 @@ public class ChatActivity extends CommunityLinkActivity {
         JSONObject jsonMessage = new JSONObject();
         try {
             jsonMessage.put("user1", user.username);
-            jsonMessage.put("user2", target.username);
+            jsonMessage.put("user2", targetName);
             jsonMessage.put("timestamp", lastUpdate);
             Log.i("JSON", jsonMessage.toString());
 
@@ -276,17 +303,17 @@ public class ChatActivity extends CommunityLinkActivity {
     //function to generate and send message as a JSON object to server
     public void sendMessage(String message) {
         //guard for empty sends
-        if(message.equals("") || message.equals(" ")){return;}
+        if(message == null || message.equals("") || message.equals(" ")){return;}
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        chatMessage localMessage = new chatMessage(user.username, target.username, time, message);
+        chatMessage localMessage = new chatMessage(user.username, targetName, time, message);
 
         //send the JSON Message
         JSONObject jsonMessage = new JSONObject();
         try {
             jsonMessage.put("sender", user.username);
-            jsonMessage.put("recipient", target.username);
+            jsonMessage.put("recipient", targetName);
             jsonMessage.put("timestamp", time);
             jsonMessage.put("content", message);
             Log.i("JSON", jsonMessage.toString());
@@ -311,73 +338,112 @@ public class ChatActivity extends CommunityLinkActivity {
             e.printStackTrace();
         }
 
-        //check for server updates
-        //checkForUpdate();
-
         //adding successfully sent message to display
         putAndOrder(new chatMessage[]{localMessage});
     }
 
+    //call this function to switch to an new chat channel specified by newTargetName.
+    public void switchToNewTarget(String newTargetName){
+        //common error cases
+        if(newTargetName == null || newTargetName.equals("")){
+            Toast.makeText(ChatActivity.this, "Chat recipient cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(newTargetName.equals(targetName)){
+            Toast.makeText(ChatActivity.this, "Already on channel with "+targetName, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //save previous session before switching
+        updateLog();
+        //clean up container for background updates
+        MasterChatLog.put(targetName, null);
+
+        //give users a direct sense of switching
+        addTargetInput.setHint(newTargetName);
+        addTargetInput.setText("");
+
+        //add initializations if not exist already
+        if(!targetNameList.contains(newTargetName)){
+            targetNameList.add(newTargetName);
+        }
+        if(!MasterChatLog.containsKey(newTargetName)){
+            MasterChatLog.put(newTargetName, null);
+        }
+
+        //element reSync with new parameters
+        targetName = newTargetName;
+        chatLog = loadFromFile(newTargetName);
+        if(MasterChatLog.containsKey(newTargetName) && MasterChatLog.get(newTargetName) != null){
+            mergeChat(chatLog, MasterChatLog.get(newTargetName).toArray(new chatMessage[0]));
+        }
+        checkForUpdate();
+
+        //launch.
+        displayNow();
+        Toast.makeText(this, "Chatting with: "+ targetName , Toast.LENGTH_SHORT).show();
+    }
+
     //function for properly ordering the chat entries and display them
     public void putAndOrder(chatMessage[] newMessages){
+        mergeChat(chatLog, newMessages);
+        displayNow();
+    }
+
+    //A background Version of PutAndOrder(), for background sorts. Base should already sorted
+    public void mergeChat(List<chatMessage> base, chatMessage[] newMessages){
         if(newMessages == null || newMessages.length == 0){
             return;
         }
 
         ArrayList<chatMessage> receivedMessages = new ArrayList<chatMessage>(Arrays.asList(newMessages));
-        if(chatLog == null){
-            chatLog = new ArrayList<chatMessage>();
+        if(base == null){
+            base = new ArrayList<chatMessage>();
         }
 
-        if(chatLog.size() == 0){
-            chatLog.add(receivedMessages.get(0));
+        if(base.size() == 0){
+            base.add(receivedMessages.get(0));
             receivedMessages.remove(0);
         }
-        for(int j=0; j<chatLog.size(); j++){
+        for(int j=0; j<base.size(); j++){
             for(int i=0; i<receivedMessages.size(); i++){
-                if(receivedMessages.get(i).timestamp.compareTo(chatLog.get(j).timestamp) < 0){
-                    chatLog.add(j, receivedMessages.get(i));
+                if(receivedMessages.get(i).timestamp.compareTo(base.get(j).timestamp) < 0){
+                    if(!receivedMessages.get(i).compactString().equals(base.get(j).compactString())){
+                        base.add(j, receivedMessages.get(i));
+                    }
                     receivedMessages.remove(i);
                     i--;
                 }
             }
-            if(receivedMessages.size() != 0 && j == chatLog.size()-1){
-                chatLog.add(receivedMessages.get(receivedMessages.size()-1));
+            if(receivedMessages.size() != 0 && j == base.size()-1){
+                base.add(receivedMessages.get(receivedMessages.size()-1));
                 receivedMessages.remove(receivedMessages.size()-1);
             }
             if(receivedMessages.size() == 0){
                 break;
             }
         }
-
-        //updateLog();
-        recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
-
-        lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
-        int latestChatPosition = chatLog.size() - 1;
-        chatAdapter.notifyItemInserted(latestChatPosition);
-        recyclerView.setAdapter(chatAdapter);
-        recyclerView.smoothScrollToPosition(latestChatPosition);
     }
 
     //the function used to put current chat history into the local cache
     public void updateLog() {
+        if(targetName == null){
+            System.out.println("Chat: NULL chat target, cache file not needed");
+            return;
+        }
         if(chatLog == null || chatLog.size() == 0){
             System.out.println("Chat: empty chat log, cache file not needed");
             return;
         }
 
-        chatLogFile = new File(context.getFilesDir(), chatDataLogFile);
+        chatLogFile = new File(context.getFilesDir(), targetName + chatDataLogFileSuffix);
         try {
             //Create a new cache file in case of missing
             if(chatLogFile.createNewFile()) System.out.println("Chat: chat log file created");
             else System.out.println("Chat: chat log file found");
 
             //write the chat history to cache file
-            FileOutputStream fout = context.openFileOutput(chatDataLogFile, Context.MODE_PRIVATE);
+            FileOutputStream fout = context.openFileOutput(targetName + chatDataLogFileSuffix, Context.MODE_PRIVATE);
             OutputStreamWriter writer = new OutputStreamWriter(fout);
             writer.write(gson.toJson(chatLog));
             writer.flush();
@@ -391,6 +457,65 @@ public class ChatActivity extends CommunityLinkActivity {
             System.out.println("Chat:updateLog chat log file IO error-ed");
             e.printStackTrace();
         }
+    }
+
+    //load local chatlog file of specified target, returns null if file not exists.
+    public List<chatMessage> loadFromFile(String targetName){
+        List<chatMessage> readFromFile = null;
+
+        chatLogFile = new File(context.getFilesDir(), targetName + chatDataLogFileSuffix);
+        if(chatLogFile.exists()){
+            //if the chatLog cache exists, go read it and populate the chatlog List.
+            try {
+                FileInputStream fin = new FileInputStream(chatLogFile.getPath());
+                InputStreamReader read = new InputStreamReader(fin);
+                BufferedReader buffreader = new BufferedReader (read) ;
+                StringBuilder sb = new StringBuilder();
+                String readString = buffreader.readLine() ;
+                while ( readString != null ) {
+                    sb.append(readString);
+                    readString = buffreader.readLine() ;
+                }
+                read.close();
+                readString = sb.toString();
+                chatMessage[] holder = gson.fromJson(readString, chatMessage[].class);
+                readFromFile = new ArrayList<chatMessage>(Arrays.asList(holder));
+            } catch (FileNotFoundException e) {
+                System.out.println("Chat:OnCreate chat log file exists but not recognized");
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("Chat:OnCreate chat log file exists but IO error-ed");
+                e.printStackTrace();
+            }
+        }
+        return readFromFile;
+    }
+
+    //display using chatlog and configure lastUpdate according to the chatlog
+    public void displayNow(){
+        //guard
+        if(chatLog == null) {chatLog = new ArrayList<chatMessage>();}
+
+        //chat view
+        recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
+
+        int latestChatPosition = 0;
+        if(chatLog.size()>0){
+            lastUpdate = chatLog.get(chatLog.size()-1).timestamp;
+            latestChatPosition = chatLog.size() - 1;
+        }
+        chatAdapter.notifyItemInserted(latestChatPosition);
+        recyclerView.setAdapter(chatAdapter);
+        recyclerView.smoothScrollToPosition(latestChatPosition);
+
+        spinner = (Spinner) findViewById(R.id.chat_Target_spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, targetNameList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setAdapter(adapter);
     }
 
     //this is the supporting function for toolbar "return to main" button

@@ -3,7 +3,6 @@ package com.example.community_link;
 import com.google.gson.Gson;
 
 //a simple strut to hold message info
-//TODO: security private guards?
 public class chatMessage {
     public String sender;
     public String recipient;
@@ -25,6 +24,11 @@ public class chatMessage {
                 "timestamp=" + timestamp + '\n' +
                 "content=" + content + '\n' +
                 '}';
+    }
+
+    //this is optimized for logical comparision, not for human reading.
+    public String compactString(){
+        return timestamp+"_"+content+"_"+recipient+"_"+sender;
     }
 
     public String toJson(){

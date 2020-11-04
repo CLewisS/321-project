@@ -13,14 +13,70 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:id="@+id/layout_targetbox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:minHeight="48dp"
+        android:background="#ffffff"
+        app:layout_constraintTop_toBottomOf="@id/navbar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <Spinner
+            android:id="@+id/chat_Target_spinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:textSize="14sp"
+            android:padding="5dip"
+            android:hint="@string/chatTargetHint"
+            app:layout_constraintLeft_toLeftOf="@id/edittext_targetbox"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edittext_targetbox"
+            android:layout_width="0dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/chatTargetHint"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:maxLines="6" />
+
+        <Button
+            android:id="@+id/button_targetbox_apply"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/chatTargetApply"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/navbar" />
+        app:layout_constraintTop_toBottomOf="@id/layout_targetbox"
+        app:layout_constraintVertical_bias="1.0" />
 
     <View
         android:id="@+id/view"

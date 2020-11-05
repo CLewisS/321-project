@@ -239,7 +239,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
     //Spinner: callback on user abort
     @Override
-    public void onNothingSelected(AdapterView<?> arg0) {}
+    public void onNothingSelected(AdapterView<?> arg0) {
+        //change is if special action on user abort is needed.
+    }
 
     //Background Message receiving callback
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {

@@ -6,3 +6,6 @@ build/
 
 # npm files
 node_modules/
+
+# API Keys
+fcm-key.json

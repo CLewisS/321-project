@@ -36,7 +36,9 @@ module.exports.add = function (user, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(user).length < 2) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
+      if (Object.values(user).length < 2){
+         throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
+        }
     } catch (err) {
       return console.error(err);
     }
@@ -103,9 +105,9 @@ module.exports.delete = function(username, callback) {
     console.log("Connected to MySQL server");
     
     // Build SQL query
-    var query = `DELETE FROM users WHERE username = ` + `"` + username + `"`;
+    var query = "DELETE FROM users WHERE username = " + `"` + username + `"`;
   
-    console.log(query);
+    // console.log(query);
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
@@ -164,8 +166,10 @@ module.exports.update = function ( user, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(user).length != 3) throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
-    } catch (err) {
+      if (Object.values(user).length !== 3) {
+        throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
+      }
+      } catch (err) {
       return console.error(err);
     }
     var values = [
@@ -175,7 +179,7 @@ module.exports.update = function ( user, callback) {
     ];
     
     // Insert service into database
-    var query = `UPDATE users SET username = ?, password = ?, deviceToken = ? WHERE username = ` + `"`+ user.username + `"`;
+    var query = "UPDATE users SET username = ?, password = ?, deviceToken = ? WHERE username = " + `"`+ user.username + `"`;
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
@@ -230,8 +234,10 @@ module.exports.loginCheck = function (loginInfo, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(loginInfo).length != 3) throw "loginInfo has too few [" + Object.values(loginInfo).length + "] values. loginInfo: " + JSON.stringify(loginInfo);
-    } catch (err) {
+      if (Object.values(loginInfo).length !== 3){
+         throw "loginInfo has too few [" + Object.values(loginInfo).length + "] values. loginInfo: " + JSON.stringify(loginInfo);
+      }
+        } catch (err) {
       return console.error(err);
     }
     var values = [
@@ -239,7 +245,7 @@ module.exports.loginCheck = function (loginInfo, callback) {
     ];
     
     // Insert service into database
-    var query1 = `Select password from users where username=`  + `"` + loginInfo.username + `"`;
+    var query1 = "Select password from users where username="  + `"` + loginInfo.username + `"`;
 
     dbConn.query(query1, (err, results, fields) => {
       if (err) {
@@ -254,7 +260,7 @@ module.exports.loginCheck = function (loginInfo, callback) {
       }
     });
 
-    var query2 = `UPDATE users SET deviceToken = ? WHERE username = ` + `"` + loginInfo.username + `"`;
+    var query2 = "UPDATE users SET deviceToken = ? WHERE username = " + `"` + loginInfo.username + `"`;
     console.log(query2);
     dbConn.query(query2,values, (err, results, fields) => {
       if (err) {

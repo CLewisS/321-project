@@ -5,11 +5,28 @@ var stringAttributes = ["name", "date", "dow", "time", "type", "owner", "descrip
 var numberAttributes = ["lat", "longi"];
 var singleValConditions= ["name", "dow", "type", "owner"];
 
-module.exports.getConditionsFromQuery = function(queryString) {
 
-  return createConditionsArray(queryString);
 
-};
+
+
+/* Checks if service object properties are valid.
+ * Parameters:
+ *    - service: An object which contains all the attribute values to create a service
+ */
+var serviceIsValid = function (service) {
+  const keys = Object.keys(service);
+  for(var key of keys){
+    if(!serviceAttributes.includes(key) || !isCorrectType(key, service[key])){
+  console.log("Is valid " + key);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+module.exports.serviceIsValid = serviceIsValid;
+
 
 module.exports.getServiceFromReq = function(body) {
   var service;
@@ -23,7 +40,7 @@ module.exports.getServiceFromReq = function(body) {
     delete service.id;
   }
 
-  console.log("get from req " + JSON.stringify(service));
+  // console.log("get from req " + JSON.stringify(service));
   if (!serviceIsValid(service)) {
     throw "Service is invalid";
   }
@@ -41,7 +58,7 @@ var createConditionString = function(key, conditions){
   var split = key.split("-");
   var attribute = split[0];
 
-  if (split.length == 2) {
+  if (split.length === 2) {
     var comparator = split[1];
   }
 
@@ -112,7 +129,6 @@ var createConditionsArray = function (conditions) {
       var str = createConditionString(key, conditions);
       conditionStrs.push(str);
     } else {
-      console.log("There is something wrong. " + key + " is not a valid key!!")
       throw key + " is not a valid key";
     }
   }
@@ -130,35 +146,27 @@ var isCorrectType = function (key, value) {
 
   if (stringAttributes.includes(key) && typeof(value) != "string") {
 
-    console.log("The value of " + key + " shoulbe be a string, not a " + typeof(value) + "." );
+    // console.log("The value of " + key + " shoulbe be a string, not a " + typeof(value) + "." );
     return false;
 
   } else if (numberAttributes.includes(key) && typeof(value) != "number") {
 
-    console.log("The value of " + key + " shoulbe be a number, not a " + typeof(value) + "." );
+    // console.log("The value of " + key + " shoulbe be a number, not a " + typeof(value) + "." );
     return false;
 
   } 
 
   return true;
 
-}
+};
 
 
-/* Checks if service object properties are valid.
- * Parameters:
- *    - service: An object which contains all the attribute values to create a service
- */
-var serviceIsValid = function (service) {
-  const keys = Object.keys(service);
-  for(var key of keys){
-    if(!serviceAttributes.includes(key) || !isCorrectType(key, service[key])){
-  console.log("Is valid " + key);
-      return false;
-    }
-  }
 
-  return true;
-}
 
-module.exports.serviceIsValid = serviceIsValid;
+
+
+module.exports.getConditionsFromQuery = function(queryString) {
+
+  return createConditionsArray(queryString);
+
+};

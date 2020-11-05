@@ -35,15 +35,12 @@ module.exports.addService = function (req, res) {
   var  insertID ;
 
   
-db.add(service, (id)=>{
+db.add(service, (id) => {
   db.adduserServices(service, id);
     res.json(id);
-  })
-  //console.log(res);
+  });
   
-  
-
-/*  } else {
+  /*  } else {
   
     console.log("This is not a valid object for create a service.");
     res.status(400).json({error: "Service object is invalid"});
@@ -56,7 +53,6 @@ db.add(service, (id)=>{
 
 module.exports.deleteService = function (req, res) {
   console.log("In service handler: delete service");
-  console.log(req.query);
   const id = req.query;
   const keys = Object.keys(id);
   if(keys.length!==1 || keys[0]!=="id"){
@@ -65,8 +61,7 @@ module.exports.deleteService = function (req, res) {
 
   // still need to delete the service in the serviceUser table.
 
-  id_num = parseInt(id[keys[0]]);
-  console.log(id_num);
+  var id_num = parseInt(id[keys[0]],10);
   
   db.delete(id_num, (id) => {
     res.json(id);
@@ -83,13 +78,13 @@ module.exports.deleteService = function (req, res) {
 module.exports.updateService = function (req, res) {
   console.log("In service handler: update service");
   var updateService = req.body;
-  console.log(updateService);
+  // console.log(updateService);
   const keys = Object.keys(req.query);
   if(keys.length!==1 || keys[0]!=="id"){
     throw "The delete service id passed in was wrong.";
   }
 
-  var serviceID = parseInt(req.query["id"]);
+  var serviceID = parseInt(req.query["id"], 10);
   console.log(serviceID);
 
   if(!reqData.serviceIsValid(updateService)){
@@ -110,7 +105,7 @@ module.exports.receiveService = function (req, res) {
   
   var receiveInfo = req.body;
   
-  console.log("Body " + JSON.stringify(receiveInfo));
+  // console.log("Body " + JSON.stringify(receiveInfo));
 
   db.receive(receiveInfo.username, receiveInfo.serviceID , (id)=>{
     res.json(id);

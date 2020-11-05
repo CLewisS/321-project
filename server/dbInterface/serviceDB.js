@@ -38,8 +38,10 @@ module.exports.add = function (service, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(service).length != 9) throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
-    } catch (err) {
+      if (Object.values(service).length !== 9){ 
+        throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
+    }
+  } catch (err) {
       return console.error(err);
     }
     var values = [service.name, 
@@ -103,7 +105,7 @@ module.exports.get = function(conditions, callback) {
     console.log("Connected to MySQL server");
 
     // Build SQL query
-    var query = `SELECT * FROM services WHERE `;
+    var query = "SELECT * FROM services WHERE ";
 
     var sqlConds = conditions;
 
@@ -158,7 +160,7 @@ module.exports.delete = function(serviceID, callback) {
     console.log("Connected to MySQL server");
 
     // Build SQL query
-    var query = `DELETE FROM services WHERE id = ` + serviceID;
+    var query = "DELETE FROM services WHERE id = " + serviceID;
   
     console.log(query);
 
@@ -220,8 +222,10 @@ module.exports.update = function (serviceID, service, callback) {
 
     // Get Service Values  
     try {
-      if (Object.values(service).length != 8) throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
-    } catch (err) {
+      if (Object.values(service).length !== 8){
+         throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
+      }
+        } catch (err) {
       return console.error(err);
     }
     var values = [service.name, 
@@ -290,7 +294,7 @@ module.exports.adduserServices = function (service, insertId) {
     ];
     console.log(insertId.id);
     // Insert service into database
-    var query = `INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)`;
+    var query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {

@@ -7,9 +7,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
-
-import static android.content.ContentValues.TAG;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private LocalBroadcastManager broadcaster;
@@ -53,7 +50,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 return;
             }
 
-            chatMessage newMessage =  new chatMessage(sender, recipient, timestamp, content);
+            ChatMessage newMessage =  new ChatMessage(sender, recipient, timestamp, content);
             Intent intent = new Intent("pushNdata");
             intent.putExtra("pushNdata", newMessage.toJson().toString());
             broadcaster.sendBroadcast(intent);
@@ -67,6 +64,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtra("pushNdata", remoteMessage.getNotification().getBody());
             broadcaster.sendBroadcast(intent);
         }
-        return;
     }
 }

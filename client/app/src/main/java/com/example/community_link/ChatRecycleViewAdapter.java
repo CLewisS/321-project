@@ -4,19 +4,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class chatRecycleViewAdapter extends RecyclerView.Adapter<chatViewHolder> {
-    public List<chatMessage> chatLog;
+public class ChatRecycleViewAdapter extends RecyclerView.Adapter<ChatViewHolder> {
+    public List<ChatMessage> chatLog;
     public String userID;
 
-    public chatRecycleViewAdapter(List<chatMessage> chatLog, String userID) {
+    public ChatRecycleViewAdapter(List<ChatMessage> chatLog, String userID) {
         this.chatLog = chatLog;
         this.userID = userID;
     }
@@ -26,18 +24,18 @@ public class chatRecycleViewAdapter extends RecyclerView.Adapter<chatViewHolder>
     //viewTypes: 0=Receiving; else=Sending
     @Override
     @NonNull
-    public chatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.chat_message_ver2, parent, false);
 
-        return new chatViewHolder(v);
+        return new ChatViewHolder(v);
     }
 
     // Set contents of the Views
     @Override
-    public void onBindViewHolder(chatViewHolder holder, int position) {
-        chatMessage c = this.chatLog.get(position);
+    public void onBindViewHolder(ChatViewHolder holder, int position) {
+        ChatMessage c = this.chatLog.get(position);
         //keep only one of 2 views and set contents to display
         if(c.sender.equals(userID)){
             holder.sentMessage.setText(c.content);

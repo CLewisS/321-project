@@ -79,8 +79,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     MyFirebaseMessagingService pushedMessageServer;
 
     //a local file storing the chat log
-    private List<chatMessage> chatLog;
-    private Map<String, List<chatMessage>> MasterChatLog;
+    private List<ChatMessage> chatLog;
+    private Map<String, List<ChatMessage>> MasterChatLog;
     private File chatLogFile;
     public String chatDataLogFileSuffix = "_chatloglocal.tmp";
 
@@ -100,7 +100,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         user = new UserProfile("currentUserName", "password");
         targetName = null;
 
-        MasterChatLog = new HashMap<String, List<chatMessage>>();
+        MasterChatLog = new HashMap<String, List<ChatMessage>>();
         targetNameList = new ArrayList<String>();
         targetNameList.add(chat_target_pick_hint);
 
@@ -189,18 +189,18 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         //launch chat view
         chatLog = loadFromFile(targetName);
         if(MasterChatLog.containsKey(targetName) && MasterChatLog.get(targetName) != null){
-            mergeChat(chatLog, MasterChatLog.get(targetName).toArray(new chatMessage[0]));
+            mergeChat(chatLog, MasterChatLog.get(targetName).toArray(new ChatMessage[0]));
         }
         displayNow();
 
         //handles the push notification
         if(getIntent().getStringExtra("pushNdata") != null){
             String newPushedString = getIntent().getStringExtra("pushNdata");
-            chatMessage newPushedMessage = gson.fromJson(newPushedString, chatMessage.class);
+            ChatMessage newPushedMessage = gson.fromJson(newPushedString, ChatMessage.class);
             if(newPushedMessage == null){ return;}  //abort on Hard errors
 
             if(newPushedMessage.sender.equals(targetName)){
-                putAndOrder(new chatMessage[]{newPushedMessage});
+                putAndOrder(new ChatMessage[]{newPushedMessage});
             }else{
                 //update target name list
                 if(!targetNameList.contains(newPushedMessage.sender)){
@@ -210,7 +210,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 if(!MasterChatLog.containsKey(newPushedMessage.sender)){
                     MasterChatLog.put(newPushedMessage.sender, null);
                 }
-                mergeChat(MasterChatLog.get(newPushedMessage.sender),new chatMessage[]{newPushedMessage});
+                mergeChat(MasterChatLog.get(newPushedMessage.sender),new ChatMessage[]{newPushedMessage});
             }
         }
     }
@@ -239,18 +239,16 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
     //Spinner: callback on user abort
     @Override
-    public void onNothingSelected(AdapterView<?> arg0) {
-        return;
-    }
+    public void onNothingSelected(AdapterView<?> arg0) {}
 
     //Background Message receiving callback
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            chatMessage newMessage = gson.fromJson(intent.getExtras().getString("pushNdata"), chatMessage.class);
+            ChatMessage newMessage = gson.fromJson(intent.getExtras().getString("pushNdata"), ChatMessage.class);
             if(newMessage != null){
                 if(newMessage.sender.equals(targetName)){
-                    putAndOrder(new chatMessage[]{newMessage});
+                    putAndOrder(new ChatMessage[]{newMessage});
                 }else{
                     //if its an background update
                     if(!targetNameList.contains(newMessage.sender)){
@@ -259,7 +257,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                     if(!MasterChatLog.containsKey(newMessage.sender)){
                         MasterChatLog.put(newMessage.sender, null);
                     }
-                    mergeChat(MasterChatLog.get(newMessage.sender), new chatMessage[]{newMessage});
+                    mergeChat(MasterChatLog.get(newMessage.sender), new ChatMessage[]{newMessage});
                 }
             }
             intent.removeExtra("pushNdata");
@@ -282,7 +280,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 public void onResponse(JSONArray response) {
                     Log.d("response", response.toString());
                     //decode and put newly gotten messages to the chat list
-                    chatMessage[] newMessages = gson.fromJson(response.toString(), chatMessage[].class);
+                    ChatMessage[] newMessages = gson.fromJson(response.toString(), ChatMessage[].class);
                     putAndOrder(newMessages);
                 }
             };
@@ -307,7 +305,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        chatMessage localMessage = new chatMessage(user.username, targetName, time, message);
+        ChatMessage localMessage = new ChatMessage(user.username, targetName, time, message);
 
         //send the JSON Message
         JSONObject jsonMessage = new JSONObject();
@@ -339,7 +337,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
 
         //adding successfully sent message to display
-        putAndOrder(new chatMessage[]{localMessage});
+        putAndOrder(new ChatMessage[]{localMessage});
     }
 
     //call this function to switch to an new chat channel specified by newTargetName.
@@ -375,7 +373,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         targetName = newTargetName;
         chatLog = loadFromFile(newTargetName);
         if(MasterChatLog.containsKey(newTargetName) && MasterChatLog.get(newTargetName) != null){
-            mergeChat(chatLog, MasterChatLog.get(newTargetName).toArray(new chatMessage[0]));
+            mergeChat(chatLog, MasterChatLog.get(newTargetName).toArray(new ChatMessage[0]));
         }
         checkForUpdate();
 
@@ -385,20 +383,20 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     }
 
     //function for properly ordering the chat entries and display them
-    public void putAndOrder(chatMessage[] newMessages){
+    public void putAndOrder(ChatMessage[] newMessages){
         mergeChat(chatLog, newMessages);
         displayNow();
     }
 
     //A background Version of PutAndOrder(), for background sorts. Base should already sorted
-    public void mergeChat(List<chatMessage> base, chatMessage[] newMessages){
+    public void mergeChat(List<ChatMessage> base, ChatMessage[] newMessages){
         if(newMessages == null || newMessages.length == 0){
             return;
         }
 
-        ArrayList<chatMessage> receivedMessages = new ArrayList<chatMessage>(Arrays.asList(newMessages));
+        ArrayList<ChatMessage> receivedMessages = new ArrayList<ChatMessage>(Arrays.asList(newMessages));
         if(base == null){
-            base = new ArrayList<chatMessage>();
+            base = new ArrayList<ChatMessage>();
         }
 
         if(base.size() == 0){
@@ -460,8 +458,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     }
 
     //load local chatlog file of specified target, returns null if file not exists.
-    public List<chatMessage> loadFromFile(String targetName){
-        List<chatMessage> readFromFile = null;
+    public List<ChatMessage> loadFromFile(String targetName){
+        List<ChatMessage> readFromFile = null;
 
         chatLogFile = new File(context.getFilesDir(), targetName + chatDataLogFileSuffix);
         if(chatLogFile.exists()){
@@ -478,8 +476,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 }
                 read.close();
                 readString = sb.toString();
-                chatMessage[] holder = gson.fromJson(readString, chatMessage[].class);
-                readFromFile = new ArrayList<chatMessage>(Arrays.asList(holder));
+                ChatMessage[] holder = gson.fromJson(readString, ChatMessage[].class);
+                readFromFile = new ArrayList<ChatMessage>(Arrays.asList(holder));
             } catch (FileNotFoundException e) {
                 System.out.println("Chat:OnCreate chat log file exists but not recognized");
                 e.printStackTrace();
@@ -494,13 +492,13 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     //display using chatlog and configure lastUpdate according to the chatlog
     public void displayNow(){
         //guard
-        if(chatLog == null) {chatLog = new ArrayList<chatMessage>();}
+        if(chatLog == null) {chatLog = new ArrayList<ChatMessage>();}
 
         //chat view
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new chatRecycleViewAdapter(chatLog, user.username);
+        chatAdapter = new ChatRecycleViewAdapter(chatLog, user.username);
 
         int latestChatPosition = 0;
         if(chatLog.size()>0){

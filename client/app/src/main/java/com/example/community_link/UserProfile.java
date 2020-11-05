@@ -1,5 +1,6 @@
 package com.example.community_link;
 
+/* dev only imports:
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -12,6 +13,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+*/
+
 
 public class UserProfile {
     public String username;

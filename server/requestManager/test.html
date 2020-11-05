@@ -45,6 +45,89 @@
       console.log("Adding service: POST /service");
     }
 
+
+    var update_service = function () {
+
+      const Http = new XMLHttpRequest();
+
+      var originbody = { name: 'A service',
+                   dow: 'Monday',
+                   date: '2020-10-17',
+                   time: '12:57:33',
+                   lat:   49.56911,
+                   longi: 123.456,
+                   owner: 'Brendon',
+                   type:  'food',
+                   description: 'This is a description'
+                 };
+
+      var updatebody = { name: 'A update service',
+                   dow: 'Tuesday',
+                   date: '2020-10-17',
+                   time: '12:57:33',
+                   lat:   49.56911,
+                   longi: 123.456,
+                   owner: 'Brendon',
+                   type:  'study',
+                   description: 'This is a update description'
+                 };
+      // you can change the id here based on your database table
+      Http.open("PUT", '/service?id=2');
+      Http.setRequestHeader('Content-Type', 'application/json');
+      
+      Http.send(JSON.stringify(updatebody));
+      console.log("update service: PUT /service");
+    }
+
+
+
+    var delete_service = function () {
+
+      const Http = new XMLHttpRequest();
+      
+      Http.open("DELETE", '/service?id=1');
+      Http.send();
+
+      console.log("Getting services: GET /service");
+    }
+
+
+
+    var receive_service = function () {
+
+          const Http = new XMLHttpRequest();
+
+          var body = { receiver: "brendon",
+                       serviceID:10
+                    };
+      
+          Http.open("POST", '/receiveService');
+          Http.setRequestHeader('Content-Type', 'application/json');
+          
+          Http.send(JSON.stringify(body));
+          //Http.send(body);
+          console.log("Adding service: POST /receiveService");
+        }
+
+    var drop_service = function () {
+
+          const Http = new XMLHttpRequest();
+
+          var body = { receiver: "brendon",
+                       serviceID:10
+                    };
+      
+          Http.open("POST", '/dropService');
+          Http.setRequestHeader('Content-Type', 'application/json');
+          
+          Http.send(JSON.stringify(body));
+          //Http.send(body);
+          console.log("Adding service: POST /receiveService");
+        }
+
+
+
+
     var get_new_messages = function () {
 
        const Http = new XMLHttpRequest();
@@ -70,13 +153,88 @@
 
       console.log("Adding message: POST /chat");
     }
+
+
+
+
+     var add_user = function () {
+
+      const Http = new XMLHttpRequest();
+
+      var body = {
+              username: "brendon",
+              password: "brendon20000522",
+              deviceToken:"this is a device",
+                 };
+  
+      Http.open("POST", '/user');
+      Http.setRequestHeader('Content-Type', 'application/json');
+      
+      Http.send(JSON.stringify(body));
+      console.log("Adding user: POST /service");
+    }
+
+
+     var delete_user = function () {
+
+       const Http = new XMLHttpRequest();
+      
+      Http.open("DELETE", '/user?username=brendon');
+      Http.send();
+
+      console.log("Getting user: GET /user");
+    }
+
+
+    var update_user = function () {
+
+      const Http = new XMLHttpRequest();
+
+      var updatebody = { 
+              username: "brendon",
+              password: "newpassword3",
+              deviceToken:"this is a device"
+                 };
+      // you can change the id here based on your database table
+      Http.open("PUT", '/user');
+      Http.setRequestHeader('Content-Type', 'application/json');
+      
+      Http.send(JSON.stringify(updatebody));
+      console.log("update user: PUT /user");
+    }
+
+
+  var user_login = function () {
+
+      const Http = new XMLHttpRequest();
+
+      var loginInfo = { 
+              username: "brendon",
+              password: "newpass3453453",
+              deviceToken:"new device1"
+                 };
+      // you can change the id here based on your database table
+      Http.open("PUT", '/userlogin');
+      Http.setRequestHeader('Content-Type', 'application/json');
+      
+      Http.send(JSON.stringify(loginInfo));
+      console.log("update user: PUT /user");
+    }
   
   </script>
 
   <button onclick='get_services()'> Get Services </button>
   <button onclick='add_service()'> Add Service </button>
+  <button onclick='update_service()'> Update Services </button>
+  <button onclick='delete_service()'> Delete Service </button>
+  <button onclick='receive_service()'> Receive Service </button>
   <button onclick='get_new_messages()'> Get Messages </button>
   <button onclick='add_message()'> Add Message </button>
+  <button onclick='add_user()'> Add User </button>
+  <button onclick='delete_user()'> Delete User </button>
+  <button onclick='update_user()'> Update User </button>
+  <button onclick='user_login()'> Check Login </button>
+
 
 </body>
 </html>

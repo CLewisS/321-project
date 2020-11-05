@@ -8,10 +8,11 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 var serviceHandler = require("../serviceHandler/serviceHandler.js");
+var userHandler = require("../userHandler/userHandler.js");
 var chatServer = require("../chatServer/chatServer.js");
 
 
-const PORT = 8080;
+const PORT = 5150;
 
 //*******************
 // JUST FOR DEBUGGING
@@ -24,13 +25,27 @@ var jsonParser = bodyParser.json();
 
 app.use(bodyParser.json());
 
-app.get("/service", serviceHandler.getServices);
+app.route("/service")
+  .get(serviceHandler.getServices)
+  .post(serviceHandler.addService)
+  .put(serviceHandler.updateService)
+  .delete(serviceHandler.deleteService);
 
-app.post("/service", serviceHandler.addService);
+app.route("/service/use")
+  .post(serviceHandler.receiveService)
+  .get(serviceHandler.getReceivedServices);
 
-app.post("/chat", chatServer.addMessage);
+app.route("/chat")
+  .post(chatServer.addMessage)
+  .get(chatServer.getMessages);
 
-app.get("/chat", chatServer.getMessages);
+app.route("/user")
+  .post(userHandler.addUser)
+  .put(userHandler.updateUser)
+  .delete(userHandler.deleteUser);
+
+app.put("/user/login", userHandler.loginCheck);
+
 
 
 app.listen(PORT, () => console.log("Listening on port " + PORT));

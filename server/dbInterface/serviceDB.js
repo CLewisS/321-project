@@ -68,16 +68,16 @@ module.exports.add = function (service, callback) {
       callback({id: results.insertId});
     });
 
- // End connection
- dbConn.end(function (err) {
-  if (err) {
-    return console.error("error: " + err.message); 
-  }
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
 
-  console.log("Closed connection to MySQL server");
-});
+      console.log("Closed connection to MySQL server");
+    });
 
-});
+  });
 
 }; 
 
@@ -187,13 +187,6 @@ module.exports.delete = function(serviceID, callback) {
 };
 
 
-
-
-
-
-
-
-
 /* Update a service in the services database
  *
  * Parameters:
@@ -266,12 +259,6 @@ module.exports.update = function (serviceID, service, callback) {
 }; 
 
 
-
-
-
-
-
-
 module.exports.adduserServices = function (service, insertId) {
 
   console.log("Adding Service to userDB userServices table.");
@@ -319,11 +306,6 @@ module.exports.adduserServices = function (service, insertId) {
   });
 
 }; 
-
-
-
-
-
 
 
 module.exports.receive = function (receiver,serviceID, callback) {
@@ -377,9 +359,103 @@ module.exports.receive = function (receiver,serviceID, callback) {
 }; 
 
 
+module.exports.getReceivedIDs = function(conditions, callback) {
+
+  console.log("Getting received services from DB");
+
+  var dbConn = mysql.createConnection(dbConfig.userDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    // Build SQL query
+    var query = `SELECT * FROM userServices WHERE `;
+
+    var sqlConds = conditions;
+
+    query += sqlConds.join(" AND ");
+  
+    console.log(query);
+
+    // Get services
+    dbConn.query(query, (err, result, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+  
+      callback(result);
+    });
+
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+};
 
 
+/* Gets services that meet the given conditions from the service database. 
+ *
+ * Parameters:
+ *   - conditions: id values of the services that should be returned. 
+ *                 Must be a JSON object where each key is an attribute, 
+ *
+ *   - callback: A callback function that is called once the services have been retrieved.
+ *               The retrieved services are passed as an argument.
+ */
+module.exports.getReceivedServices = function(conditions, callback) {
+  console.log("Getting Services from DB");
 
+  var dbConn = mysql.createConnection(dbConfig.serviceDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    // Build SQL query
+    var query = `SELECT * FROM services WHERE `;
+
+    var sqlConds = conditions;
+
+    query += sqlConds.join(" OR ");
+  
+    console.log(query);
+
+    // Get services
+    dbConn.query(query, (err, result, fields) => {
+      if (err) {
+        return console.error(err.message);
+      }
+  
+      callback(result);
+    });
+
+    // End connection
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+
+};
 
 
 

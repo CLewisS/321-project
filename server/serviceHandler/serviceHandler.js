@@ -5,9 +5,6 @@
  *   - addService:  Adds the new service from the HTTP request. 
  */
 
-//const { log, Console } = require("console");
-//const { S_IFDIR } = require("constants");
-
 
 var db = require("../dbInterface/serviceDB.js");
 var reqData = require("./requestData.js");
@@ -50,7 +47,6 @@ db.add(service, (id) => {
 };
 
 
-
 module.exports.deleteService = function (req, res) {
   console.log("In service handler: delete service");
   const id = req.query;
@@ -68,11 +64,6 @@ module.exports.deleteService = function (req, res) {
   });
  
 };
-
-
-
-
-
 
 
 module.exports.updateService = function (req, res) {
@@ -98,8 +89,6 @@ module.exports.updateService = function (req, res) {
 };
 
 
-
-
 module.exports.receiveService = function (req, res) {
   console.log("In service handler: receive service");
   
@@ -121,4 +110,24 @@ module.exports.receiveService = function (req, res) {
 
 };
 
+
+module.exports.getReceivedServices = function (req, res) {
+  console.log("In service handler: get received services");
+  console.log("query: " + JSON.stringify(req.query));
+
+  var conditions = ["username='" + req.query.username + "'", "status='" + req.query.status + "'"];
+
+  db.getReceivedIDs(conditions, (services) => {
+    console.log("Used services: " + JSON.stringify(services));
+    var conditions = [];
+    for(service of services) {
+      conditions.push("id=" + service.serviceID);
+    }
+
+    db.getReceivedServices(conditions, (services) => { 
+	    console.log("Got " + JSON.stringify(services));
+      res.json(services);
+    });
+  });
+}
 

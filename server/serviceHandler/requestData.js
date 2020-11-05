@@ -1,9 +1,9 @@
 
 var serviceAttributes = ["name", "date", "dow", "time", "lat", "longi", "type", "owner", "description"];
-var searchConditions = ["name", "date", "dow", "time", "lat", "longi", "type", "owner"];
+var searchConditions = ["id", "name", "date", "dow", "time", "lat", "longi", "type", "owner"];
 var stringAttributes = ["name", "date", "dow", "time", "type", "owner", "description"];
-var numberAttributes = ["lat", "longi"];
-var singleValConditions= ["name", "dow", "type", "owner"];
+var numberAttributes = ["id", "lat", "longi"];
+var singleValConditions= ["id", "name", "dow", "type", "owner"];
 
 
 

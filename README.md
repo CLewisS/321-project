@@ -14,9 +14,9 @@ Handling of the received messages is done in the method *onMessageReceived* in t
 
 #### User Info
 -   User Attributes:
-      -   username (string): The User Name of the user. It must be unique.
-      -   password (string): The password of the user account.
-      -   deviceToken (string): The users current FCM device registration token.
+    -   username (string): The User Name of the user. It must be unique.
+    -   password (string): The password of the user account.
+    -   deviceToken (string): The users current FCM device registration token.
       
 
 #### HTTP Request Methods
@@ -96,7 +96,7 @@ in your browser.
 
 7.  `USE services;`
 
-8.  
+8.   See the code below
 ```
 CREATE TABLE services (
   id INT unsigned NOT NULL AUTO_INCREMENT,
@@ -113,12 +113,9 @@ CREATE TABLE services (
 ```
 
 9.  `CREATE DATABASE chat;`
-
-10.  `USE chat;`
-
-11.  `CREATE TABLE threads (thread VARCHAR(150) NOT NULL, numMess INT unsigned NOT NULL, PRIMARY KEY (thread));`
-
-12.  `CREATE TABLE messages (id VARCHAR(160) NOT NULL, time TIMESTAMP NOT NULL, content TEXT NOT NULL, PRIMARY KEY (id));`
+10. `USE chat;`
+11. `CREATE TABLE threads (thread VARCHAR(150) NOT NULL, numMess INT unsigned NOT NULL, PRIMARY KEY (thread));`
+12. `CREATE TABLE messages (id VARCHAR(160) NOT NULL, time TIMESTAMP NOT NULL, content TEXT NOT NULL, PRIMARY KEY (id));`
 
 ### Database notes
 

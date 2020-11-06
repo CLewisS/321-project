@@ -476,7 +476,10 @@ public class BrowseActivity extends CommunityLinkActivity {
                     serviceResults.removeAllViews();
 
                 } else {
-                    //Log.w("Suggestions", "Got suggested Services " + sdList);
+                    CharSequence message = "Based on your history, we suggest these services.";
+                    Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                     displayServices();
                 }
             }

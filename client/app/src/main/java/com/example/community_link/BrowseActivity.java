@@ -235,10 +235,14 @@ public class BrowseActivity extends CommunityLinkActivity {
     private JSONObject getSuggestedConditions() {
         List<Double> latList = new ArrayList<>();
         List<Double> lonList = new ArrayList<>();
+        List<String> timeList = new ArrayList<>();
+        List<Integer> hourList = new ArrayList<>();
+        List<Integer> minList = new ArrayList<>();
 
         for (ServiceData sd : usedList) {
             latList.add(sd.getLat());
             lonList.add(sd.getLongi());
+            timeList.add(sd.getTime());
         }
         OptionalDouble lat = latList.stream().mapToDouble(x -> x).average();
         OptionalDouble lon = lonList.stream().mapToDouble(x -> x).average();
@@ -247,6 +251,23 @@ public class BrowseActivity extends CommunityLinkActivity {
         int avgDist = 15;
 
         double[] coords = getCoords(avgDist, averageLat, averageLon);
+
+        for(String time:timeList){
+            hourList.add(Integer.parseInt(time.split(":")[0]));
+            minList.add(Integer.parseInt(time.split(":")[1]));
+        }
+        OptionalDouble ho = hourList.stream().mapToDouble(x -> x).average();
+        OptionalDouble mi = minList.stream().mapToDouble(x -> x).average();
+
+        int avgHour = ho.isPresent() ? (int) Math.round(ho.getAsDouble()) : 0;
+        int avgMin = mi.isPresent() ? (int) Math.round(mi.getAsDouble()) : 0;
+        int timeDiff = 12;                                                   //min search time difference;
+
+        int minHour = Math.max(avgHour - timeDiff / 2, 0);
+        int maxHour = Math.min(avgHour + timeDiff / 2, 24);
+
+        String timeMin = minHour + ":" + avgMin;
+        String timeMax = maxHour + ":" + avgMin;
 
         JSONObject conditions = new JSONObject();
         try {
@@ -259,6 +280,9 @@ public class BrowseActivity extends CommunityLinkActivity {
 
             String currDate = getCurrDate();
             conditions.put("date-min", currDate);
+            conditions.put("time-min",timeMin);
+            conditions.put("time-max", timeMax);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

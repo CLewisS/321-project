@@ -96,8 +96,8 @@ in your browser.
 
 7.  `USE services;`
 
-8.   See the code below
-```
+8.  See the code below
+``` sql
 CREATE TABLE services (
   id INT unsigned NOT NULL AUTO_INCREMENT,
   name VARCHAR(150) NOT NULL,

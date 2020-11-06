@@ -181,7 +181,7 @@ public class BrowseActivity extends CommunityLinkActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void getSuggestions(View view) {
         if(CommunityLinkApp.userLoggedIn()) {
-            getSuggestedServices();
+            getUsedServices();
         } else {
             CharSequence toastMess = "You are not logged in.";
             Toast toast = Toast.makeText(view.getContext(), toastMess, Toast.LENGTH_SHORT);
@@ -191,7 +191,7 @@ public class BrowseActivity extends CommunityLinkActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void getSuggestedServices(){
+    private void getUsedServices(){
         usedList.clear();
         sdList.clear();
 

@@ -507,7 +507,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         String date = sd.getDate().split("T")[0];
         String [] dateSplit = date.split("-");
         String dow = sd.getDow();
-        String month = new DateFormatSymbols().getMonths()[Integer.parseInt(dateSplit[1])-1];;
+        String month = new DateFormatSymbols().getMonths()[Integer.parseInt(dateSplit[1])-1];
         String day = dateSplit[2];
         String year = dateSplit[0];
         String time = sd.getTime();

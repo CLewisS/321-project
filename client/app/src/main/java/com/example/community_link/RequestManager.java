@@ -1,24 +1,16 @@
 package com.example.community_link;
 
-import android.app.Application;
-import android.app.VoiceInteractor;
-import android.media.MediaDrm;
-import android.net.Network;
 import android.util.Log;
 
-import androidx.constraintlayout.solver.Cache;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.JsonArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;

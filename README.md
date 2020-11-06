@@ -41,14 +41,14 @@ Handling of the received messages is done in the method *onMessageReceived* in t
     `{date: {min: '2020-10-15', max: '2020-11-15'}, lat: {min: 49.3456}, longi: {max: 123.456}}`
 
   - POST /chat: Add a new message. Must contain a JSON object with users, timestamp, and content.
-    - Message Attributes:
+    -   Message Attributes:
         - sender (string): The user id of the sender
         - reciever (string): The user id of the reciever
         - timestamp (string): The time that the message was sent. Format 'YYYY-MM-DD hh:mm:ss'
         - content (string): The message content.
 
   - GET /chat: Get messages.
-    - conditions:
+    -   conditions:
         - user1 (string): One of the users involved in the message.
         - user2 (string): The other user involved in the message.
         - newest (int): The newest message to retrieve from the thread (the first message ever sent between these two users is 1, the second is 2, etc.). 
@@ -57,23 +57,23 @@ Handling of the received messages is done in the method *onMessageReceived* in t
 ![](imgs/server_modules.png?raw=true)
 
 ### Server Setup
- 1. Install [Nodejs](https://nodejs.org/en/download/)
+1. Install [Nodejs](https://nodejs.org/en/download/)
  
- 2. Clone repo
+2. Clone repo
  
- 3. navigate to *server/dbInterface*
+3. navigate to *server/dbInterface*
  
- 4. Run `npm install` in the command line
+4. Run `npm install` in the command line
  
- 5. Navigate to *server/chatserver*
+5. Navigate to *server/chatserver*
  
- 6. Run `npm install` in the command line
+6. Run `npm install` in the command line
  
- 7. navigate to *server/requestManager*
+7. navigate to *server/requestManager*
  
- 8. Run `npm install` in the command line
+8. Run `npm install` in the command line
  
- 9. Run `node server.js` in the command line
+9. Run `node server.js` in the command line
 *Optional:*
 
 I have created a very basic web client which can be found in *test.html*. 

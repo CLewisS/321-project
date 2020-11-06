@@ -25,15 +25,15 @@ Handling of the received messages is done in the method *onMessageReceived* in t
   - POST /service: Add a new service. Must contain a JSON object of the service values. The response contains the unique identifier for the service.
 
     - Service Attributes:
-      - name (string): The title of the service
-      - date (date): The date of the service. Format: 'YYYY-MM-DD'
-      - dow (string): The day of the week that the service occurs on.
-      - time (time): The time that the service is occuring at. Format: 'hh:mm:ss'
-      - lat (double): The latitudinal coordinate of the event location.
-      - longi (double): The longitudinal coordinate of the event location.
-      - owner (string): The name of the person that created the event.
-      - type (string): The type of service being provided (eg. food, money, etc.)
-      - description (string): A description of the service provided.
+      -   name (string): The title of the service
+      -   date (date): The date of the service. Format: 'YYYY-MM-DD'
+      -   dow (string): The day of the week that the service occurs on.
+      -   time (time): The time that the service is occuring at. Format: 'hh:mm:ss'
+      -   lat (double): The latitudinal coordinate of the event location.
+      -   longi (double): The longitudinal coordinate of the event location.
+      -   owner (string): The name of the person that created the event.
+      -   type (string): The type of service being provided (eg. food, money, etc.)
+      -   description (string): A description of the service provided.
 
   - GET /service: Get services that meet specified conditions. Must contain conditions in query string.
     - Example: http://xxxxxxx:####/service?date-min=2020-10-15&date-max=2020-11-15&lat-min=49.3456&longi-max=123.456

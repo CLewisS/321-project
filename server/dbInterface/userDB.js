@@ -131,13 +131,6 @@ module.exports.delete = function(username, callback) {
 };
 
 
-
-
-
-
-
-
-
 /* Update a service in the services database
  *
  * Parameters:
@@ -209,14 +202,6 @@ module.exports.update = function ( user, callback) {
 }; 
 
 
-
-
-
-
-
-
-
-
 module.exports.loginCheck = function (loginInfo, callback) {
 
   console.log("login check " + JSON.stringify(loginInfo));
@@ -246,14 +231,13 @@ module.exports.loginCheck = function (loginInfo, callback) {
     
     // Insert service into database
     var query1 = "Select password from users where username="  + `"` + loginInfo.username + `"`;
-
+    console.log(query1);
     dbConn.query(query1, (err, results, fields) => {
       if (err) {
         return console.error(err.message);
       }
-      console.log(JSON.stringify(loginInfo));
-      console.log(results[0].password === loginInfo.password);
-      if (results[0].password === loginInfo.password){
+      console.log(JSON.stringify(results[0]));
+      if (results[0] && results[0].password === loginInfo.password){
         callback({username: loginInfo.username, password: loginInfo.password});
       }else{
         callback(401);
@@ -280,4 +264,48 @@ module.exports.loginCheck = function (loginInfo, callback) {
 
   });
 
-}; 
+};
+
+
+/* Retrieve a users information 
+ *
+ * Parameters:
+ *   -username: The username of the user beign retrieved.
+ *
+ *   - callback: A callback function that is called once the user has been retrieved.
+ *               The function must have one argument which will be the user object.
+ */
+module.exports.get = function(username, callback) {
+  console.log("Retrieving user " + username);
+
+
+  var dbConn = mysql.createConnection(dbConfig.userDB);
+
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+
+    console.log("Connected to MySQL server");
+
+    var query1 = "SELECT * FROM users where username='" + username  + "'";
+
+    dbConn.query(query1, (err, results, fields) => {
+      if (err) {
+        return console.error(err.message);
+      } else{
+        callback(results[0]);
+      }
+    });
+
+    dbConn.end(function (err) {
+      if (err) {
+        return console.error("error: " + err.message); 
+      }
+  
+      console.log("Closed connection to MySQL server");
+    });
+
+  });
+}

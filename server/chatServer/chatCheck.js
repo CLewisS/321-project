@@ -1,5 +1,5 @@
 
-messageGetAttribute = ["user1", "user2", "newest"];
+messageGetAttribute = ["user1", "user2", "newest", "timestamp"];
 messageAttribute = ["sender", "recipient", "timestamp", "content"];
 
 

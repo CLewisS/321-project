@@ -12,7 +12,9 @@ var chatDB = {
   host:"localhost",
   user: "root",
   password: "password", // Change password to mysql server root user"s password
-  database: "chat"
+  database: "chat",
+  charset: "utf8", 
+  collate: "utf8mb4_unicode_ci"
 }
 
 var userDB = {

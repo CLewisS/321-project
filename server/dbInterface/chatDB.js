@@ -96,7 +96,7 @@ module.exports.add = function (message, callback) {
  *               The retrieved messages are passed as an argument.
  */
 module.exports.get = function(user1, user2, newest, callback) {
-  console.log("Getting messages from DB");
+  console.log("Getting messages from DB " + user1 + " " + user2 + " " + newest);
 
   var dbConn = mysql.createConnection(dbConfig.chatDB);
 
@@ -115,24 +115,29 @@ module.exports.get = function(user1, user2, newest, callback) {
 
     var query = "SELECT numMess FROM threads WHERE thread='" + thread + "'";
 
+    console.log(query);
+
     // Get total number of thread messages
     dbConn.query(query, (err, result, fields) => {
       if (err) {
         return console.error(err.message);
       }
-  
-      // Get messages newer than newest
-      var numMess = result[0].numMess;
 
-      query = "SELECT JSON_ARRAYAGG(JSON_OBJECT('sender', sender, 'recipient', recipient, 'timestamp', time, 'content', content)) FROM messages" + 
-              " WHERE (sender='" + user1 + "' AND recipient='" + user2 + "') OR (sender='" + user2 + "' AND recipient='" + user1 + "') AND time>='" + newest + "'";
-      console.log(query);
-      dbConn.query(query, (err, results, fields) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        callback(Object.values(results[0])[0]);
-      });
+      if (result[0]) {
+        console.log("Getting messages");
+        // Get messages newer than newest
+        var numMess = result[0].numMess;
+
+        query = "SELECT JSON_ARRAYAGG(JSON_OBJECT('sender', sender, 'recipient', recipient, 'timestamp', time, 'content', content)) FROM messages" + 
+                " WHERE (sender='" + user1 + "' AND recipient='" + user2 + "') OR (sender='" + user2 + "' AND recipient='" + user1 + "') AND time>='" + newest + "'";
+        console.log(query);
+        dbConn.query(query, (err, results, fields) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          callback(Object.values(results[0])[0]);
+        });
+      }
 
       // End connection
       dbConn.end(function (err) {

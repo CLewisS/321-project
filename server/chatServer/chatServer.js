@@ -27,14 +27,12 @@ module.exports.getMessages = function(req, res) {
     newest = queryString.newest;
   }
 
-  db.get(queryString.user1, queryString.user2, newest, (messages) => {
-    check.checkMessageQuery(queryString);
-    console.log(queryString)
-    db.get(queryString.user1, queryString.user2, queryString.newest, (messages) => {
+  check.checkMessageQuery(queryString);
+  console.log(queryString)
 
-      res.json(JSON.parse(messages));
-      console.log(messages);
-    });
+  db.get(queryString.user1, queryString.user2, newest, (messages) => {
+    res.json(JSON.parse(messages));
+    console.log(messages);
   });
 };
 

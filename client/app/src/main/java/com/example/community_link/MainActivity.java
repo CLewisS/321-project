@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -129,8 +130,12 @@ public class MainActivity extends CommunityLinkActivity {
     }
 
     public void enterChat(View view){
-        Intent enterChat = new Intent(this, ChatActivity.class);
-        startActivity(enterChat);
+        if(CommunityLinkApp.userLoggedIn()){
+            Intent enterChat = new Intent(this, ChatActivity.class);
+            startActivity(enterChat);
+        }else{
+            Toast.makeText(this, "Please log-in or sign-up before using chat", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

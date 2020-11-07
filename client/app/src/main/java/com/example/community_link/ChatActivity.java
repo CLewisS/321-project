@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.DiskBasedCache;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -91,7 +90,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         setContentView(R.layout.activity_chat);
 
         context = this;
-
+        
         //setup local user parameters
         //TODO: Config these to use the real runtime data... how to get current user profile?
         targetName = null;
@@ -259,14 +258,20 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
     };
 
-    //Http GET request for updating chats
-    public void checkForUpdate() {
+    //used for quick check for fast-forward updates
+    public void checkForUpdate(){
+        reSyncPull(lastUpdate);
+    }
+
+
+    //Http GET request for re-Pulling chats
+    public void reSyncPull(String fromTime) {
         //format request message
         JSONObject jsonMessage = new JSONObject();
         try {
             jsonMessage.put("user1", CommunityLinkApp.user.getUsername());
             jsonMessage.put("user2", targetName);
-            jsonMessage.put("timestamp", lastUpdate);
+            jsonMessage.put("timestamp", fromTime);
             Log.i("JSON", jsonMessage.toString());
 
             //http GET
@@ -297,6 +302,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     public void sendMessage(String message) {
         //guard for empty sends
         if(message == null || message.equals("") || message.equals(" ")){return;}
+
+        //do a quick check for mis-aligned server state
+        checkForUpdate();
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -370,7 +378,11 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         if(MasterChatLog.containsKey(newTargetName) && MasterChatLog.get(newTargetName) != null){
             mergeChat(chatLog, MasterChatLog.get(newTargetName).toArray(new ChatMessage[0]));
         }
-        checkForUpdate();
+        if(chatLog == null || chatLog.size()<1){
+            chatLog = new ArrayList<ChatMessage>();
+        }else{
+            reSyncPull(chatLog.get(0).timestamp);
+        }
 
         //launch.
         displayNow();
@@ -409,7 +421,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 }
             }
             if(receivedMessages.size() != 0 && j == base.size()-1){
-                base.add(receivedMessages.get(receivedMessages.size()-1));
+                if(!receivedMessages.get(receivedMessages.size()-1).compactString().equals(base.get(j).compactString())){
+                    base.add(receivedMessages.get(receivedMessages.size()-1));
+                }
                 receivedMessages.remove(receivedMessages.size()-1);
             }
             if(receivedMessages.size() == 0){

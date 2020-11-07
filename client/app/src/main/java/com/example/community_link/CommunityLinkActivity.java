@@ -154,8 +154,12 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     public void enterChat(View view){
-        Intent enterChat = new Intent(this, ChatActivity.class);
-        startActivity(enterChat);
+        if(CommunityLinkApp.userLoggedIn()){
+            Intent enterChat = new Intent(this, ChatActivity.class);
+            startActivity(enterChat);
+        }else{
+            Toast.makeText(this, "Please log-in or sign-up before using chat", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void signupPopup(View view){
@@ -378,4 +382,5 @@ public class CommunityLinkActivity extends AppCompatActivity {
         }
         return "Wrong";
     }
+
 }

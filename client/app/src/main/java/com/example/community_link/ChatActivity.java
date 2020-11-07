@@ -68,14 +68,11 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
     //TODO: fix these globals
     //User profiles are to be implemented as App global
-    public UserProfile user;
     public String targetName;
     public String lastUpdate = "2020-09-01 12:12:12";
     public String chat_target_pick_hint = "History:";
 
     //server IO portal used for chat Backend
-    private DiskBasedCache chatNetCache;
-    RequestManager chatPortal;
     MyFirebaseMessagingService pushedMessageServer;
 
     //a local file storing the chat log
@@ -97,7 +94,6 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //setup local user parameters
         //TODO: Config these to use the real runtime data... how to get current user profile?
-        user = new UserProfile("currentUserName", "password");
         targetName = null;
 
         MasterChatLog = new HashMap<String, List<ChatMessage>>();
@@ -116,16 +112,13 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
                         // Get new FCM registration token
                         String token = task.getResult() + " ------------------------------------------";
-                        user.deviceToken = token;
+                        CommunityLinkApp.user.deviceToken = token;
                         // Log and toast
                         Log.d("UserProfile", token);
                         //Toast.makeText(ChatActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        //network parameters
-        chatNetCache = new DiskBasedCache(context.getCacheDir());
-        chatPortal = new RequestManager(chatNetCache);
 
         //Json library (Gson helper)
         gson = new Gson();
@@ -177,7 +170,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         //Guards
         if(targetNameList == null || targetNameList.size() < 2|| targetNameList.get(1) == null){
             if(targetName == null){
-                targetName = user.username; //initialization default to user self-Looping on first creation
+                targetName = CommunityLinkApp.user.getUsername(); //initialization default to user self-Looping on first creation
             }
             targetNameList = new ArrayList<String>();
             targetNameList.add(chat_target_pick_hint);
@@ -271,7 +264,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         //format request message
         JSONObject jsonMessage = new JSONObject();
         try {
-            jsonMessage.put("user1", user.username);
+            jsonMessage.put("user1", CommunityLinkApp.user.getUsername());
             jsonMessage.put("user2", targetName);
             jsonMessage.put("timestamp", lastUpdate);
             Log.i("JSON", jsonMessage.toString());
@@ -293,7 +286,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                     System.out.println(error.toString());
                 }
             };
-            chatPortal.getMessages(jsonMessage, getMessageResponseCallback, errorCallback);
+            CommunityLinkApp.requestManager.getMessages(jsonMessage, getMessageResponseCallback, errorCallback);
         }catch(Exception e){
             Log.i("ChatGET", "Get failed");
             e.printStackTrace();
@@ -307,12 +300,12 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        ChatMessage localMessage = new ChatMessage(user.username, targetName, time, message);
+        ChatMessage localMessage = new ChatMessage(CommunityLinkApp.user.getUsername(), targetName, time, message);
 
         //send the JSON Message
         JSONObject jsonMessage = new JSONObject();
         try {
-            jsonMessage.put("sender", user.username);
+            jsonMessage.put("sender", CommunityLinkApp.user.getUsername());
             jsonMessage.put("recipient", targetName);
             jsonMessage.put("timestamp", time);
             jsonMessage.put("content", message);
@@ -332,7 +325,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                     System.out.println(error.toString());
                 }
             };
-            chatPortal.addMessage(jsonMessage, addMessageResponseCallback, errorCallback);
+            CommunityLinkApp.requestManager.addMessage(jsonMessage, addMessageResponseCallback, errorCallback);
         } catch (JSONException e) {
             System.out.println("chat:sendMessage: JSON components malfunctions");
             e.printStackTrace();
@@ -500,7 +493,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new ChatRecycleViewAdapter(chatLog, user.username);
+        chatAdapter = new ChatRecycleViewAdapter(chatLog, CommunityLinkApp.user.getUsername());
 
         int latestChatPosition = 0;
         if(chatLog.size()>0){

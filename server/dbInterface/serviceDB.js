@@ -332,7 +332,7 @@ module.exports.receive = function (receiver,serviceID, callback) {
     console.log(values);
     
     // Insert service into database
-    var query = `INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)`;
+    var query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
@@ -374,7 +374,7 @@ module.exports.getReceivedIDs = function(conditions, callback) {
     console.log("Connected to MySQL server");
 
     // Build SQL query
-    var query = `SELECT * FROM userServices WHERE `;
+    var query = "SELECT * FROM userServices WHERE ";
 
     var sqlConds = conditions;
 

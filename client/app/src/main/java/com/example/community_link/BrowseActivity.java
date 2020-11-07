@@ -419,7 +419,7 @@ public class BrowseActivity extends CommunityLinkActivity {
             ret[LONG_MAX] = Math.min(currLong + latDiff, 90);
         }
         else{
-            ret[LONG_MAX] = Math.max(currLong + latDiff, 0);
+            ret[LONG_MAX] = Math.min(currLong + latDiff, 0);
             ret[LONG_MIN] = Math.max(currLong - latDiff, -90);
         }
 
@@ -430,7 +430,7 @@ public class BrowseActivity extends CommunityLinkActivity {
             ret[LONG_MAX] = Math.min(currLong + longDiff, 180);
         }
         else{
-            ret[LONG_MAX] = Math.max(currLong + longDiff, 0);
+            ret[LONG_MAX] = Math.min(currLong + longDiff, 0);
             ret[LONG_MIN] = Math.max(currLong - longDiff, -180);
         }
 

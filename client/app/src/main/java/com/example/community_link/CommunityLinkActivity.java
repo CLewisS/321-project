@@ -111,7 +111,7 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     private void setProfileMenu() {
-        ViewGroup topView = (ViewGroup) profileMenu.getParent();
+        //ViewGroup topView = (ViewGroup) profileMenu.getParent();
         TextView profileName = profileMenu.findViewById(R.id.profileName);
         Button signupButt = profileMenu.findViewById(R.id.menuSignupButt);
         Button loginButt = profileMenu.findViewById(R.id.menuLoginButt);

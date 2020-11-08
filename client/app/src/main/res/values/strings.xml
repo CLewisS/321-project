@@ -6,9 +6,8 @@
     <string name="chatSend">Send</string>
     <string name="A_Dev_Placeholder">Place Holder Text</string>
     <string name="chatModule_Title">Begin Chatting</string>
-    <string name="chatTargetApply">Set</string>
-    <string name="chatTargetHint">Recipient:</string>
-    <string name="chatTargetListHint">Talk to...</string>
+    <string name="chatTargetApply">Add</string>
+    <string name="chatTargetHint">New Contact</string>
 
 
 

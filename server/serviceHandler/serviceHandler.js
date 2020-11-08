@@ -20,7 +20,7 @@ module.exports.getServices = function (req, res) {
   db.get(conditions, (services) => { 
     res.json(services);
   });
-}
+};
 
 
 
@@ -96,9 +96,9 @@ module.exports.receiveService = function (req, res) {
   
   // console.log("Body " + JSON.stringify(receiveInfo));
 
-  db.receive(receiveInfo.username, receiveInfo.serviceID , (id)=>{
+  db.receive(receiveInfo.username, receiveInfo.serviceID , (id) => {
     res.json(id);
-  })
+  });
   
 
 /*  } else {

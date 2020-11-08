@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.DiskBasedCache;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -66,16 +65,13 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     private RecyclerView.LayoutManager layoutManager;
 
 
-    //TODO: fix these globals
     //User profiles are to be implemented as App global
-    public UserProfile user;
     public String targetName;
+    public final String timeAnchor = "2020-09-01 12:12:12";
     public String lastUpdate = "2020-09-01 12:12:12";
     public String chat_target_pick_hint = "History:";
 
     //server IO portal used for chat Backend
-    private DiskBasedCache chatNetCache;
-    RequestManager chatPortal;
     MyFirebaseMessagingService pushedMessageServer;
 
     //a local file storing the chat log
@@ -96,8 +92,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters
-        //TODO: Config these to use the real runtime data... how to get current user profile?
-        user = new UserProfile("currentUserName", "password");
+        //TODO: Remove this for online testing
+        //CommunityLinkApp.user = new UserProfile("Charlie", "Charlie");
         targetName = null;
 
         MasterChatLog = new HashMap<String, List<ChatMessage>>();
@@ -116,16 +112,13 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
                         // Get new FCM registration token
                         String token = task.getResult() + " ------------------------------------------";
-                        user.deviceToken = token;
+                        CommunityLinkApp.user.deviceToken = token;
                         // Log and toast
                         Log.d("UserProfile", token);
                         //Toast.makeText(ChatActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        //network parameters
-        chatNetCache = new DiskBasedCache(context.getCacheDir());
-        chatPortal = new RequestManager(chatNetCache);
 
         //Json library (Gson helper)
         gson = new Gson();
@@ -177,7 +170,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         //Guards
         if(targetNameList == null || targetNameList.size() < 2|| targetNameList.get(1) == null){
             if(targetName == null){
-                targetName = user.username; //initialization default to user self-Looping on first creation
+                targetName = CommunityLinkApp.user.getUsername(); //initialization default to user self-Looping on first creation
             }
             targetNameList = new ArrayList<String>();
             targetNameList.add(chat_target_pick_hint);
@@ -191,6 +184,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         if(MasterChatLog.containsKey(targetName) && MasterChatLog.get(targetName) != null){
             mergeChat(chatLog, MasterChatLog.get(targetName).toArray(new ChatMessage[0]));
         }
+        checkForUpdate();
         displayNow();
 
         //handles the push notification
@@ -266,14 +260,24 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
     };
 
-    //Http GET request for updating chats
-    public void checkForUpdate() {
+    //used for quick check for fast-forward updates
+    public void checkForUpdate(){
+        reSyncPull(lastUpdate);
+    }
+
+    //Http GET request for re-Pulling chats
+    public void reSyncPull(String fromTime) {
+        //a fix for the ServerDB timestamp format
+        if(fromTime.length()>19){
+            fromTime = fromTime.substring(0, 20);
+        }
+
         //format request message
         JSONObject jsonMessage = new JSONObject();
         try {
-            jsonMessage.put("user1", user.username);
+            jsonMessage.put("user1", CommunityLinkApp.user.getUsername());
             jsonMessage.put("user2", targetName);
-            jsonMessage.put("timestamp", lastUpdate);
+            jsonMessage.put("timestamp", fromTime);
             Log.i("JSON", jsonMessage.toString());
 
             //http GET
@@ -293,7 +297,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                     System.out.println(error.toString());
                 }
             };
-            chatPortal.getMessages(jsonMessage, getMessageResponseCallback, errorCallback);
+            CommunityLinkApp.requestManager.getMessages(jsonMessage, getMessageResponseCallback, errorCallback);
         }catch(Exception e){
             Log.i("ChatGET", "Get failed");
             e.printStackTrace();
@@ -305,14 +309,23 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         //guard for empty sends
         if(message == null || message.equals("") || message.equals(" ")){return;}
 
+        //do a quick check for mis-aligned server state
+        checkForUpdate();
+
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        ChatMessage localMessage = new ChatMessage(user.username, targetName, time, message);
+        ChatMessage localMessage = new ChatMessage(CommunityLinkApp.user.getUsername(), targetName, time, message);
+
+        //self Messaging is detached from the server, being local-only.
+        if(targetName.equals(CommunityLinkApp.user.getUsername())){
+            putAndOrder(new ChatMessage[]{localMessage});
+            return;
+        }
 
         //send the JSON Message
         JSONObject jsonMessage = new JSONObject();
         try {
-            jsonMessage.put("sender", user.username);
+            jsonMessage.put("sender", CommunityLinkApp.user.getUsername());
             jsonMessage.put("recipient", targetName);
             jsonMessage.put("timestamp", time);
             jsonMessage.put("content", message);
@@ -332,7 +345,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                     System.out.println(error.toString());
                 }
             };
-            chatPortal.addMessage(jsonMessage, addMessageResponseCallback, errorCallback);
+            CommunityLinkApp.requestManager.addMessage(jsonMessage, addMessageResponseCallback, errorCallback);
         } catch (JSONException e) {
             System.out.println("chat:sendMessage: JSON components malfunctions");
             e.printStackTrace();
@@ -377,7 +390,12 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         if(MasterChatLog.containsKey(newTargetName) && MasterChatLog.get(newTargetName) != null){
             mergeChat(chatLog, MasterChatLog.get(newTargetName).toArray(new ChatMessage[0]));
         }
-        checkForUpdate();
+        if(chatLog == null || chatLog.size()<1){
+            chatLog = new ArrayList<ChatMessage>();
+            reSyncPull(timeAnchor);
+        }else{
+            reSyncPull(chatLog.get(0).timestamp);
+        }
 
         //launch.
         displayNow();
@@ -407,16 +425,22 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
         for(int j=0; j<base.size(); j++){
             for(int i=0; i<receivedMessages.size(); i++){
-                if(receivedMessages.get(i).timestamp.compareTo(base.get(j).timestamp) < 0){
-                    if(!receivedMessages.get(i).compactString().equals(base.get(j).compactString())){
-                        base.add(j, receivedMessages.get(i));
-                    }
+                if(receivedMessages.get(i).compactString().equals(base.get(j).compactString())){
                     receivedMessages.remove(i);
                     i--;
+                }else{
+                    if(receivedMessages.get(i).timestamp.compareTo(base.get(j).timestamp) < 0){
+                        base.add(j, receivedMessages.get(i));
+                        receivedMessages.remove(i);
+                        i--;
+                    }
                 }
+
             }
             if(receivedMessages.size() != 0 && j == base.size()-1){
-                base.add(receivedMessages.get(receivedMessages.size()-1));
+                if(!receivedMessages.get(receivedMessages.size()-1).compactString().equals(base.get(j).compactString())){
+                    base.add(receivedMessages.get(receivedMessages.size()-1));
+                }
                 receivedMessages.remove(receivedMessages.size()-1);
             }
             if(receivedMessages.size() == 0){
@@ -500,7 +524,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycleView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new ChatRecycleViewAdapter(chatLog, user.username);
+        chatAdapter = new ChatRecycleViewAdapter(chatLog, CommunityLinkApp.user.getUsername());
 
         int latestChatPosition = 0;
         if(chatLog.size()>0){

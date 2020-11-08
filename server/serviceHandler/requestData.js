@@ -7,6 +7,29 @@ var singleValConditions= ["id", "name", "dow", "type", "owner"];
 
 
 
+/* Check if the json value has the correct variable type fot that attribute key.
+ * Parameters:
+ *    - key: one of the key of the service.
+ *    - value: the value of this key. 
+ */
+var isCorrectType = function (key, value) {
+
+  if (stringAttributes.includes(key) && typeof(value) != "string") {
+
+    // console.log("The value of " + key + " shoulbe be a string, not a " + typeof(value) + "." );
+    return false;
+
+  } else if (numberAttributes.includes(key) && typeof(value) != "number") {
+
+    // console.log("The value of " + key + " shoulbe be a number, not a " + typeof(value) + "." );
+    return false;
+
+  } 
+
+  return true;
+
+};
+
 
 
 /* Checks if service object properties are valid.
@@ -23,7 +46,7 @@ var serviceIsValid = function (service) {
   }
 
   return true;
-}
+};
 
 module.exports.serviceIsValid = serviceIsValid;
 
@@ -101,8 +124,8 @@ var createConditionString = function(key, conditions){
 
 var isValidCondition = function (condition) {
   var split = condition.split("-");
-  if ( (split.length == 2 && searchConditions.includes(split[0]) && (split[1] === "max" || split[1] == "min")) 
-      || (split.length == 1 && searchConditions.includes(split[0])) ) {
+  if ( (split.length === 2 && searchConditions.includes(split[0]) && (split[1] === "max" || split[1] === "min")) 
+      || (split.length === 1 && searchConditions.includes(split[0])) ) {
 
     console.log("valid");
     return true;
@@ -137,28 +160,6 @@ var createConditionsArray = function (conditions) {
 };
 
 
-/* Check if the json value has the correct variable type fot that attribute key.
- * Parameters:
- *    - key: one of the key of the service.
- *    - value: the value of this key. 
- */
-var isCorrectType = function (key, value) {
-
-  if (stringAttributes.includes(key) && typeof(value) != "string") {
-
-    // console.log("The value of " + key + " shoulbe be a string, not a " + typeof(value) + "." );
-    return false;
-
-  } else if (numberAttributes.includes(key) && typeof(value) != "number") {
-
-    // console.log("The value of " + key + " shoulbe be a number, not a " + typeof(value) + "." );
-    return false;
-
-  } 
-
-  return true;
-
-};
 
 
 

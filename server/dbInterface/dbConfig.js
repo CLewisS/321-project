@@ -6,7 +6,7 @@ var serviceDB = {
   user: "root",
   password: "password", // Change password to mysql server root user"s password
   database: "services"
-}
+};
 
 var chatDB = {
   host:"localhost",
@@ -15,14 +15,14 @@ var chatDB = {
   database: "chat",
   charset: "utf8", 
   collate: "utf8mb4_unicode_ci"
-}
+};
 
 var userDB = {
   host:"localhost",
   user: "root",
   password: "password", // Change password to mysql server root user"s password
   database: "user"
-}
+};
 
 module.exports.serviceDB = serviceDB;
 module.exports.chatDB = chatDB;

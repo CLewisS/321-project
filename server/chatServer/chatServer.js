@@ -26,11 +26,15 @@ module.exports.getMessages = function(req, res) {
   }
 
   check.checkMessageQuery(queryString);
-  // console.log(queryString);
 
-  db.get(queryString.user1, queryString.user2, newest, (messages) => {
-    res.json(JSON.parse(messages));
-    // console.log(messages);
+  db.get(queryString.user1, queryString.user2, newest, (messages, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      res.json(JSON.parse(messages));
+      return;
+    }
   });
 };
 
@@ -49,8 +53,11 @@ module.exports.addMessage = function(req, res) {
       data: message
   };
 
-  userDB.get(message.recipient, (user) => {
-    if (user.deviceToken !== "") {
+  userDB.get(message.recipient, (user, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else if (user.deviceToken !== "") {
       var payload = {
           data: message
       };
@@ -60,19 +67,25 @@ module.exports.addMessage = function(req, res) {
         timeToLive: 60 * 60 *24
       };
 
-      // console.log("Push notification " + payload.data);
+      //console.log("Push notification " + payload.data + " to " + user.deviceToken);
       admin.messaging().sendToDevice(user.deviceToken, payload, options)
       .then(function(response) {
-        console.log("Successfully sent message:" + JSON.stringify(response)); 
+        //console.log("Successfully sent message:" + JSON.stringify(response)); 
       })
       .catch(function(error) {
-        console.log("Error sending message:", error);
+        //console.log("Error sending message:", error);
       });
     }
   });
 
 
-  db.add(message, (id) => {
-    res.json(id);
+  db.add(message, (id, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      res.json(id);
+      return;
+    }
   });
 };

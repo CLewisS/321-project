@@ -40,7 +40,6 @@ var serviceIsValid = function (service) {
   const keys = Object.keys(service);
   for(var key of keys){
     if(!serviceAttributes.includes(key) || !isCorrectType(key, service[String(key)])){
-  console.log("Is valid " + key);
       return false;
     }
   }
@@ -63,7 +62,6 @@ module.exports.getServiceFromReq = function(body) {
     delete service.id;
   }
 
-  // console.log("get from req " + JSON.stringify(service));
   if (!serviceIsValid(service)) {
     throw "Service is invalid";
   }
@@ -133,7 +131,6 @@ var isValidCondition = function (condition) {
   var split = condition.split("-");
   
   if (searchConditions.includes(split[0]) && hasValidComparator(split)) {
-    console.log("valid");
     return true;
   } 
 

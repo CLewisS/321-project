@@ -29,19 +29,12 @@ module.exports.add = function (user, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return; 
     }
 
     // console.log("Connected to MySQL server");
 
-    // Get Service Values  
-    try {
-      if (Object.values(user).length < 2){
-         throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
-        }
-    } catch (err) {
-      return console.error(err);
-    }
     var values = [
       user.username,
       user.password,
@@ -53,7 +46,8 @@ module.exports.add = function (user, callback) {
 
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
   
       // console.log("Inserted");
@@ -68,7 +62,8 @@ module.exports.add = function (user, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
   
       // console.log("Closed connection to MySQL server");
@@ -98,7 +93,8 @@ module.exports.delete = function(username, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return; 
     }
 
     // console.log("Connected to MySQL server");
@@ -110,7 +106,8 @@ module.exports.delete = function(username, callback) {
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
   
       callback(result);
@@ -119,7 +116,8 @@ module.exports.delete = function(username, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
   
       // console.log("Closed connection to MySQL server");
@@ -151,19 +149,12 @@ module.exports.update = function ( user, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return; 
     }
 
     // console.log("Connected to MySQL server");
 
-    // Get Service Values  
-    try {
-      if (Object.values(user).length !== 3) {
-        throw "User has too few [" + Object.values(user).length + "] values. user: " + JSON.stringify(user);
-      }
-      } catch (err) {
-      return console.error(err);
-    }
     var values = [
       user.username,
       user.password,
@@ -175,11 +166,10 @@ module.exports.update = function ( user, callback) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
   
-      console.log("Updated");
-
       callback({
         username: user.username,
         password: user.password
@@ -190,10 +180,9 @@ module.exports.update = function ( user, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -211,7 +200,8 @@ module.exports.loginCheck = function (loginInfo, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return; 
     }
 
     // console.log("Connected to MySQL server");
@@ -233,21 +223,22 @@ module.exports.loginCheck = function (loginInfo, callback) {
     console.log(query1);
     dbConn.query(query1, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
-      console.log(JSON.stringify(results[0]));
+
       if (results[0] && results[0].password === loginInfo.password){
         callback({username: loginInfo.username, password: loginInfo.password});
       }else{
-        callback(401);
+        callback({}, {code: 401, message: "Username and password aren't a valid pair"});
       }
     });
 
     var query2 = "UPDATE users SET deviceToken = ? WHERE username = '" + "'" + loginInfo.username + "'";
-    console.log(query2);
     dbConn.query(query2,values, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
     });
    
@@ -255,10 +246,9 @@ module.exports.loginCheck = function (loginInfo, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -275,15 +265,14 @@ module.exports.loginCheck = function (loginInfo, callback) {
  *               The function must have one argument which will be the user object.
  */
 module.exports.get = function(username, callback) {
-  console.log("Retrieving user " + username);
-
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return; 
     }
 
     // console.log("Connected to MySQL server");
@@ -292,7 +281,8 @@ module.exports.get = function(username, callback) {
 
     dbConn.query(query1, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return; 
       } else{
         callback(results[0]);
       }
@@ -300,10 +290,9 @@ module.exports.get = function(username, callback) {
 
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return; 
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });

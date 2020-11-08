@@ -35,17 +35,13 @@ module.exports.addUser = function (req, res) {
   }
   
 
-  db.add(user, (username) => {
-    res.json(username);
+  db.add(user, (username, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+    } else {
+      res.json(username);
+    }
   });
-
-/*  } else {
-  
-    console.log("This is not a valid object for create a service.");
-    res.status(400).json({error: "Service object is invalid"});
-
-  }*/
-
 };
 
 
@@ -59,8 +55,12 @@ module.exports.deleteUser = function (req, res) {
   }
 
   
-  db.delete(username.username, (user) => {
-    res.json(user);
+  db.delete(username.username, (user, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+    } else {
+      res.json(user);
+    }
   });
  
 };
@@ -79,8 +79,12 @@ module.exports.updateUser = function (req, res) {
     throw "This is not a valid User Object.";
  }
 
-  db.update(updateUser, (user) => {
-    res.json(user);
+  db.update(updateUser, (user, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+    } else {
+      res.json(user);
+    }
   });
 
 };
@@ -94,9 +98,12 @@ module.exports.loginCheck = function (req, res) {
   
   var loginInfo = req.body;
   
-  // console.log(loginInfo);
-  db.loginCheck(loginInfo , (result) => {
-    res.json(result);
+  db.loginCheck(loginInfo , (result, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+    } else {
+      res.json(result);
+    }
   });
 
 };

@@ -26,11 +26,13 @@ module.exports.getMessages = function(req, res) {
   }
 
   check.checkMessageQuery(queryString);
-  // console.log(queryString);
 
-  db.get(queryString.user1, queryString.user2, newest, (messages) => {
-    res.json(JSON.parse(messages));
-    // console.log(messages);
+  db.get(queryString.user1, queryString.user2, newest, (messages, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+    } else {
+      res.json(JSON.parse(messages));
+    }
   });
 };
 
@@ -63,16 +65,20 @@ module.exports.addMessage = function(req, res) {
       // console.log("Push notification " + payload.data);
       admin.messaging().sendToDevice(user.deviceToken, payload, options)
       .then(function(response) {
-        console.log("Successfully sent message:" + JSON.stringify(response)); 
+        //console.log("Successfully sent message:" + JSON.stringify(response)); 
       })
       .catch(function(error) {
-        console.log("Error sending message:", error);
+        //console.log("Error sending message:", error);
       });
     }
   });
 
 
-  db.add(message, (id) => {
-    res.json(id);
+  db.add(message, (id, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+    } else {
+      res.json(id);
+    }
   });
 };

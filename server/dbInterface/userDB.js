@@ -21,7 +21,7 @@ var dbConfig = require("./dbConfig");
 
 module.exports.add = function (user, callback) {
 
-  console.log("Adding User to DB");
+  // console.log("Adding User to DB");
 
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -32,7 +32,7 @@ module.exports.add = function (user, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Get Service Values  
     try {
@@ -57,7 +57,7 @@ module.exports.add = function (user, callback) {
         return console.error(err.message);
       }
   
-      console.log("Inserted");
+      // console.log("Inserted");
 
       callback({
         username: user.username,
@@ -72,7 +72,7 @@ module.exports.add = function (user, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -92,7 +92,7 @@ module.exports.add = function (user, callback) {
  *               The retrieved user are passed as an argument.
  */
 module.exports.delete = function(username, callback) {
-  console.log("Getting Services from DB");
+  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
@@ -102,7 +102,7 @@ module.exports.delete = function(username, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
     
     // Build SQL query
     var query = "DELETE FROM users WHERE username = " + `"` + username + `"`;
@@ -123,7 +123,7 @@ module.exports.delete = function(username, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -144,7 +144,7 @@ module.exports.delete = function(username, callback) {
 
 module.exports.update = function ( user, callback) {
 
-  console.log("Adding Service to DB");
+  // console.log("Adding Service to DB");
 
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -155,7 +155,7 @@ module.exports.update = function ( user, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Get Service Values  
     try {
@@ -194,7 +194,7 @@ module.exports.update = function ( user, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -204,7 +204,7 @@ module.exports.update = function ( user, callback) {
 
 module.exports.loginCheck = function (loginInfo, callback) {
 
-  console.log("login check " + JSON.stringify(loginInfo));
+  // console.log("login check " + JSON.stringify(loginInfo));
 
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -215,7 +215,7 @@ module.exports.loginCheck = function (loginInfo, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Get Service Values  
     try {
@@ -259,7 +259,7 @@ module.exports.loginCheck = function (loginInfo, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -287,7 +287,7 @@ module.exports.get = function(username, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     var query1 = "SELECT * FROM users where username='" + username  + "'";
 
@@ -304,7 +304,7 @@ module.exports.get = function(username, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });

@@ -40,7 +40,7 @@ var serviceIsValid = function (service) {
   const keys = Object.keys(service);
   for(var key of keys){
     if(!serviceAttributes.includes(key) || !isCorrectType(key, service[key])){
-  console.log("Is valid " + key);
+  // console.log("Is valid " + key);
       return false;
     }
   }
@@ -127,7 +127,7 @@ var isValidCondition = function (condition) {
   if ( (split.length === 2 && searchConditions.includes(split[0]) && (split[1] === "max" || split[1] === "min")) 
       || (split.length === 1 && searchConditions.includes(split[0])) ) {
 
-    console.log("valid");
+    // console.log("valid");
     return true;
 
   } 

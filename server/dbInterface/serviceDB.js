@@ -23,7 +23,7 @@ var dbConfig = require("./dbConfig");
 module.exports.add = function (service, callback) {
 
   
-  console.log("Adding Service to DB");
+  // console.log("Adding Service to DB");
 
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
@@ -34,7 +34,7 @@ module.exports.add = function (service, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Get Service Values  
     try {
@@ -63,8 +63,8 @@ module.exports.add = function (service, callback) {
         return console.error(err.message);
       }
   
-      console.log("Inserted");
-      console.log(results);
+      // console.log("Inserted");
+      // console.log(results);
       callback({id: results.insertId});
     });
 
@@ -74,7 +74,7 @@ module.exports.add = function (service, callback) {
         return console.error("error: " + err.message); 
       }
 
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -92,7 +92,7 @@ module.exports.add = function (service, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.get = function(conditions, callback) {
-  console.log("Getting Services from DB");
+  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -102,7 +102,7 @@ module.exports.get = function(conditions, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = "SELECT * FROM services WHERE ";
@@ -111,7 +111,7 @@ module.exports.get = function(conditions, callback) {
 
     query += sqlConds.join(" AND ");
   
-    console.log(query);
+    // console.log(query);
 
     // Get services
     dbConn.query(query, (err, result, fields) => {
@@ -128,7 +128,7 @@ module.exports.get = function(conditions, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -147,7 +147,7 @@ module.exports.get = function(conditions, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.delete = function(serviceID, callback) {
-  console.log("Getting Services from DB");
+  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -157,12 +157,12 @@ module.exports.delete = function(serviceID, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = "DELETE FROM services WHERE id = " + serviceID;
   
-    console.log(query);
+
 
     // Get services
     dbConn.query(query, (err, result, fields) => {
@@ -179,7 +179,7 @@ module.exports.delete = function(serviceID, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -200,7 +200,7 @@ module.exports.delete = function(serviceID, callback) {
 
 module.exports.update = function (serviceID, service, callback) {
 
-  console.log("Adding Service to DB");
+  // console.log("Adding Service to DB");
 
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
@@ -211,7 +211,7 @@ module.exports.update = function (serviceID, service, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Get Service Values  
     try {
@@ -239,7 +239,7 @@ module.exports.update = function (serviceID, service, callback) {
         return console.error(err.message);
       }
   
-      console.log("Updated");
+      // console.log("Updated");
 
       callback(results);
     });
@@ -251,7 +251,7 @@ module.exports.update = function (serviceID, service, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -261,7 +261,7 @@ module.exports.update = function (serviceID, service, callback) {
 
 module.exports.adduserServices = function (service, insertId) {
 
-  console.log("Adding Service to userDB userServices table.");
+  // console.log("Adding Service to userDB userServices table.");
 
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -272,14 +272,14 @@ module.exports.adduserServices = function (service, insertId) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     var values = [
       service.owner,
       "post",
       insertId.id
     ];
-    console.log(insertId.id);
+    // console.log(insertId.id);
     // Insert service into database
     var query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
   
@@ -288,7 +288,7 @@ module.exports.adduserServices = function (service, insertId) {
         return console.error(err.message);
       }
   
-      console.log("Inserted");
+      // console.log("Inserted");
 
      
     });
@@ -300,7 +300,7 @@ module.exports.adduserServices = function (service, insertId) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -310,7 +310,7 @@ module.exports.adduserServices = function (service, insertId) {
 
 module.exports.receive = function (receiver,serviceID, callback) {
 
-  console.log("Adding Service to userDB userServices table.");
+  // console.log("Adding Service to userDB userServices table.");
 
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -321,7 +321,7 @@ module.exports.receive = function (receiver,serviceID, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     var values = [
       receiver,
@@ -329,7 +329,7 @@ module.exports.receive = function (receiver,serviceID, callback) {
       serviceID
     ];
 
-    console.log(values);
+
     
     // Insert service into database
     var query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
@@ -339,7 +339,7 @@ module.exports.receive = function (receiver,serviceID, callback) {
         return console.error(err.message);
       }
   
-      console.log("Inserted");
+      // console.log("Inserted");
 
       callback(results);
     });
@@ -351,7 +351,7 @@ module.exports.receive = function (receiver,serviceID, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -361,7 +361,7 @@ module.exports.receive = function (receiver,serviceID, callback) {
 
 module.exports.getReceivedIDs = function(conditions, callback) {
 
-  console.log("Getting received services from DB");
+  // console.log("Getting received services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
@@ -371,7 +371,7 @@ module.exports.getReceivedIDs = function(conditions, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = "SELECT * FROM userServices WHERE ";
@@ -380,7 +380,7 @@ module.exports.getReceivedIDs = function(conditions, callback) {
 
     query += sqlConds.join(" AND ");
   
-    console.log(query);
+
 
     // Get services
     dbConn.query(query, (err, result, fields) => {
@@ -397,7 +397,7 @@ module.exports.getReceivedIDs = function(conditions, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -414,7 +414,7 @@ module.exports.getReceivedIDs = function(conditions, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.getReceivedServices = function(conditions, callback) {
-  console.log("Getting Services from DB");
+  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -424,7 +424,7 @@ module.exports.getReceivedServices = function(conditions, callback) {
       return console.error("error: " + err.message);
     }
 
-    console.log("Connected to MySQL server");
+    // console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = `SELECT * FROM services WHERE `;
@@ -432,8 +432,7 @@ module.exports.getReceivedServices = function(conditions, callback) {
     var sqlConds = conditions;
 
     query += sqlConds.join(" OR ");
-  
-    console.log(query);
+
 
     // Get services
     dbConn.query(query, (err, result, fields) => {
@@ -450,7 +449,7 @@ module.exports.getReceivedServices = function(conditions, callback) {
         return console.error("error: " + err.message); 
       }
   
-      console.log("Closed connection to MySQL server");
+      // console.log("Closed connection to MySQL server");
     });
 
   });

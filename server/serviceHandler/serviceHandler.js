@@ -10,12 +10,10 @@ var db = require("../dbInterface/serviceDB.js");
 var reqData = require("./requestData.js");
 
 module.exports.getServices = function (req, res) {
-  console.log("In service handler: get services");
-  console.log("query: " + JSON.stringify(req.query));
+  // console.log("In service handler: get services");
+  // console.log("query: " + JSON.stringify(req.query));
 
   var conditions = reqData.getConditionsFromQuery(req.query);
-
-  console.log(conditions);
 
   db.get(conditions, (services) => { 
     res.json(services);
@@ -25,8 +23,8 @@ module.exports.getServices = function (req, res) {
 
 
 module.exports.addService = function (req, res) {
-  console.log("In service handler: add service");
-  console.log("service " + JSON.stringify(req.body));
+  // console.log("In service handler: add service");
+  // console.log("service " + JSON.stringify(req.body));
   
   var service = reqData.getServiceFromReq(req.body);
   var  insertID ;
@@ -48,7 +46,7 @@ db.add(service, (id) => {
 
 
 module.exports.deleteService = function (req, res) {
-  console.log("In service handler: delete service");
+  // console.log("In service handler: delete service");
   const id = req.query;
   const keys = Object.keys(id);
   if(keys.length!==1 || keys[0]!=="id"){
@@ -67,7 +65,7 @@ module.exports.deleteService = function (req, res) {
 
 
 module.exports.updateService = function (req, res) {
-  console.log("In service handler: update service");
+  // console.log("In service handler: update service");
   var updateService = req.body;
   // console.log(updateService);
   const keys = Object.keys(req.query);
@@ -76,7 +74,6 @@ module.exports.updateService = function (req, res) {
   }
 
   var serviceID = parseInt(req.query["id"], 10);
-  console.log(serviceID);
 
   if(!reqData.serviceIsValid(updateService)){
     throw "This is not a valid service!";
@@ -90,7 +87,7 @@ module.exports.updateService = function (req, res) {
 
 
 module.exports.receiveService = function (req, res) {
-  console.log("In service handler: receive service");
+  // console.log("In service handler: receive service");
   
   var receiveInfo = req.body;
   
@@ -112,20 +109,20 @@ module.exports.receiveService = function (req, res) {
 
 
 module.exports.getReceivedServices = function (req, res) {
-  console.log("In service handler: get received services");
-  console.log("query: " + JSON.stringify(req.query));
+  // console.log("In service handler: get received services");
+  // console.log("query: " + JSON.stringify(req.query));
 
   var conditions = ["username='" + req.query.username + "'", "status='" + req.query.status + "'"];
 
   db.getReceivedIDs(conditions, (services) => {
-    console.log("Used services: " + JSON.stringify(services));
+    // console.log("Used services: " + JSON.stringify(services));
     var conditions = [];
     for(service of services) {
       conditions.push("id=" + service.serviceID);
     }
 
     db.getReceivedServices(conditions, (services) => { 
-	    console.log("Got " + JSON.stringify(services));
+	    // console.log("Got " + JSON.stringify(services));
       res.json(services);
     });
   });

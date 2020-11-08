@@ -240,7 +240,7 @@ module.exports.update = function (serviceID, service, callback) {
 }; 
 
 
-module.exports.adduserServices = function (service, insertId) {
+module.exports.adduserServices = function (service, insertId, callback) {
 
   // console.log("Adding Service to userDB userServices table.");
 
@@ -250,7 +250,7 @@ module.exports.adduserServices = function (service, insertId) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      callback({}, {code: 500, message: err.message});
+      callback({code: 500, message: err.message});
       return;
     }
 
@@ -267,7 +267,7 @@ module.exports.adduserServices = function (service, insertId) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-        callback({}, {code: 500, message: err.message});
+        callback({code: 500, message: err.message});
         return;
       }
     });
@@ -276,7 +276,7 @@ module.exports.adduserServices = function (service, insertId) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        callback({}, {code: 500, message: err.message});
+        callback({code: 500, message: err.message});
         return;
       }
     });

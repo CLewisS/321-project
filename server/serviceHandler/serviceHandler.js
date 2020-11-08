@@ -34,7 +34,13 @@ module.exports.addService = function (req, res) {
   var  insertID ;
 
   db.add(service, (id, err) => {
-    db.adduserServices(service, id);
+    db.adduserServices(service, id, (err) => {
+      if (err) {
+        res.status(err.code).json(err);
+	return;
+      }
+    });
+
     if (err) {
       res.status(err.code).json(err);
       return;

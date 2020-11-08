@@ -25,7 +25,6 @@ module.exports.add = function (message, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      console.error("error: " + err.message);
       callback({}, {code: 500, message: err.message});
       return;
     }

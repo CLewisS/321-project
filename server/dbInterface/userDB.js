@@ -208,7 +208,6 @@ module.exports.loginCheck = function (loginInfo, callback) {
 
     // Insert service into database
     var query1 = "Select password from users where username='" + loginInfo.username + "'";
-    console.log(query1);
     dbConn.query(query1, (err, results, fields) => {
       if (err) {
         callback({}, {code: 500, message: err.message});

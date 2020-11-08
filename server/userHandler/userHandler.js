@@ -38,8 +38,10 @@ module.exports.addUser = function (req, res) {
   db.add(user, (username, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(username);
+      return;
     }
   });
 };
@@ -58,8 +60,10 @@ module.exports.deleteUser = function (req, res) {
   db.delete(username.username, (user, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(user);
+      return;
     }
   });
  
@@ -82,8 +86,10 @@ module.exports.updateUser = function (req, res) {
   db.update(updateUser, (user, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(user);
+      return;
     }
   });
 
@@ -101,6 +107,7 @@ module.exports.loginCheck = function (req, res) {
   db.loginCheck(loginInfo , (result, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(result);
     }

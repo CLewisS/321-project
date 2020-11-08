@@ -206,20 +206,8 @@ module.exports.loginCheck = function (loginInfo, callback) {
 
     // console.log("Connected to MySQL server");
 
-    // Get Service Values  
-    try {
-      if (Object.values(loginInfo).length !== 3){
-         throw "loginInfo has too few [" + Object.values(loginInfo).length + "] values. loginInfo: " + JSON.stringify(loginInfo);
-      }
-        } catch (err) {
-      return console.error(err);
-    }
-    var values = [
-      loginInfo.deviceToken
-    ];
-    
     // Insert service into database
-    var query1 = "Select password from users where username='"  + "'" + loginInfo.username + "'";
+    var query1 = "Select password from users where username='" + loginInfo.username + "'";
     console.log(query1);
     dbConn.query(query1, (err, results, fields) => {
       if (err) {
@@ -234,8 +222,8 @@ module.exports.loginCheck = function (loginInfo, callback) {
       }
     });
 
-    var query2 = "UPDATE users SET deviceToken = ? WHERE username = '" + "'" + loginInfo.username + "'";
-    dbConn.query(query2,values, (err, results, fields) => {
+    var query2 = "UPDATE users SET deviceToken ='" + loginInfo.deviceToken + "' WHERE username = '" + loginInfo.username + "'";
+    dbConn.query(query2, (err, results, fields) => {
       if (err) {
         callback({}, {code: 500, message: err.message});
         return; 

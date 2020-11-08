@@ -17,8 +17,10 @@ module.exports.getServices = function (req, res) {
   db.get(conditions, (services, err) => { 
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(services);
+      return;
     }
   });
 };
@@ -35,8 +37,10 @@ module.exports.addService = function (req, res) {
     db.adduserServices(service, id);
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(id);
+      return;
     }
   });
 
@@ -58,8 +62,10 @@ module.exports.deleteService = function (req, res) {
   db.delete(idNum, (id, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(id);
+      return;
     }
   });
  
@@ -83,8 +89,10 @@ module.exports.updateService = function (req, res) {
   db.update(serviceID, updateService, (service, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(service);
+      return;
     }
   });
 
@@ -99,8 +107,10 @@ module.exports.receiveService = function (req, res) {
   db.receive(receiveInfo.username, receiveInfo.serviceID , (id, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       res.json(id);
+      return;
     }
   });
   
@@ -115,6 +125,7 @@ module.exports.getReceivedServices = function (req, res) {
   db.getReceivedIDs(conditions, (services, err) => {
     if (err) {
       res.status(err.code).json(err);
+      return;
     } else {
       var conditions = [];
       for(var service of services) {
@@ -124,8 +135,10 @@ module.exports.getReceivedServices = function (req, res) {
       db.getReceivedServices(conditions, (services, err) => { 
         if (err) {
           res.status(err.code).json(err);
+          return;
         } else {
           res.json(services);
+          return;
         }
       });
     }

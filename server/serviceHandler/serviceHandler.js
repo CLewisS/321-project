@@ -30,8 +30,9 @@ module.exports.addService = function (req, res) {
   var  insertID ;
 
   
-db.add(service, (id) => {
-  db.adduserServices(service, id);
+  db.add(service, (id) => {
+    db.adduserServices(service, id);
+	  console.log(id);
     res.json(id);
   });
   
@@ -55,9 +56,9 @@ module.exports.deleteService = function (req, res) {
 
   // still need to delete the service in the serviceUser table.
 
-  var id_num = parseInt(id[keys[0]],10);
+  var idNum = parseInt(id[keys[0]],10);
   
-  db.delete(id_num, (id) => {
+  db.delete(idNum, (id) => {
     res.json(id);
   });
  
@@ -117,7 +118,7 @@ module.exports.getReceivedServices = function (req, res) {
   db.getReceivedIDs(conditions, (services) => {
     // console.log("Used services: " + JSON.stringify(services));
     var conditions = [];
-    for(service of services) {
+    for(var service of services) {
       conditions.push("id=" + service.serviceID);
     }
 
@@ -126,5 +127,5 @@ module.exports.getReceivedServices = function (req, res) {
       res.json(services);
     });
   });
-}
+};
 

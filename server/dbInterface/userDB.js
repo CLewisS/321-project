@@ -49,8 +49,7 @@ module.exports.add = function (user, callback) {
     ];
     
     // Insert service into database
-    var query = `INSERT INTO users (username, password, deviceToken )
-                 VALUES(?, ?, ?)`;
+    var query = "INSERT INTO users (username, password, deviceToken) VALUES(?, ?, ?)";
 
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
@@ -105,7 +104,7 @@ module.exports.delete = function(username, callback) {
     // console.log("Connected to MySQL server");
     
     // Build SQL query
-    var query = "DELETE FROM users WHERE username = " + `"` + username + `"`;
+    var query = "DELETE FROM users WHERE username = '" + username + "'";
   
     // console.log(query);
     // Get services
@@ -172,7 +171,7 @@ module.exports.update = function ( user, callback) {
     ];
     
     // Insert service into database
-    var query = "UPDATE users SET username = ?, password = ?, deviceToken = ? WHERE username = " + `"`+ user.username + `"`;
+    var query = "UPDATE users SET username = ?, password = ?, deviceToken = ? WHERE username = '" + user.username + "'";
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
@@ -230,7 +229,7 @@ module.exports.loginCheck = function (loginInfo, callback) {
     ];
     
     // Insert service into database
-    var query1 = "Select password from users where username="  + `"` + loginInfo.username + `"`;
+    var query1 = "Select password from users where username='"  + "'" + loginInfo.username + "'";
     console.log(query1);
     dbConn.query(query1, (err, results, fields) => {
       if (err) {
@@ -244,7 +243,7 @@ module.exports.loginCheck = function (loginInfo, callback) {
       }
     });
 
-    var query2 = "UPDATE users SET deviceToken = ? WHERE username = " + `"` + loginInfo.username + `"`;
+    var query2 = "UPDATE users SET deviceToken = ? WHERE username = '" + "'" + loginInfo.username + "'";
     console.log(query2);
     dbConn.query(query2,values, (err, results, fields) => {
       if (err) {
@@ -308,4 +307,4 @@ module.exports.get = function(username, callback) {
     });
 
   });
-}
+};

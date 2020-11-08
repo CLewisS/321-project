@@ -427,7 +427,7 @@ module.exports.getReceivedServices = function(conditions, callback) {
     // console.log("Connected to MySQL server");
 
     // Build SQL query
-    var query = `SELECT * FROM services WHERE `;
+    var query = "SELECT * FROM services WHERE ";
 
     var sqlConds = conditions;
 

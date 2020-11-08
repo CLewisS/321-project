@@ -5,7 +5,7 @@ var userDB = require("../dbInterface/userDB.js");
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./fcm-key.json");
-var check = require("./chatCheck.js")
+var check = require("./chatCheck.js");
 
 //Connect to firebase server to push new messages to recipient
 admin.initializeApp({

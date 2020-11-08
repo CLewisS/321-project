@@ -1,6 +1,6 @@
 
-messageGetAttribute = ["user1", "user2", "newest", "timestamp"];
-messageAttribute = ["sender", "recipient", "timestamp", "content"];
+var messageGetAttribute = ["user1", "user2", "newest", "timestamp"];
+var messageAttribute = ["sender", "recipient", "timestamp", "content"];
 
 
 /* Check if the get message query is valid.
@@ -14,7 +14,7 @@ module.exports.checkMessageQuery= function(query) {
             throw key + " is not a valid key";
         }
     }
-}
+};
 
 
 
@@ -31,6 +31,6 @@ module.exports.checkMessage= function(message) {
     }
 
     if (typeof(message.content) !== "string"){
-        throw "Message should be a string, not a " + typeof(message.content) + "."
+        throw "Message should be a string, not a " + typeof(message.content) + ".";
     }
-}
+};

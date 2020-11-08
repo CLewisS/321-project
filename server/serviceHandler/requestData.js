@@ -4,7 +4,7 @@ var searchConditions = ["id", "name", "date", "dow", "time", "lat", "longi", "ty
 var stringAttributes = ["name", "date", "dow", "time", "type", "owner", "description"];
 var numberAttributes = ["id", "lat", "longi"];
 var singleValConditions= ["id", "name", "dow", "type", "owner"];
-
+var validComps = ["min", "max"];
 
 
 /* Check if the json value has the correct variable type fot that attribute key.
@@ -39,7 +39,7 @@ var isCorrectType = function (key, value) {
 var serviceIsValid = function (service) {
   const keys = Object.keys(service);
   for(var key of keys){
-    if(!serviceAttributes.includes(key) || !isCorrectType(key, service[key])){
+    if(!serviceAttributes.includes(key) || !isCorrectType(key, service[String(key)])){
   console.log("Is valid " + key);
       return false;
     }
@@ -71,6 +71,30 @@ module.exports.getServiceFromReq = function(body) {
   return service;
 };
 
+var createMaxString = function (attribute, conditions, key) {
+  var str;
+
+  if (numberAttributes.includes(attribute)) {
+    str = attribute + " <= " + conditions[String(key)];
+  } else {
+    str = attribute + " <=" + "'" + conditions[String(key)] + "'";
+  }
+
+  return str;
+};
+
+var createMinString = function (attribute, conditions, key) {
+  var str;
+
+  if (numberAttributes.includes(attribute)) {
+    str = attribute + " >= " + conditions[String(key)];
+  } else {
+    str = attribute + " >=" + "'" + conditions[String(key)] + "'";
+  }
+
+  return str;
+};
+
 /* Create a condition string from a query string key value pair 
  * Parameters:
  *   - key: one of the key that is read from the query. 
@@ -81,59 +105,41 @@ var createConditionString = function(key, conditions){
   var split = key.split("-");
   var attribute = split[0];
 
-  if (split.length === 2) {
-    var comparator = split[1];
-  }
-
   if (singleValConditions.includes(attribute)) {
-
-    str = attribute + "='" + conditions[key] + "'";
-
-  } else if (comparator === "max") {
-
-     if (numberAttributes.includes(attribute)) {
-
-       str = attribute + " <= " + conditions[key];
-
-     } else {
-
-       str = attribute + " <=" + "'" + conditions[key] + "'";
-
-     }
-
-  } else if (comparator === "min") {
-
-     if (numberAttributes.includes(attribute)) {
-
-       str = attribute + " >= " + conditions[key];
-
-     } else {
-
-       str = attribute + " >=" + "'" + conditions[key] + "'";
-
-     }
-
+    str = attribute + "='" + conditions[String(key)] + "'";
+  } else if (split[1] === "max") {
+    str = createMaxString(attribute, conditions, key);
+  } else if (split[1] === "min") {
+    str = createMinString(attribute, conditions, key);
   } else {
-
     throw key + " is not a valid key";
-
   }
 
   return str;
 };
 
+
+var hasValidComparator = function(split) {
+  if(split.length !== 2 && singleValConditions.includes(split[0])) {
+    return true;
+  } else if (validComps.includes(split[1])) {
+    return true;
+  }
+
+  return false;
+};
+
 var isValidCondition = function (condition) {
   var split = condition.split("-");
-  if ( (split.length === 2 && searchConditions.includes(split[0]) && (split[1] === "max" || split[1] === "min")) 
-      || (split.length === 1 && searchConditions.includes(split[0])) ) {
-
+  
+  if (searchConditions.includes(split[0]) && hasValidComparator(split)) {
     console.log("valid");
     return true;
-
   } 
 
   return false;
 };
+
 
 
 /* Create an array of strings. 

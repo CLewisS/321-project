@@ -8,7 +8,7 @@ var checkType = function(key, value){
         return true;
     } 
     return false;
-}
+};
 
 
 
@@ -19,11 +19,11 @@ module.exports.checkUserInfo = function (user){
         if (!userAttributes.includes(key)) {
           throw key + " is not a valid key";
         }
-        if (!checkType(key,user[key])) {
+        if (!checkType(key, user[String(key)])) {
             throw "The value of the " + key + " has the wrong type.";
           }
       }
     return true;
-}
+};
 
 

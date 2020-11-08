@@ -5,27 +5,27 @@ var db = require("../../dbInterface/serviceDB.js");
 
 test("Service Add: Get JSON", () => {
   var req = {body: { id: 123,
-                 name: 'A service',
-                 dow: 'Monday',
-                 date: '2020-10-17',
-                 time: '12:57:33',
+                 name: "A service",
+                 dow: "Monday",
+                 date: "2020-10-17",
+                 time: "12:57:33",
                  lat: 49.56911,
                  longi: 123.456,
-                 owner: 'Brendon',
-                 type: 'food',
-                 description: 'This is a description'
+                 owner: "Brendon",
+                 type: "food",
+                 description: "This is a description"
                }};
 
   var expected = {
-                   name: 'A service',
-                   dow: 'Monday',
-                   date: '2020-10-17',
-                   time: '12:57:33',
+                   name: "A service",
+                   dow: "Monday",
+                   date: "2020-10-17",
+                   time: "12:57:33",
                    lat: 49.56911,
                    longi: 123.456,
-                   owner: 'Brendon',
-                   type: 'food',
-                   description: 'This is a description'
+                   owner: "Brendon",
+                   type: "food",
+                   description: "This is a description"
                 };
   
 
@@ -36,7 +36,7 @@ test("Service Add: Get JSON", () => {
 
   var res = {
     data: {},
-    json: function(input) {
+    json(input) {
         this.data = input;
     }
   };

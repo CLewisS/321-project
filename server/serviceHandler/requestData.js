@@ -14,12 +14,8 @@ var validComps = ["min", "max"];
  */
 var isCorrectType = function (key, value) {
 
-  if ((stringAttributes.includes(key) && typeof(value) != "string") ||
-      (numberAttributes.includes(key) && typeof(value) != "number")) {
-    return false;
-  } 
-
-  return true;
+  return !((stringAttributes.includes(key) && typeof(value) != "string") || 
+           (numberAttributes.includes(key) && typeof(value) != "number"));
 
 };
 

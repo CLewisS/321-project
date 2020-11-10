@@ -7,13 +7,6 @@
 
       const Http = new XMLHttpRequest();
   
-      var conditions = {
-        date:  {min:'2020-10-15', max:'2020-10-25'},
-        type:  "food",
-        lat:   {max:47.453, min:50.342},
-        longi: {max: 130.456, min: 122.908}
-      };
-      
         //Http.open("GET", '/service?date-minn=2020-10-15&lat-min=45.786&lat-max=67.89&longi-min=122.3434');
       Http.open("GET", '/service?owner=jon&date-min=2020-10-16&date-max=2020-10-25&type=food&lat-min=45.786&lat-max=67.89&longi-min=122.3434&longi-max=125.2323');
       Http.send();
@@ -41,7 +34,6 @@
       Http.setRequestHeader('Content-Type', 'application/json');
       
       Http.send(JSON.stringify(body));
-      //Http.send(body);
       console.log("Adding service: POST /service");
     }
 

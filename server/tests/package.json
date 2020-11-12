@@ -50,6 +50,13 @@
     "jest": "^26.6.1",
     "mysql": "^2.18.1"
   },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "../serviceHandler/*.js",
+      "../dbInterface/serviceDB.js"
+    ]
+  },
   "devDependencies": {},
   "scripts": {
     "test": "jest --env=node"

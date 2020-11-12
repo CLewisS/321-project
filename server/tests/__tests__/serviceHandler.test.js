@@ -14,7 +14,6 @@ afterAll(async () => {
   await testDb.tearDownUserDb();
 });
 
-
 test("Service Add: Valid", (done) => {
 
   var req = {body: { id: 123,

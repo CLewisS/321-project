@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -399,7 +400,10 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //launch.
         displayNow();
-        Toast.makeText(this, "Chatting with: "+ targetName , Toast.LENGTH_SHORT).show();
+        CharSequence toastMess = "Chatting with: "+ targetName;
+        Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     //function for properly ordering the chat entries and display them

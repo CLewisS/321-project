@@ -3,6 +3,7 @@ package com.example.community_link;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -57,12 +58,19 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        CommunityLinkApp.setCurrActivity(this);
+    }
+
+
+    @Override
     protected void onStop() {
         super.onStop();
         clearPopups(ALL);
     }
 
-    private void clearPopups(int except) {
+    public void clearPopups(int except) {
         if (navPopup.isShowing() && except != EXCEPT_NAV) {
             navPopup.dismiss();
         }
@@ -92,7 +100,7 @@ public class CommunityLinkActivity extends AppCompatActivity {
 
             navPopup.showAsDropDown(view);
             navPopup.setTouchable(true);
-            navPopup.update(600, 900);
+            navPopup.update(600, 700);
         }
     }
 
@@ -137,8 +145,16 @@ public class CommunityLinkActivity extends AppCompatActivity {
     }
 
     public void addService(View view) {
-        Intent addService = new Intent(this, AddServiceActivity.class);
-        startActivity(addService);
+        if (CommunityLinkApp.userLoggedIn()) {
+            Intent addService = new Intent(this, AddServiceActivity.class);
+            startActivity(addService);
+        } else {
+            CharSequence toastMess = "Sorry, you must be logged in to Add a service.";
+            Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+
     }
 
 
@@ -253,7 +269,7 @@ public class CommunityLinkActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Some fields have errors.", Toast.LENGTH_SHORT).show();
         } else {
             CommunityLinkApp.login(username, encyPass);
-            clearPopups(ALL);
+            //clearPopups(ALL);
         }
     }
 

@@ -1,5 +1,4 @@
 var serviceHandler = require("../../serviceHandler/serviceHandler.js");
-//jest.mock("../../dbInterface/serviceDB.js");
 jest.mock("../../dbInterface/dbConfig.js");
 var db = require("../../dbInterface/serviceDB.js");
 var testDb = require("../testDbSetup.js");

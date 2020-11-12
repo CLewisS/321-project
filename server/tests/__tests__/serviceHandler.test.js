@@ -1,9 +1,21 @@
 var serviceHandler = require("../../serviceHandler/serviceHandler.js");
-jest.mock("../../dbInterface/serviceDB.js");
+//jest.mock("../../dbInterface/serviceDB.js");
+jest.mock("../../dbInterface/dbConfig.js");
 var db = require("../../dbInterface/serviceDB.js");
+var testDb = require("../testDbSetup.js");
 
+beforeEach(async () => {
+  await testDb.initServiceDb();
+  await testDb.initUserDb();
+});
 
-test("Service Add: Get JSON", () => {
+afterEach(async () => {
+  await testDb.tearDownServiceDb();
+  await testDb.tearDownUserDb();
+});
+
+test("Service Add: Get JSON", (done) => {
+
   var req = {body: { id: 123,
                  name: "A service",
                  dow: "Monday",
@@ -11,7 +23,7 @@ test("Service Add: Get JSON", () => {
                  time: "12:57:33",
                  lat: 49.56911,
                  longi: 123.456,
-                 owner: "Brendon",
+                 owner: "Caleb",
                  type: "food",
                  description: "This is a description"
                }};
@@ -23,26 +35,36 @@ test("Service Add: Get JSON", () => {
                    time: "12:57:33",
                    lat: 49.56911,
                    longi: 123.456,
-                   owner: "Brendon",
+                   owner: "Caleb",
                    type: "food",
                    description: "This is a description"
                 };
   
-
+/*
   db.add.mockImplementation((service, callback) => {
     expect(service).toMatchObject(expected);
     callback({id: 15});
   });
-
+*/
   var res = {
-    data: {},
     json(input) {
-        this.data = input;
+      try {
+        console.log("Called json");
+        console.log("Called status " + JSON.stringify(input));
+        expect(this.code).toBe(0);
+        expect(input).toMatchObject({id: 1});
+        done();
+      } catch (err) {
+        done(err);
+      }
+    },
+    code: 0,
+    status(input) {
+      this.code = input;
+      return this;
     }
   };
 
   serviceHandler.addService(req, res);
 
-  expect(db.add).toHaveBeenCalled();
-  expect(res.data).toMatchObject({id: 15});
 });

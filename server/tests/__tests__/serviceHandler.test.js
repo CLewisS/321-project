@@ -111,3 +111,51 @@ test("Service Add: Invalid Attribute", (done) => {
   serviceHandler.addService(req, res);
 
 });
+
+test("Service Add: Invalid Type", (done) => {
+
+  var req = {body: { id: 123,
+                 name: 15,
+                 dow: "Monday",
+                 date: "2020-10-17",
+                 time: "12:57:33",
+                 lat: 49.56911,
+                 longi: 123.456,
+                 owner: "Caleb",
+                 type: "food",
+                 description: "This is a description"
+               }};
+
+  var expected = {
+                   name: "A service",
+                   dow: "Monday",
+                   date: "2020-10-17",
+                   time: "12:57:33",
+                   lat: 49.56911,
+                   longi: 123.456,
+                   owner: "Caleb",
+                   type: "food",
+                   description: "This is a description"
+                };
+  
+  var res = { 
+    json(input) {
+      try {
+        expect(this.code).toBe(400);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    },
+  
+    code: undefined,
+  
+    status(input) {
+      this.code = input;
+      return this;
+    }
+  }
+
+  serviceHandler.addService(req, res);
+
+});

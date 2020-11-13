@@ -19,6 +19,7 @@ public class ServiceData implements Serializable{
     private double longi;
     private double lat;
     private int id;
+    private int maxCapacity;
 
     public ServiceData(){
         longi = -123.116226;
@@ -56,6 +57,8 @@ public class ServiceData implements Serializable{
     public void setLongi(double longi){ this.longi = longi;}
 
     public void setLat(double lat){ this.lat = lat;}
+
+    public void setMaxCapacity(int maxCapacity){this.maxCapacity = maxCapacity;}
 
     public String toString(){
         return  "ID: " + id + "\n" +

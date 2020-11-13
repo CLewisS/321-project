@@ -114,6 +114,22 @@
                     tools:text="Please enter a description." />
 
                 <TextView
+                    android:id="@+id/maxPeople"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/droid_sans"
+                    android:text="Max Capacity:"
+                    android:textColor="#000000"
+                    android:textSize="18dp" />
+
+                <Spinner
+                    android:id="@+id/number_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
                     android:id="@+id/tvDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -124,8 +140,8 @@
 
                 <DatePicker
                     android:id="@+id/datePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="179dp"
+                    android:layout_height="137dp"
                     android:layout_gravity="center_horizontal"
                     android:calendarViewShown="false"
                     android:datePickerMode="spinner" />

@@ -41,6 +41,7 @@ public class AddServiceActivity extends CommunityLinkActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         initTime();
         initType();
+        initNum();
         getLocation();
     }
 
@@ -68,6 +69,14 @@ public class AddServiceActivity extends CommunityLinkActivity {
         type.setAdapter(typeAdapter);
     }
 
+    private void initNum(){
+        Spinner num = (Spinner) findViewById(R.id.number_spinner);
+        ArrayAdapter<CharSequence> numAdapter = ArrayAdapter.createFromResource(this,
+                R.array.number_array, android.R.layout.simple_spinner_item);
+        numAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        num.setAdapter(numAdapter);
+    }
+
     private int getHour() {
         Spinner hourSpin = findViewById(R.id.hourAdd);
         String hour = hourSpin.getSelectedItem().toString();
@@ -93,6 +102,11 @@ public class AddServiceActivity extends CommunityLinkActivity {
     private String getType() {
         Spinner typeSpinner = findViewById(R.id.type_spinner);
         return typeSpinner.getSelectedItem().toString();
+    }
+
+    private int getMaxCapacity(){
+        Spinner numSpinner = findViewById(R.id.number_spinner);
+        return Integer.parseInt(numSpinner.getSelectedItem().toString());
     }
 
     private void clearErrs() {
@@ -158,6 +172,7 @@ public class AddServiceActivity extends CommunityLinkActivity {
         if (CommunityLinkApp.userLoggedIn()) {
             int hour = getHour();
             int minute = getMin();
+            int maxCapacity = getMaxCapacity();
 
             EditText titleIn = (EditText) findViewById(R.id.etProjectName);
             String title = titleIn.getText().toString();
@@ -178,6 +193,7 @@ public class AddServiceActivity extends CommunityLinkActivity {
                 sd.setDescription(desc);
                 sd.setLat(userLoc.getLatitude());
                 sd.setLongi(userLoc.getLongitude());
+                sd.setMaxCapacity(maxCapacity);
 
                 picker = (DatePicker) findViewById(R.id.datePicker);
                 sd.setDate(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());

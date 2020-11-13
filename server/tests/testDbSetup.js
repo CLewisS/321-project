@@ -100,7 +100,7 @@ var initUserDb = function (callback) {
       return;
     }
 
-    userDbConn.query("DROP TABLE IF EXISTS user", (err) => {
+    userDbConn.query("DROP TABLE IF EXISTS users", (err) => {
       if (err) {
         console.log(err);
       } else {

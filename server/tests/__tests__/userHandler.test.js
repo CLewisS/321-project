@@ -127,8 +127,8 @@ test("User Add: Invalid Type", (done) => {
 
 test("Add user: null deviceToken", (done) => {
 
-  var req = {body: { username: "MRAK",
-                     password: "dwiahsdfvlknsdvd",
+  var req = {body: { username: "Alice",
+                     password: "12345",
                      deviceToken: ""
                    }};
 
@@ -136,7 +136,7 @@ test("Add user: null deviceToken", (done) => {
     json(input) {
       try {
         expect(this.code).toBeUndefined();
-        expect(input).toMatchObject({username: "MRAK", password: "dwiahsdfvlknsdvd"});
+        expect(input).toMatchObject({username: "Alice", password: "12345"});
         done();
       } catch (err) {
         done(err);

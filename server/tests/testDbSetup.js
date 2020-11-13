@@ -41,19 +41,6 @@ var initServiceDb = function (callback) {
     serviceDbConn.query(createServiceTable, (err) => {
       if (err) {
         console.log(err);
-      } else {
-        var createUserServicesTable = `CREATE TABLE IF NOT EXISTS userServices (
-                                         id INT unsigned NOT NULL AUTO_INCREMENT, 
-  	                                 username VARCHAR(50) NOT NULL,
-                                         status VARCHAR(15) NOT NULL,
-                                         serviceID INT unsigned NOT NULL,
-                                         PRIMARY KEY (id)
-                                       )`;
-        serviceDbConn.query(createUserServicesTable, (err) => {
-          if (err) {
-            console.log(err);
-  	  }
-        });
       }
   
       serviceDbConn.end((err) => {
@@ -84,13 +71,6 @@ var tearDownServiceDb = function (callback) {
     serviceDbConn.query(dropServiceTable, (err) => {
       if (err) {
         console.log(err);
-      } else {
-        var dropUserServicesTable = "DROP TABLE userServices";
-        serviceDbConn.query(dropUserServicesTable, (err) => {
-          if (err) {
-            console.log(err);
-  	  }
-        });
       }
   
       serviceDbConn.end((err) => {
@@ -124,9 +104,9 @@ var initUserDb = function (callback) {
       if (err) {
         console.log(err);
       } else {
-        var createuserTable = `CREATE TABLE user (
+        var createuserTable = `CREATE TABLE users (
                                  username VARCHAR(150) NOT NULL,
-                                 deviceToken VARCHAR(150) NOT NULL,
+                                 deviceToken VARCHAR(150),
                                  password VARCHAR(150) NOT NULL,
                                  PRIMARY KEY (username)
                                );`
@@ -135,7 +115,7 @@ var initUserDb = function (callback) {
           if (err) {
             console.log(err);
           } else {
-            userDbConn.query("INSERT INTO user (username, deviceToken, password) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
+            userDbConn.query("INSERT INTO users (username, deviceToken, password) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
               (err) => {
                 if (err) {
                   console.log(err);
@@ -148,7 +128,7 @@ var initUserDb = function (callback) {
                                              status VARCHAR(15) NOT NULL,
                                              serviceID INT unsigned NOT NULL,
                                              PRIMARY KEY (id),
-                                             FOREIGN KEY (username) REFERENCES user(username)
+                                             FOREIGN KEY (username) REFERENCES users(username)
                                            )`;
             userDbConn.query(createUserServicesTable, (err) => {
               if (err) {
@@ -189,7 +169,7 @@ var tearDownUserDb = function (callback) {
         console.log(err);
       } else {
 
-        userDbConn.query("DROP TABLE user", (err) => {
+        userDbConn.query("DROP TABLE users", (err) => {
           if (err) {
             console.log(err);
   	  }

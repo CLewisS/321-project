@@ -22,6 +22,10 @@ module.exports.addUser = function (req, res) {
     return;
   }  
 
+  if (!user.hasOwnProperty("deviceToken")) {
+    user.deviceToken = "";
+  }
+
   db.add(user, (username, err) => {
     if (err) {
       res.status(err.code).json(err);
@@ -67,6 +71,10 @@ module.exports.updateUser = function (req, res) {
     res.status(400).json({code: 400, message: err});
     return;
   }  
+
+  if (!updateUser.hasOwnProperty("deviceToken")) {
+    updateUser.deviceToken = "";
+  }
 
   db.update(updateUser, (user, err) => {
     if (err) {

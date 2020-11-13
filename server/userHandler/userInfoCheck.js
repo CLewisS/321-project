@@ -4,7 +4,7 @@ const userStringAttributes = ["username","password","deviceToken"];
 
 
 var checkType = function(key, value){
-  if(userStringAttributes.includes(key) && !typeof(value)=="string"){
+  if(userStringAttributes.includes(key) && typeof(value) !== "string"){
     throw key + "is type " + typeof(value) + " but should be type string";
     return false;
   } 
@@ -22,7 +22,7 @@ module.exports.checkUserInfo = function (user){
     }
 
     if (!checkType(key, user[String(key)])) {
-        throw "The value of the " + key + " has the wrong type.";
+       return false;
     }
   }
   return true;

@@ -18,6 +18,7 @@ module.exports.addUser = function (req, res) {
   try {
     checkData.checkUserInfo(user);
   } catch (err) {
+    console.log(err);
     res.status(400).json({code: 400, message: err});
     return;
   }  
@@ -68,6 +69,7 @@ module.exports.updateUser = function (req, res) {
   try {
     checkData.checkUserInfo(updateUser);
   } catch (err) {
+    console.log(err);
     res.status(400).json({code: 400, message: err});
     return;
   }  
@@ -98,6 +100,7 @@ module.exports.loginCheck = function (req, res) {
   try {
     checkData.checkUserInfo(loginInfo);
   } catch (err) {
+    console.log(err);
     res.status(400).json({code: 400, message: err});
     return;
   }  

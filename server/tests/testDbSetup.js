@@ -41,11 +41,13 @@ var initServiceDb = function (callback) {
     serviceDbConn.query(createServiceTable, (err) => {
       if (err) {
         console.log(err);
+        return;
       }
   
       serviceDbConn.end((err) => {
         if (err) {
           console.log(err);
+          return;
         }
 	callback();
       });
@@ -66,16 +68,18 @@ var tearDownServiceDb = function (callback) {
       return;
     }
   
-    var dropServiceTable = "DROP TABLE services";
+    var dropServiceTable = "DROP TABLE IF EXISTS services";
   
     serviceDbConn.query(dropServiceTable, (err) => {
       if (err) {
         console.log(err);
+        return;
       }
   
       serviceDbConn.end((err) => {
         if (err) {
           console.log(err);
+          return;
         }
 	callback();
       });
@@ -96,32 +100,35 @@ var initUserDb = function (callback) {
 
   userDbConn.connect((err) => {
     if (err) {
-      consople.log("Couldn't connect to DB");
+      console.log("Couldn't connect to DB");
       return;
     }
 
-    userDbConn.query("DROP TABLE IF EXISTS users", (err) => {
+    var createuserTable = `CREATE TABLE IF NOT EXISTS users (
+                             username VARCHAR(150) NOT NULL,
+                             deviceToken VARCHAR(150),
+                             password VARCHAR(150) NOT NULL,
+                             PRIMARY KEY (username)
+                           );`
+  
+    userDbConn.query(createuserTable, (err) => {
       if (err) {
         console.log(err);
-      } else {
-        var createuserTable = `CREATE TABLE users (
-                                 username VARCHAR(150) NOT NULL,
-                                 deviceToken VARCHAR(150),
-                                 password VARCHAR(150) NOT NULL,
-                                 PRIMARY KEY (username)
-                               );`
-      
-        userDbConn.query(createuserTable, (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            userDbConn.query("INSERT INTO users (username, deviceToken, password) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
-              (err) => {
-                if (err) {
-                  console.log(err);
-                } 
-    	    });
-    
+        return;
+      } 
+
+      userDbConn.query("DELETE FROM users", (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+
+        userDbConn.query("INSERT INTO users (username, deviceToken, password) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
+          (err) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
             var createUserServicesTable = `CREATE TABLE IF NOT EXISTS userServices (
                                              id INT unsigned NOT NULL AUTO_INCREMENT, 
                                              username VARCHAR(50) NOT NULL,
@@ -133,23 +140,24 @@ var initUserDb = function (callback) {
             userDbConn.query(createUserServicesTable, (err) => {
               if (err) {
                 console.log(err);
+                return;
               }
-            });
-    
-          }
 
-          userDbConn.end((err) => {
-            if (err) {
-              console.log(err);
-            }
-	    callback();
-          });
+              userDbConn.end((err) => {
+                if (err) {
+                  console.log(err);
+                  return;
+                }
+                callback();
+              });
+
+            });
         });
-  
-      }
-  
+
+      });
+        
     });
-  
+
   });
 };
 
@@ -164,24 +172,26 @@ var tearDownUserDb = function (callback) {
       return;
     }
   
-    userDbConn.query("DROP TABLE userServices", (err) => {
+    userDbConn.query("DROP TABLE IF EXISTS userServices", (err) => {
       if (err) {
         console.log(err);
-      } else {
+        return;
+      } 
 
-        userDbConn.query("DROP TABLE users", (err) => {
-          if (err) {
-            console.log(err);
-  	  }
-        });
-
-      }
-  
-      userDbConn.end((err) => {
+      userDbConn.query("DROP TABLE IF EXISTS users", (err) => {
         if (err) {
           console.log(err);
+          return;
         }
-	callback();
+
+        userDbConn.end((err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          callback();
+        });
+
       });
   
     });

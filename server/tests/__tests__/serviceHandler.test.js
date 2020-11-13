@@ -2,6 +2,7 @@ var serviceHandler = require("../../serviceHandler/serviceHandler.js");
 jest.mock("../../dbInterface/dbConfig.js");
 var db = require("../../dbInterface/serviceDB.js");
 var testDb = require("../testDbSetup.js");
+var userHandlerTests = require("../userHandlerTests.js");
 
 beforeAll((done) => {
   var cb = function() {
@@ -21,6 +22,7 @@ beforeAll((done) => {
 });
 
 afterAll((done) => {
+  done();
   var cb = function() {
     var count = 0;
     return () => {
@@ -50,18 +52,6 @@ test("Service Add: Valid", (done) => {
                  type: "food",
                  description: "This is a description"
                }};
-
-  var expected = {
-                   name: "A service",
-                   dow: "Monday",
-                   date: "2020-10-17",
-                   time: "12:57:33",
-                   lat: 49.56911,
-                   longi: 123.456,
-                   owner: "Caleb",
-                   type: "food",
-                   description: "This is a description"
-                };
   
   var res = { 
     json(input) {
@@ -136,18 +126,6 @@ test("Service Add: Invalid Type", (done) => {
                  description: "This is a description"
                }};
 
-  var expected = {
-                   name: "A service",
-                   dow: "Monday",
-                   date: "2020-10-17",
-                   time: "12:57:33",
-                   lat: 49.56911,
-                   longi: 123.456,
-                   owner: "Caleb",
-                   type: "food",
-                   description: "This is a description"
-                };
-  
   var res = { 
     json(input) {
       try {
@@ -169,3 +147,5 @@ test("Service Add: Invalid Type", (done) => {
   serviceHandler.addService(req, res);
 
 });
+
+userHandlerTests();

@@ -14,7 +14,6 @@ module.exports.getServices = function (req, res) {
   try {
     var conditions = reqData.getConditionsFromQuery(req.query);
   } catch(err) {
-    console.log("Error: " + err);
     res.status(400).json({code: 400, message: err});
     return;
   }
@@ -40,28 +39,26 @@ module.exports.addService = function (req, res) {
   try {  
     var service = reqData.getServiceFromReq(req.body);
   } catch (err) {
-    console.log("Error: " + err);
     res.status(400).json({code: 400, message: err});
     return;
   }
 
   db.add(service, (id, err) => {
-
-    db.adduserServices(service, id, (err) => {
-
-      if (err) {
-        res.status(err.code).json(err);
-	return;
-      }
-
-    });
-
     if (err) {
       res.status(err.code).json(err);
       return;
     } else {
-      res.json(id);
-      return;
+
+      db.adduserServices(service, id, (err) => {
+        if (err) {
+          res.status(err.code).json(err);
+          return;
+        } else {
+          res.json(id);
+          return;
+        }
+      });
+
     }
 
   });

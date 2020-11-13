@@ -94,7 +94,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //setup local user parameters
         //TODO: Remove this for online testing
-        //CommunityLinkApp.user = new UserProfile("Charlie", "Charlie");
+        CommunityLinkApp.user = new UserProfile("TEST", "TEST");
         targetName = null;
 
         MasterChatLog = new HashMap<String, List<ChatMessage>>();

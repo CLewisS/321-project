@@ -140,7 +140,7 @@
 
                 <DatePicker
                     android:id="@+id/datePicker"
-                    android:layout_width="179dp"
+                    android:layout_width="274dp"
                     android:layout_height="137dp"
                     android:layout_gravity="center_horizontal"
                     android:calendarViewShown="false"

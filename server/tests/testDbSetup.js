@@ -15,7 +15,7 @@ const userDBTest = {host: "localhost",
         /* SERIVCE DATABSE */
 /************************************/
 
-var initServiceDb = function () {
+var initServiceDb = function (callback) {
   var serviceDbConn = mysql.createConnection(serviceDBTest);
 
   serviceDbConn.connect((err) => {
@@ -60,6 +60,7 @@ var initServiceDb = function () {
         if (err) {
           console.log(err);
         }
+	callback();
       });
   
     });
@@ -69,7 +70,7 @@ var initServiceDb = function () {
 
 module.exports.initServiceDb = initServiceDb;
 
-var tearDownServiceDb = function () {
+var tearDownServiceDb = function (callback) {
   var serviceDbConn = mysql.createConnection(serviceDBTest);
 
   serviceDbConn.connect((err) => {
@@ -96,6 +97,7 @@ var tearDownServiceDb = function () {
         if (err) {
           console.log(err);
         }
+	callback();
       });
   
     });
@@ -109,7 +111,7 @@ module.exports.tearDownServiceDb = tearDownServiceDb;
 
         /* USER DATABSE */
 /************************************/
-var initUserDb = function () {
+var initUserDb = function (callback) {
   var userDbConn = mysql.createConnection(userDBTest);
 
   userDbConn.connect((err) => {
@@ -117,47 +119,54 @@ var initUserDb = function () {
       consople.log("Couldn't connect to DB");
       return;
     }
-  
-    var createuserTable = `CREATE TABLE IF NOT EXISTS user (
-                             username VARCHAR(150) NOT NULL,
-                             deviceToken VARCHAR(150) NOT NULL,
-                             password VARCHAR(150) NOT NULL,
-                             PRIMARY KEY (username)
-                           );`
-  
-    userDbConn.query(createuserTable, (err) => {
+
+    userDbConn.query("DROP TABLE IF EXISTS user", (err) => {
       if (err) {
         console.log(err);
       } else {
-        userDbConn.query("INSERT INTO user (username, deviceToken, password) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
-          (err) => {
-            if (err) {
-              console.log(err);
-            } else {
-
-	    }
-	  });
-
-        var createUserServicesTable = `CREATE TABLE IF NOT EXISTS userServices (
-                                         id INT unsigned NOT NULL AUTO_INCREMENT, 
-                                         username VARCHAR(50) NOT NULL,
-                                         status VARCHAR(15) NOT NULL,
-                                         serviceID INT unsigned NOT NULL,
-                                         PRIMARY KEY (id),
-                                         FOREIGN KEY (username) REFERENCES user(username)
-                                       )`;
-        userDbConn.query(createUserServicesTable, (err) => {
+        var createuserTable = `CREATE TABLE user (
+                                 username VARCHAR(150) NOT NULL,
+                                 deviceToken VARCHAR(150) NOT NULL,
+                                 password VARCHAR(150) NOT NULL,
+                                 PRIMARY KEY (username)
+                               );`
+      
+        userDbConn.query(createuserTable, (err) => {
           if (err) {
             console.log(err);
+          } else {
+            userDbConn.query("INSERT INTO user (username, deviceToken, password) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
+              (err) => {
+                if (err) {
+                  console.log(err);
+                } 
+    	    });
+    
+            var createUserServicesTable = `CREATE TABLE IF NOT EXISTS userServices (
+                                             id INT unsigned NOT NULL AUTO_INCREMENT, 
+                                             username VARCHAR(50) NOT NULL,
+                                             status VARCHAR(15) NOT NULL,
+                                             serviceID INT unsigned NOT NULL,
+                                             PRIMARY KEY (id),
+                                             FOREIGN KEY (username) REFERENCES user(username)
+                                           )`;
+            userDbConn.query(createUserServicesTable, (err) => {
+              if (err) {
+                console.log(err);
+              }
+            });
+    
           }
+
+          userDbConn.end((err) => {
+            if (err) {
+              console.log(err);
+            }
+	    callback();
+          });
         });
-      }
   
-      userDbConn.end((err) => {
-        if (err) {
-          console.log(err);
-        }
-      });
+      }
   
     });
   
@@ -166,7 +175,7 @@ var initUserDb = function () {
 
 module.exports.initUserDb = initUserDb;
 
-var tearDownUserDb = function () {
+var tearDownUserDb = function (callback) {
   var userDbConn = mysql.createConnection(userDBTest);
 
   userDbConn.connect((err) => {
@@ -192,6 +201,7 @@ var tearDownUserDb = function () {
         if (err) {
           console.log(err);
         }
+	callback();
       });
   
     });

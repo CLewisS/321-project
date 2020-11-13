@@ -202,11 +202,11 @@
 
       var loginInfo = { 
               username: "brendon",
-              password: "newpass3453453",
+              password: "newpassword3",
               deviceToken:"new device1"
                  };
       // you can change the id here based on your database table
-      Http.open("PUT", '/userlogin');
+      Http.open("PUT", '/user/login');
       Http.setRequestHeader('Content-Type', 'application/json');
       
       Http.send(JSON.stringify(loginInfo));

@@ -141,9 +141,6 @@ module.exports.delete = function(username, callback) {
 
 module.exports.update = function ( user, callback) {
 
-  // console.log("Adding Service to DB");
-
-
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
@@ -152,8 +149,6 @@ module.exports.update = function ( user, callback) {
       callback({}, {code: 500, message: err.message});
       return; 
     }
-
-    // console.log("Connected to MySQL server");
 
     var values = [
       user.username,

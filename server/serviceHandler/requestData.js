@@ -14,19 +14,8 @@ var validComps = ["min", "max"];
  */
 var isCorrectType = function (key, value) {
 
-  if (stringAttributes.includes(key) && typeof(value) != "string") {
-
-    // console.log("The value of " + key + " shoulbe be a string, not a " + typeof(value) + "." );
-    return false;
-
-  } else if (numberAttributes.includes(key) && typeof(value) != "number") {
-
-    // console.log("The value of " + key + " shoulbe be a number, not a " + typeof(value) + "." );
-    return false;
-
-  } 
-
-  return true;
+  return !((stringAttributes.includes(key) && typeof(value) != "string") || 
+           (numberAttributes.includes(key) && typeof(value) != "number"));
 
 };
 
@@ -40,7 +29,6 @@ var serviceIsValid = function (service) {
   const keys = Object.keys(service);
   for(var key of keys){
     if(!serviceAttributes.includes(key) || !isCorrectType(key, service[String(key)])){
-  console.log("Is valid " + key);
       return false;
     }
   }
@@ -63,7 +51,6 @@ module.exports.getServiceFromReq = function(body) {
     delete service.id;
   }
 
-  // console.log("get from req " + JSON.stringify(service));
   if (!serviceIsValid(service)) {
     throw "Service is invalid";
   }
@@ -133,7 +120,6 @@ var isValidCondition = function (condition) {
   var split = condition.split("-");
   
   if (searchConditions.includes(split[0]) && hasValidComparator(split)) {
-    console.log("valid");
     return true;
   } 
 

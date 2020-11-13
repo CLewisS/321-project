@@ -55,33 +55,32 @@ public class MainActivity extends CommunityLinkActivity {
         Button loginButt = findViewById(R.id.loginButtIntro);
         Button signupButt = findViewById(R.id.signupButtIntro);
         Button chatButt = findViewById(R.id.chatEntry_Button);
-        Button delButt = findViewById(R.id.delButt);
 
-        welcome.setVisibility(View.VISIBLE);
+        welcome.setText("Welcome to Community Link!");
+
         loginText.setVisibility(View.VISIBLE);
         loginButt.setVisibility(View.VISIBLE);
         signupText.setVisibility(View.VISIBLE);
         signupButt.setVisibility(View.VISIBLE);
         chatButt.setVisibility(View.GONE);
-        delButt.setVisibility(View.GONE);
     }
 
-    private void setUserView() {
+    public void setUserView() {
         TextView welcome = findViewById(R.id.welcome);
         TextView loginText = findViewById(R.id.loginText);
         TextView signupText = findViewById(R.id.signupText);
         Button loginButt = findViewById(R.id.loginButtIntro);
         Button signupButt = findViewById(R.id.signupButtIntro);
         Button chatButt = findViewById(R.id.chatEntry_Button);
-        Button delButt = findViewById(R.id.delButt);
 
-        welcome.setVisibility(View.GONE);
+        String username = CommunityLinkApp.user.getUsername();
+        welcome.setText("Hello " + username + "!");
+
         loginText.setVisibility(View.GONE);
         loginButt.setVisibility(View.GONE);
         signupText.setVisibility(View.GONE);
         signupButt.setVisibility(View.GONE);
         chatButt.setVisibility(View.VISIBLE);
-        delButt.setVisibility(View.VISIBLE);
     }
 
     private void getFCMToken() {

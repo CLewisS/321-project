@@ -25,7 +25,8 @@ module.exports.add = function (message, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -39,7 +40,8 @@ module.exports.add = function (message, callback) {
     var query = "INSERT INTO threads (thread, numMess) VALUES ('" + thread + "', 1) ON DUPLICATE KEY UPDATE numMess = numMess + 1";
     dbConn.query(query, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
   
       // console.log("Updated thread message count");
@@ -48,7 +50,8 @@ module.exports.add = function (message, callback) {
       query = "SELECT numMess FROM threads WHERE thread = '" + thread + "'";
       dbConn.query(query, (err, results, fields) => {
         if (err) {
-          return console.error(err.message);
+          callback({}, {code: 500, message: err.message});
+          return;
         }
 
 
@@ -63,7 +66,8 @@ module.exports.add = function (message, callback) {
 
         dbConn.query(query, values, (err, results, fields) => {
           if (err) {
-            return console.error(err.message);
+            callback({}, {code: 500, message: err.message});
+            return;
           }
           // console.log("Inserted into messages");
           callback({id: values[0]});
@@ -72,7 +76,8 @@ module.exports.add = function (message, callback) {
         // End connection
         dbConn.end(function (err) {
           if (err) {
-            return console.error("error: " + err.message); 
+            callback({}, {code: 500, message: err.message});
+            return;
           }
       
           // console.log("Closed connection to MySQL server");
@@ -103,7 +108,8 @@ module.exports.get = function(user1, user2, newest, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -120,7 +126,8 @@ module.exports.get = function(user1, user2, newest, callback) {
     // Get total number of thread messages
     dbConn.query(query, (err, result, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
 
       if (result[0]) {
@@ -133,7 +140,8 @@ module.exports.get = function(user1, user2, newest, callback) {
 
         dbConn.query(query, (err, results, fields) => {
           if (err) {
-            return console.error(err.message);
+            callback({}, {code: 500, message: err.message});
+            return;
           }
           callback(Object.values(results[0])[0]);
         });
@@ -142,7 +150,8 @@ module.exports.get = function(user1, user2, newest, callback) {
       // End connection
       dbConn.end(function (err) {
         if (err) {
-          return console.error("error: " + err.message); 
+          callback({}, {code: 500, message: err.message});
+          return;
         }
   
         // console.log("Closed connection to MySQL server");

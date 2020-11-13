@@ -10,38 +10,45 @@ var db = require("../dbInterface/serviceDB.js");
 var reqData = require("./requestData.js");
 
 module.exports.getServices = function (req, res) {
-  // console.log("In service handler: get services");
   // console.log("query: " + JSON.stringify(req.query));
 
   var conditions = reqData.getConditionsFromQuery(req.query);
 
-  db.get(conditions, (services) => { 
-    res.json(services);
+  db.get(conditions, (services, err) => { 
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      res.json(services);
+      return;
+    }
   });
 };
 
 
 
 module.exports.addService = function (req, res) {
-  // console.log("In service handler: add service");
   // console.log("service " + JSON.stringify(req.body));
   
   var service = reqData.getServiceFromReq(req.body);
   var  insertID ;
 
-  
-  db.add(service, (id) => {
-    db.adduserServices(service, id);
-	  console.log(id);
-    res.json(id);
-  });
-  
-  /*  } else {
-  
-    console.log("This is not a valid object for create a service.");
-    res.status(400).json({error: "Service object is invalid"});
+  db.add(service, (id, err) => {
+    db.adduserServices(service, id, (err) => {
+      if (err) {
+        res.status(err.code).json(err);
+	return;
+      }
+    });
 
-  }*/
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      res.json(id);
+      return;
+    }
+  });
 
 };
 
@@ -58,8 +65,14 @@ module.exports.deleteService = function (req, res) {
 
   var idNum = parseInt(id[keys[0]],10);
   
-  db.delete(idNum, (id) => {
-    res.json(id);
+  db.delete(idNum, (id, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      res.json(id);
+      return;
+    }
   });
  
 };
@@ -68,7 +81,6 @@ module.exports.deleteService = function (req, res) {
 module.exports.updateService = function (req, res) {
   // console.log("In service handler: update service");
   var updateService = req.body;
-  // console.log(updateService);
   const keys = Object.keys(req.query);
   if(keys.length!==1 || keys[0]!=="id"){
     throw "The delete service id passed in was wrong.";
@@ -80,8 +92,14 @@ module.exports.updateService = function (req, res) {
     throw "This is not a valid service!";
   }
 
-  db.update(serviceID, updateService, (service) => {
-    res.json(service);
+  db.update(serviceID, updateService, (service, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      res.json(service);
+      return;
+    }
   });
 
 };
@@ -92,40 +110,43 @@ module.exports.receiveService = function (req, res) {
   
   var receiveInfo = req.body;
   
-  // console.log("Body " + JSON.stringify(receiveInfo));
-
-  db.receive(receiveInfo.username, receiveInfo.serviceID , (id) => {
-    res.json(id);
+  db.receive(receiveInfo.username, receiveInfo.serviceID , (id, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      res.json(id);
+      return;
+    }
   });
   
-
-/*  } else {
-  
-    console.log("This is not a valid object for create a service.");
-    res.status(400).json({error: "Service object is invalid"});
-
-  }*/
-
 };
 
 
 module.exports.getReceivedServices = function (req, res) {
   // console.log("In service handler: get received services");
-  // console.log("query: " + JSON.stringify(req.query));
 
   var conditions = ["username='" + req.query.username + "'", "status='" + req.query.status + "'"];
 
-  db.getReceivedIDs(conditions, (services) => {
-    // console.log("Used services: " + JSON.stringify(services));
-    var conditions = [];
-    for(var service of services) {
-      conditions.push("id=" + service.serviceID);
-    }
+  db.getReceivedIDs(conditions, (services, err) => {
+    if (err) {
+      res.status(err.code).json(err);
+      return;
+    } else {
+      var conditions = [];
+      for(var service of services) {
+        conditions.push("id=" + service.serviceID);
+      }
 
-    db.getReceivedServices(conditions, (services) => { 
-	    // console.log("Got " + JSON.stringify(services));
-      res.json(services);
-    });
+      db.getReceivedServices(conditions, (services, err) => { 
+        if (err) {
+          res.status(err.code).json(err);
+          return;
+        } else {
+          res.json(services);
+          return;
+        }
+      });
+    }
   });
 };
-

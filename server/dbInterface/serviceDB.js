@@ -22,28 +22,20 @@ var dbConfig = require("./dbConfig");
 
 module.exports.add = function (service, callback) {
 
-  
   // console.log("Adding Service to DB");
-
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
 
     // Get Service Values  
-    try {
-      if (Object.values(service).length !== 9){ 
-        throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
-    }
-  } catch (err) {
-      return console.error(err);
-    }
     var values = [service.name, 
                   service.date, 
                   service.dow, 
@@ -60,21 +52,18 @@ module.exports.add = function (service, callback) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Inserted");
-      // console.log(results);
       callback({id: results.insertId});
     });
 
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -99,7 +88,8 @@ module.exports.get = function(conditions, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -111,12 +101,11 @@ module.exports.get = function(conditions, callback) {
 
     query += sqlConds.join(" AND ");
   
-    // console.log(query);
-
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
   
       callback(result);
@@ -125,10 +114,9 @@ module.exports.get = function(conditions, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -154,7 +142,8 @@ module.exports.delete = function(serviceID, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -167,7 +156,8 @@ module.exports.delete = function(serviceID, callback) {
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
   
       callback(result);
@@ -176,10 +166,9 @@ module.exports.delete = function(serviceID, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -208,19 +197,13 @@ module.exports.update = function (serviceID, service, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
 
     // Get Service Values  
-    try {
-      if (Object.values(service).length !== 8){
-         throw "Service has too few [" + Object.values(service).length + "] values. service: " + JSON.stringify(service);
-      }
-        } catch (err) {
-      return console.error(err);
-    }
     var values = [service.name, 
                   service.date, 
                   service.time, 
@@ -236,10 +219,9 @@ module.exports.update = function (serviceID, service, callback) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Updated");
 
       callback(results);
     });
@@ -248,10 +230,9 @@ module.exports.update = function (serviceID, service, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -259,7 +240,7 @@ module.exports.update = function (serviceID, service, callback) {
 }; 
 
 
-module.exports.adduserServices = function (service, insertId) {
+module.exports.adduserServices = function (service, insertId, callback) {
 
   // console.log("Adding Service to userDB userServices table.");
 
@@ -269,7 +250,8 @@ module.exports.adduserServices = function (service, insertId) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -279,28 +261,24 @@ module.exports.adduserServices = function (service, insertId) {
       "post",
       insertId.id
     ];
-    // console.log(insertId.id);
+
     // Insert service into database
     var query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Inserted");
-
-     
     });
 
 
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -312,13 +290,13 @@ module.exports.receive = function (receiver,serviceID, callback) {
 
   // console.log("Adding Service to userDB userServices table.");
 
-
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -336,11 +314,10 @@ module.exports.receive = function (receiver,serviceID, callback) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
   
-      // console.log("Inserted");
-
       callback(results);
     });
 
@@ -348,10 +325,9 @@ module.exports.receive = function (receiver,serviceID, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -368,7 +344,8 @@ module.exports.getReceivedIDs = function(conditions, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -380,12 +357,11 @@ module.exports.getReceivedIDs = function(conditions, callback) {
 
     query += sqlConds.join(" AND ");
   
-
-
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
   
       callback(result);
@@ -394,10 +370,9 @@ module.exports.getReceivedIDs = function(conditions, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -421,7 +396,8 @@ module.exports.getReceivedServices = function(conditions, callback) {
   // Start database connection  
   dbConn.connect(function (err) {
     if (err) {
-      return console.error("error: " + err.message);
+      callback({}, {code: 500, message: err.message});
+      return;
     }
 
     // console.log("Connected to MySQL server");
@@ -433,11 +409,11 @@ module.exports.getReceivedServices = function(conditions, callback) {
 
     query += sqlConds.join(" OR ");
 
-
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
-        return console.error(err.message);
+        callback({}, {code: 500, message: err.message});
+        return;
       }
   
       callback(result);
@@ -446,16 +422,11 @@ module.exports.getReceivedServices = function(conditions, callback) {
     // End connection
     dbConn.end(function (err) {
       if (err) {
-        return console.error("error: " + err.message); 
+        callback({}, {code: 500, message: err.message});
+        return;
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
 
 };
-
-
-
-

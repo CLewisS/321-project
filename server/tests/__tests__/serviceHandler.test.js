@@ -3,14 +3,38 @@ jest.mock("../../dbInterface/dbConfig.js");
 var db = require("../../dbInterface/serviceDB.js");
 var testDb = require("../testDbSetup.js");
 
-beforeAll(async () => {
-  await testDb.initServiceDb();
-  await testDb.initUserDb();
+beforeAll((done) => {
+  var cb = function() {
+    var count = 0;
+    return () => {
+      if (count == 1) {
+        done();
+      } else {
+        count++;
+      }
+    }
+  };
+
+  var callback = cb();
+  testDb.initServiceDb(callback);
+  testDb.initUserDb(callback);
 });
 
-afterAll(async () => {
-  await testDb.tearDownServiceDb();
-  await testDb.tearDownUserDb();
+afterAll((done) => {
+  var cb = function() {
+    var count = 0;
+    return () => {
+      if (count == 1) {
+        done();
+      } else {
+        count++;
+      }
+    }
+  };
+
+  var callback = cb();
+  testDb.tearDownServiceDb(callback);
+  testDb.tearDownUserDb(callback);
 });
 
 

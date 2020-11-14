@@ -1,13 +1,15 @@
 var mysql = require("mysql");
 
-const serviceDBTest = {host: "localhost",
-                       user: "root",
+const serviceDBTest = {host:"ec2-3-13-46-252.us-east-2.compute.amazonaws.com",
+                       port: 3306,
+                       user: "remote",
                        password: "password",
                        database: "services_test"};
 
 
-const userDBTest = {host: "localhost",
-                    user: "root",
+const userDBTest = {host:"ec2-3-13-46-252.us-east-2.compute.amazonaws.com",
+                    port: 3306,
+                    user: "remote",
                     password: "password",
                     database: "user_test"};
 
@@ -20,7 +22,7 @@ var initServiceDb = function (callback) {
 
   serviceDbConn.connect((err) => {
     if (err) {
-      consople.log("Couldn't connect to DB");
+      console.log("Couldn't connect to DB: " + err);
       return;
     }
   

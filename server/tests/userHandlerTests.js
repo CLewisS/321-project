@@ -4,18 +4,304 @@ var testDb = require("./testDbSetup.js");
 
 
 module.exports = function () {
-test("Add user: Valid", (done) => {
 
-  var req = {body: { username: "MRAK",
-                     password: "dwiahsdfvlknsdvd",
-                     deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-                   }};
+/////////////////////ADD TESTING
+    describe.each([
+        [
+          {
+            body:{ 
+                  username: "MRAK",
+                  password: "dwiahsdfvlknsdvd",
+                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+                 }
+          },
+          200, 
+          {username:"MRAK", password:"dwiahsdfvlknsdvd"}, 
+          "Add user: valid"
+        ],
+        [
+          {
+            body:{ 
+                  user: "MRAK",
+                  password: "dwiahsdfvlknsdvd",
+                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+                 }
+          },
+          400, 
+          {}, 
+          "Add user: Invalid Attribute"
+        ],
+        [
+          {
+            body:{ 
+                  username: "MRAK",
+                  password: 2343233,
+                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+                 }
+          },
+          400, 
+          {}, 
+          "Add user: Invalid Type"
+        ],
+        [
+          {
+            body:{ 
+                username: "Alice",
+                password: "12345",
+                deviceToken: ""
+                 }
+          },
+          200, 
+          {username:"Alice", password:"12345"}, 
+          "Add user: Null deviceToken"
+        ]
+
+    ])("Add user", (req, code, expected,  name) => {
+    
+      test( name, done => {
+    
+        var res = { 
+          json(input) {
+            try {
+              if (code === 200) {
+                expect(this.code).toBeUndefined();
+              
+              }else{
+                expect(this.code).toEqual(code);
+              }
+    
+              expect(input).toMatchObject(expected);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          },
+        
+          code: undefined,
+        
+          status(input) {
+            this.code = input;
+            return this;
+          }
+        }
+      
+        userHandler.addUser(req, res);
+      });
+    
+    });
+
+  
+
+/////////////////////UPDATE TESTING
+    describe.each([
+      [
+        {
+          body:{ 
+                username: "MRAK",
+                password: "newpasswordMRAK",
+                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+               }
+        },
+        200, 
+        {username:"MRAK", password:"newpasswordMRAK"}, 
+        "Update user: valid"
+      ],
+      [
+        {
+          body:{ 
+                user: "MRAK",
+                password: "dwiahsdfvlknsdvd",
+                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+               }
+        },
+        400, 
+        {}, 
+        "Update user: Invalid Attribute"
+      ],
+      [
+        {
+          body:{ 
+                username: "MRAK",
+                password: 2343233,
+                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+               }
+        },
+        400, 
+        {}, 
+        "Update Add: Invalid Type"
+      ],
+      [
+        {
+          body:{ 
+              username: "Alice",
+              password: "newpasswordAlice",
+              deviceToken: ""
+               }
+        },
+        200, 
+        {username:"Alice", password:"newpasswordAlice"}, 
+        "Update user: Null deviceToken"
+      ]
+
+  ])("Update user", (req, code, expected,  name) => {
+  
+    test( name, done => {
+  
+      var res = { 
+        json(input) {
+          try {
+            if (code === 200) {
+              expect(this.code).toBeUndefined();
+            
+            }else{
+              expect(this.code).toEqual(code);
+            }
+  
+            expect(input).toMatchObject(expected);
+            done();
+          } catch (err) {
+            done(err);
+          }
+        },
+      
+        code: undefined,
+      
+        status(input) {
+          this.code = input;
+          return this;
+        }
+      }
+    
+      userHandler.updateUser(req, res);
+    });
+  
+  });
+
+
+
+
+/////////////////////LOGIN TESTING
+  describe.each([
+    [
+      {
+        body:{ 
+              username: "MRAK",
+              password: "newpasswordMRAK",
+             }
+      },
+      200, 
+      {username:"MRAK", password:"newpasswordMRAK"}, 
+      "Login check: valid"
+    ],
+    [
+      {
+        body:{ 
+              user: "MRAK",
+              password: "newpasswordMRAK",
+             }
+      },
+      400, 
+      {}, 
+      "Login check: Invalid Attribute"
+    ],
+    [
+      {
+        body:{ 
+              username: "MRAK",
+              password: 2343233,
+             }
+      },
+      400, 
+      {}, 
+      "Login check: Invalid Type"
+    ],
+    [
+      {
+        body:{ 
+            username: "Alice",
+            password: "12345",
+             }
+      },
+      401, 
+      {code: 401, message: "Username and password aren't a valid pair"}, 
+      "Login check: wrong password"
+    ]
+
+])("Login check", (req, code, expected,  name) => {
+
+  test( name, done => {
+
+    var res = { 
+      json(input) {
+        try {
+          if (code === 200) {
+            expect(this.code).toBeUndefined();
+          
+          }else{
+            expect(this.code).toEqual(code);
+          }
+
+          expect(input).toMatchObject(expected);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      },
+    
+      code: undefined,
+    
+      status(input) {
+        this.code = input;
+        return this;
+      }
+    }
+  
+    userHandler.loginCheck(req, res);
+  });
+
+});
+
+
+
+
+/////////////////////DELETE TESTING
+describe.each([
+  [
+    {
+      query:{ 
+            username: "MRAK"
+           }
+    },
+    200, 
+    {}, 
+    "Delete user: valid"
+  ],
+  [
+    {
+      query:{ 
+            user: "MRAK",
+           }
+    },
+    400, 
+    {}, 
+    "Delete user: Invalid Attribute"
+  ]
+
+])("Delete user", (req, code, expected,  name) => {
+
+test( name, done => {
 
   var res = { 
     json(input) {
       try {
-        expect(this.code).toBeUndefined();
-        expect(input).toMatchObject({username: "MRAK", password: "dwiahsdfvlknsdvd"});
+        if (code === 200) {
+          expect(this.code).toBeUndefined();
+        
+        }else{
+          expect(this.code).toEqual(code);
+        }
+
+        expect(input).toMatchObject(expected);
         done();
       } catch (err) {
         done(err);
@@ -30,95 +316,11 @@ test("Add user: Valid", (done) => {
     }
   }
 
-  userHandler.addUser(req, res);
+  userHandler.deleteUser(req, res);
+});
 
 });
 
-test("User Add: Invalid Attribute", (done) => {
 
-  var req = {body: { user: "MRAK",
-                     password: "dwiahsdfvlknsdvd",
-                     deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-                   }};
-  
-  var res = { 
-    json(input) {
-      try {
-        expect(this.code).toBe(400);
-        done();
-      } catch (err) {
-        done(err);
-      }
-    },
-  
-    code: undefined,
-  
-    status(input) {
-      this.code = input;
-      return this;
-    }
-  }
 
-  userHandler.addUser(req, res);
-
-});
-
-test("User Add: Invalid Type", (done) => {
-
-  var req = {body: { username: "MRAK",
-                     password: 5150,
-                     deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-                   }};
-
-  var res = { 
-    json(input) {
-      try {
-        expect(this.code).toBe(400);
-        done();
-      } catch (err) {
-        done(err);
-      }
-    },
-  
-    code: undefined,
-  
-    status(input) {
-      this.code = input;
-      return this;
-    }
-  }
-
-  userHandler.addUser(req, res);
-
-});
-
-test("Add user: null deviceToken", (done) => {
-
-  var req = {body: { username: "Alice",
-                     password: "12345",
-                     deviceToken: ""
-                   }};
-
-  var res = { 
-    json(input) {
-      try {
-        expect(this.code).toBeUndefined();
-        expect(input).toMatchObject({username: "Alice", password: "12345"});
-        done();
-      } catch (err) {
-        done(err);
-      }
-    },
-  
-    code: undefined,
-  
-    status(input) {
-      this.code = input;
-      return this;
-    }
-  }
-
-  userHandler.addUser(req, res);
-
-});
 };

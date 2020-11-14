@@ -15,10 +15,18 @@ module.exports.addUser = function (req, res) {
   // console.log("In service handler: add user");
   var user = req.body;
 
-  if(!checkData.checkUserInfo(user)){
-     throw "This is not a valid User Object.";
+  try {
+    checkData.checkUserInfo(user);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({code: 400, message: err});
+    return;
+  }  
+
+  if (!user.hasOwnProperty("deviceToken")) {
+    user.deviceToken = "";
   }
-  
+
   db.add(user, (username, err) => {
     if (err) {
       res.status(err.code).json(err);
@@ -36,7 +44,8 @@ module.exports.deleteUser = function (req, res) {
   const username = req.query;
   const keys = Object.keys(username);
   if(keys.length!==1 || keys[0]!=="username"){
-    throw "The delete username passed in was wrong.";
+    res.status(400).json({code: 400, message: "Expected a username, but didn't get one"});
+    return;
   }
 
   
@@ -57,9 +66,17 @@ module.exports.updateUser = function (req, res) {
   // console.log("In service handler: update service");
   var updateUser = req.body;
 
-  if(!checkData.checkUserInfo(updateUser)){
-    throw "This is not a valid User Object.";
- }
+  try {
+    checkData.checkUserInfo(updateUser);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({code: 400, message: err});
+    return;
+  }  
+
+  if (!updateUser.hasOwnProperty("deviceToken")) {
+    updateUser.deviceToken = "";
+  }
 
   db.update(updateUser, (user, err) => {
     if (err) {
@@ -79,6 +96,14 @@ module.exports.loginCheck = function (req, res) {
   // console.log("In service handler: check user login. " + JSON.stringify(req.body));
   
   var loginInfo = req.body;
+
+  try {
+    checkData.checkUserInfo(loginInfo);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({code: 400, message: err});
+    return;
+  }  
   
   db.loginCheck(loginInfo , (result, err) => {
     if (err) {

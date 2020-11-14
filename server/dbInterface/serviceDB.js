@@ -270,6 +270,7 @@ module.exports.adduserServices = function (service, insertId, callback) {
         callback({code: 500, message: err.message});
         return;
       }
+      callback();
     });
 
 

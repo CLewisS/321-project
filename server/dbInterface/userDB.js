@@ -45,7 +45,10 @@ module.exports.add = function (user, callback) {
     var query = "INSERT INTO users (username, password, deviceToken) VALUES(?, ?, ?)";
 
     dbConn.query(query, values, (err, results, fields) => {
-      if (err) {
+      if (err && err.code === "ER_DUP_ENTRY") {
+        callback({}, {code: 403, message: err.message});
+      } else if (err) {
+	console.log(err);
         callback({}, {code: 500, message: err.message});
         return; 
       }
@@ -141,9 +144,6 @@ module.exports.delete = function(username, callback) {
 
 module.exports.update = function ( user, callback) {
 
-  // console.log("Adding Service to DB");
-
-
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
@@ -152,8 +152,6 @@ module.exports.update = function ( user, callback) {
       callback({}, {code: 500, message: err.message});
       return; 
     }
-
-    // console.log("Connected to MySQL server");
 
     var values = [
       user.username,

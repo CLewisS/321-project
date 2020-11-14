@@ -1,41 +1,8 @@
 var userHandler = require("../userHandler/userHandler.js");
 jest.mock("../dbInterface/dbConfig.js");
 var testDb = require("./testDbSetup.js");
-/*
-beforeAll((done) => {
-  var cb = function() {
-    var count = 0;
-    return () => {
-      if (count == 1) {
-        done();
-      } else {
-        count++;
-      }
-    }
-  };
 
-  var callback = cb();
-  testDb.initServiceDb("user", callback);
-  testDb.initUserDb("user", callback);
-});
 
-afterAll((done) => {
-  var cb = function() {
-    var count = 0;
-    return () => {
-      if (count == 1) {
-        done();
-      } else {
-        count++;
-      }
-    }
-  };
-
-  var callback = cb();
-  testDb.tearDownServiceDb("user", callback);
-  testDb.tearDownUserDb("user", callback);
-});
-*/
 module.exports = function () {
 test("Add user: Valid", (done) => {
 

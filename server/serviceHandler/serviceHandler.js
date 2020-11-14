@@ -71,7 +71,8 @@ module.exports.deleteService = function (req, res) {
   const id = req.query;
   const keys = Object.keys(id);
   if(keys.length!==1 || keys[0]!=="id"){
-    throw "The delete service id passed in was wrong.";
+    //throw "The delete service id passed in was wrong.";
+    res.status(400);
   }
 
   // still need to delete the service in the serviceUser table.
@@ -102,7 +103,7 @@ module.exports.updateService = function (req, res) {
     return;
   }
 
-  var serviceID = parseInt(req.query["id"], 10);
+  var serviceID = Number(req.query["id"]);
   
   try {
     reqData.serviceIsValid(updateService)
@@ -118,6 +119,8 @@ module.exports.updateService = function (req, res) {
       res.status(err.code).json(err);
       return;
     } else {
+     // service.date = JSON.stringify(service.date);
+      //console.log(service);
       res.json(service);
       return;
     }

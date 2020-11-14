@@ -142,14 +142,28 @@ var hasValidComparator = function(split) {
 
 };
 
-var isValidCondition = function (condition) {
 
-  var split = condition.split("-");
-  
-  return (searchConditions.includes(split[0]) && hasValidComparator(split));
+var hasCorrectType = function (key, value) {
+  if (numberAttributes.includes(key) && isNaN(Number(value))) {
+    throw "Expected type number for " + key + ", but got type " + typeof(value); 
+    return false; 
+  }
 
+  return true;
 };
 
+
+var isValidCondition = function (condition, value) {
+
+  var split = condition.split("-");
+  if (!searchConditions.includes(split[0])) {
+    throw "Condition " + condition + " is not valid";
+    return false;
+  }
+  
+  return (hasValidComparator(split) && hasCorrectType(split[0], value));
+
+};
 
 
 /* Create an array of strings. 
@@ -166,12 +180,10 @@ var createConditionsArray = function (conditions) {
 
   for (var key of keys) {
 
-    if (isValidCondition(key)) {
+    if (isValidCondition(key, conditions[String(key)])) {
       var str = createConditionString(key, conditions);
       conditionStrs.push(str);
-    } else {
-      throw key + " is not a valid key";
-    }
+    } 
 
   }
 
@@ -180,8 +192,4 @@ var createConditionsArray = function (conditions) {
 };
 
 
-module.exports.getConditionsFromQuery = function(queryString) {
-
-  return createConditionsArray(queryString);
-
-};
+module.exports.getConditionsFromQuery = createConditionsArray;

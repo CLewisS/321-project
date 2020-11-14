@@ -49,9 +49,9 @@ describe("Service Handler tests", () => {
   test("Service Add: Valid", (done) => {
   
     var req = {body: { id: 123,
-                   name: "A service",
+                   name: "service",
                    dow: "Monday",
-                   date: "2020-10-17",
+                   date: "2020-5-17",
                    time: "12:57:33",
                    lat: 49.56911,
                    longi: 123.456,
@@ -64,7 +64,7 @@ describe("Service Handler tests", () => {
       json(input) {
         try {
           expect(this.code).toBeUndefined();
-          expect(input).toMatchObject({id: 1});
+          expect(input).toMatchObject({id: 3});
           done();
         } catch (err) {
           done(err);
@@ -86,9 +86,9 @@ describe("Service Handler tests", () => {
   test("Service Add: Invalid Attribute", (done) => {
   
     var req = {body: { id: 123,
-                   title: "A service",
+                   title: "service 2",
                    dow: "Monday",
-                   date: "2020-10-17",
+                   date: "2020-4-17",
                    time: "12:57:33",
                    lat: 49.56911,
                    longi: 123.456,
@@ -124,7 +124,7 @@ describe("Service Handler tests", () => {
     var req = {body: { id: 123,
                    name: 15,
                    dow: "Monday",
-                   date: "2020-10-17",
+                   date: "2020-3-17",
                    time: "12:57:33",
                    lat: 49.56911,
                    longi: 123.456,

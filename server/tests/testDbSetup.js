@@ -39,19 +39,44 @@ var initServiceDb = function (callback) {
                                 description TEXT,
                                 PRIMARY KEY (id)
                               );`
+
   
     serviceDbConn.query(createServiceTable, (err) => {
       if (err) {
         console.log(err);
         return;
       }
-  
-      serviceDbConn.end((err) => {
+
+      var service1 = ["food service", "2020-8-17", "Monday", "12:57:33", 49.56911, 123.456, "Caleb", "food", "This is a description"];
+      var query1 = `INSERT INTO services (name, date, dow, time, lat, longi, owner, type, description)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+      serviceDbConn.query(query1, service1, (err) => {
         if (err) {
           console.log(err);
           return;
-        }
-	callback();
+	}
+
+        var service2 = ["A service", "2020-11-17", "Friday", "12:57:33", 49.56911, 123.456, "Caleb", "food", "This is a description"];
+        var query2 = `INSERT INTO services (name, date, dow, time, lat, longi, owner, type, description)
+                      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  
+        serviceDbConn.query(query2, service2, (err) => {
+          if (err) {
+            console.log(err);
+            return;
+  	  }
+
+          serviceDbConn.end((err) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            callback();
+          });
+  
+        });
+
       });
   
     });
@@ -125,7 +150,7 @@ var initUserDb = function (callback) {
           return;
         }
 
-        userDbConn.query("INSERT INTO users (username, deviceToken, password) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
+        userDbConn.query("INSERT INTO users (username, password, deviceToken) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
           (err) => {
             if (err) {
               console.log(err);

@@ -1,16 +1,17 @@
 var mysql = require("mysql");
 
-const serviceDBTest = {host:"ec2-3-13-46-252.us-east-2.compute.amazonaws.com",
-                       port: 3306,
-                       user: "remote",
-                       password: "password",
+const serviceDBTest = {host:"localhost",
+                        //port: 3306,
+                        user: "root",
+                       password: "houzi25252525",
                        database: "services_test"};
 
 
-const userDBTest = {host:"ec2-3-13-46-252.us-east-2.compute.amazonaws.com",
-                    port: 3306,
-                    user: "remote",
-                    password: "password",
+const userDBTest = {
+                    host:"localhost",
+                    //port: 3306,
+                    user: "root",
+                    password: "houzi25252525",
                     database: "user_test"};
 
 

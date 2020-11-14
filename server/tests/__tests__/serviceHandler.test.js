@@ -160,19 +160,19 @@ describe("Service Handler tests", () => {
 
 test("Service get: Valid", (done) => {
 
-  var req = {query: { id: "1", name:"A service", owner:"Caleb" }};
+  var req = {query: { name:"service", owner:"Caleb" }};
 
-  var expected = { id = 1,
-                   name: "A service",
+  var expected = [{ id:3,
+                   name: "service",
                    dow: "Monday",
-                   date: "2020-10-17",
+                   date: "2020-05-17T07:00:00.000Z",
                    time: "12:57:33",
                    lat: 49.56911,
                    longi: 123.456,
                    owner: "Caleb",
                    type: "food",
                    description: "This is a description"
-                };
+                }];
   
   var res = { 
     json(input) {
@@ -267,7 +267,7 @@ test("Service update: Valid", (done) => {
     
     query:{id:"1"},
 
-    body: {      id: 123,
+    body: {     
                  name: "service",
                  dow: "Monday",
                  date: "2020-5-17",

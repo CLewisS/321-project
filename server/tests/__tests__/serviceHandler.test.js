@@ -46,25 +46,34 @@ afterAll((done) => {
 
 describe("Service Handler tests", () => {
 
-  test("Service Add: Valid", (done) => {
-  
-    var req = {body: { id: 123,
-                   name: "service",
-                   dow: "Monday",
-                   date: "2020-5-17",
-                   time: "12:57:33",
-                   lat: 49.56911,
-                   longi: 123.456,
-                   owner: "Caleb",
-                   type: "food",
-                   description: "This is a description"
-                 }};
-    
+describe.each([
+  [{body: { id: 123,
+    name: "service",
+    dow: "Monday",
+    date: "2020-5-17",
+    time: "12:57:33",
+    lat: 49.56911,
+    longi: 123.456,
+    owner: "Caleb",
+    type: "food",
+    description: "This is a description"
+  }} , 200, {id:3}, "add test1"] 
+
+])("add service", (req, code, expected,  name) => {
+
+  test( name, done => {
+
     var res = { 
       json(input) {
         try {
-          expect(this.code).toBeUndefined();
-          expect(input).toMatchObject({id: 3});
+          if (code === 200) {
+            expect(this.code).toBeUndefined();
+          
+          }else{
+            expect(this.code).toEqual(code);
+          }
+
+          expect(input).toMatchObject(expected);
           done();
         } catch (err) {
           done(err);
@@ -80,8 +89,10 @@ describe("Service Handler tests", () => {
     }
   
     serviceHandler.addService(req, res);
-  
   });
+
+});
+
   
   test("Service Add: Invalid Attribute", (done) => {
   
@@ -201,7 +212,7 @@ test("Service get: Valid", (done) => {
 
 test("Service get: invalid query key", (done) => {
 
-  var req = {query: { id: "1",
+  var req = {query: { id: "3",
                      label:'food'
                }};
   
@@ -227,37 +238,6 @@ test("Service get: invalid query key", (done) => {
 
 });
 
-//query is always a string, so i do not think we need to check is the value in a query string.
-// test("Service get: invalid query value type", (done) => {
-
-//   var req = {query: { id: "1",
-//                      name:12
-//                }};
-  
-//   var res = { 
-//     json(input) {
-//       try {
-//         console.log( 'qweqweqweaweada  '+ this.code + "   asdasdasdasdas")
-//         expect(this.code).toBe(400);
-//         done();
-//       } catch (err) {
-//         done(err);
-//       }
-//     },
-  
-//     code: undefined,
-  
-//     status(input) {
-//       this.code = input;
-//       return this;
-//     }
-//   }
-
-//   serviceHandler.getServices(req, res);
-
-// });
-
-
 
 
 
@@ -265,7 +245,7 @@ test("Service update: Valid", (done) => {
   
   var req = {
     
-    query:{id:"1"},
+    query:{id:"3"},
 
     body: {     
                  name: "service",
@@ -307,7 +287,7 @@ test("Service update: inValid query key", (done) => {
   
   var req = {
     
-    query:{idnum:"1"},
+    query:{idnum:"3"},
 
     body: {      id: 123,
                  name: "service",
@@ -348,7 +328,7 @@ test("Service update: inValid body key", (done) => {
   
   var req = {
     
-    query:{id:"1"},
+    query:{id:"3"},
 
     body: {      id: 123,
                  nameWRONG: "service",
@@ -390,7 +370,7 @@ test("Service update: inValid body value type", (done) => {
   
   var req = {
     
-    query:{id:"1"},
+    query:{id:"3"},
 
     body: {      id: 123,
                  name: "service",
@@ -431,7 +411,7 @@ test("Service update: inValid body value type", (done) => {
 
 test("Service delete: valid", (done) => {
 
-  var req = {query: { id: "1"}};
+  var req = {query: { id: "3"}};
   
   var res = { 
     json(input) {
@@ -459,7 +439,7 @@ test("Service delete: valid", (done) => {
 
 test("Service delete: invalid query", (done) => {
 
-  var req = {query: { service: "1"}};
+  var req = {query: { service: "3"}};
   
   var res = { 
     json(input) {

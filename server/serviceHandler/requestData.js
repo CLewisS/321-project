@@ -43,6 +43,7 @@ var serviceIsValid = function (service) {
     }
 
     if (!isCorrectType(key, service[String(key)])){
+      throw key + "'s value not a valid service attribute type";
       return false;
     }
 

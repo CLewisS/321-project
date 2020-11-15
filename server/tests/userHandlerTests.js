@@ -7,21 +7,58 @@ module.exports = function () {
 
 /////////////////////ADD TESTING
     describe.each([
-        [{body:{username: "MRAK", password: "dwiahsdfvlknsdvd", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
-          200, {username:"MRAK", password:"dwiahsdfvlknsdvd"}, "Add user: valid"],
-
-        [{body:{user: "MRAK", password: "dwiahsdfvlknsdvd", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
-          400, {}, "Add user: Invalid Attribute"],
-
-        [{body:{username: "MRAK", password: 2343233, deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
-          400, {}, "Add user: Invalid Type"],
-
-        [{body:{username: "Alice", password: "12345", deviceToken: ""}},
-          200, {username:"Alice", password:"12345"}, "Add user: Null deviceToken"]
+        [
+          {
+            body:{ 
+                  username: "MRAK",
+                  password: "dwiahsdfvlknsdvd",
+                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+                 }
+          },
+          200, 
+          {username:"MRAK", password:"dwiahsdfvlknsdvd"}, 
+          "Add user: valid"
+        ],
+        [
+          {
+            body:{ 
+                  user: "MRAK",
+                  password: "dwiahsdfvlknsdvd",
+                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+                 }
+          },
+          400, 
+          {}, 
+          "Add user: Invalid Attribute"
+        ],
+        [
+          {
+            body:{ 
+                  username: "MRAK",
+                  password: 2343233,
+                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+                 }
+          },
+          400, 
+          {}, 
+          "Add user: Invalid Type"
+        ],
+        [
+          {
+            body:{ 
+                username: "Alice",
+                password: "12345",
+                deviceToken: ""
+                 }
+          },
+          200, 
+          {username:"Alice", password:"12345"}, 
+          "Add user: Null deviceToken"
+        ]
 
     ])("Add user", (req, code, expected,  name) => {
     
-      test( name, (done) => {
+      test( name, done => {
     
         var res = { 
           json(input) {
@@ -57,21 +94,58 @@ module.exports = function () {
 
 /////////////////////UPDATE TESTING
     describe.each([
-      [{body:{username: "MRAK", password: "newpasswordMRAK", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
-        200, {username:"MRAK", password:"newpasswordMRAK"}, "Update user: valid"],
-
-      [{body:{user: "MRAK", password: "dwiahsdfvlknsdvd", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}}, 
-	      400, {}, "Update user: Invalid Attribute"],
-
-      [{body:{username: "MRAK", password: 2343233, deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
-        400, {}, "Update Add: Invalid Type"],
-
-      [{body:{username: "Alice", password: "newpasswordAlice", deviceToken: ""}},
-        200, {username:"Alice", password:"newpasswordAlice"}, "Update user: Null deviceToken"]
+      [
+        {
+          body:{ 
+                username: "MRAK",
+                password: "newpasswordMRAK",
+                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+               }
+        },
+        200, 
+        {username:"MRAK", password:"newpasswordMRAK"}, 
+        "Update user: valid"
+      ],
+      [
+        {
+          body:{ 
+                user: "MRAK",
+                password: "dwiahsdfvlknsdvd",
+                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+               }
+        },
+        400, 
+        {}, 
+        "Update user: Invalid Attribute"
+      ],
+      [
+        {
+          body:{ 
+                username: "MRAK",
+                password: 2343233,
+                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
+               }
+        },
+        400, 
+        {}, 
+        "Update Add: Invalid Type"
+      ],
+      [
+        {
+          body:{ 
+              username: "Alice",
+              password: "newpasswordAlice",
+              deviceToken: ""
+               }
+        },
+        200, 
+        {username:"Alice", password:"newpasswordAlice"}, 
+        "Update user: Null deviceToken"
+      ]
 
   ])("Update user", (req, code, expected,  name) => {
   
-    test( name, (done) => {
+    test( name, done => {
   
       var res = { 
         json(input) {
@@ -108,95 +182,145 @@ module.exports = function () {
 
 /////////////////////LOGIN TESTING
   describe.each([
-    [{body:{username: "MRAK", password: "newpasswordMRAK"}},
-      200, {username:"MRAK", password:"newpasswordMRAK"}, "Login check: valid"],
+    [
+      {
+        body:{ 
+              username: "MRAK",
+              password: "newpasswordMRAK",
+             }
+      },
+      200, 
+      {username:"MRAK", password:"newpasswordMRAK"}, 
+      "Login check: valid"
+    ],
+    [
+      {
+        body:{ 
+              user: "MRAK",
+              password: "newpasswordMRAK",
+             }
+      },
+      400, 
+      {}, 
+      "Login check: Invalid Attribute"
+    ],
+    [
+      {
+        body:{ 
+              username: "MRAK",
+              password: 2343233,
+             }
+      },
+      400, 
+      {}, 
+      "Login check: Invalid Type"
+    ],
+    [
+      {
+        body:{ 
+            username: "Alice",
+            password: "12345",
+             }
+      },
+      401, 
+      {code: 401, message: "Username and password aren't a valid pair"}, 
+      "Login check: wrong password"
+    ]
 
-    [{body:{user: "MRAK", password: "newpasswordMRAK"}},
-      400, {}, "Login check: Invalid Attribute"],
+])("Login check", (req, code, expected,  name) => {
 
-    [{body:{username: "MRAK", password: 2343233}},
-      400, {}, "Login check: Invalid Type"],
+  test( name, done => {
 
-    [{body:{ username: "Alice", password: "12345"}},
-      401, {code: 401, message: "Username and password aren't a valid pair"}, "Login check: wrong password"]
-
-  ])("Login check", (req, code, expected,  name) => {
-  
-    test( name, (done) => {
-  
-      var res = { 
-        json(input) {
-          try {
-            if (code === 200) {
-              expect(this.code).toBeUndefined();
-            
-            }else{
-              expect(this.code).toEqual(code);
-            }
-  
-            expect(input).toMatchObject(expected);
-            done();
-          } catch (err) {
-            done(err);
+    var res = { 
+      json(input) {
+        try {
+          if (code === 200) {
+            expect(this.code).toBeUndefined();
+          
+          }else{
+            expect(this.code).toEqual(code);
           }
-        },
-      
-        code: undefined,
-      
-        status(input) {
-          this.code = input;
-          return this;
+
+          expect(input).toMatchObject(expected);
+          done();
+        } catch (err) {
+          done(err);
         }
+      },
+    
+      code: undefined,
+    
+      status(input) {
+        this.code = input;
+        return this;
       }
-    
-      userHandler.loginCheck(req, res);
-    });
+    }
   
+    userHandler.loginCheck(req, res);
   });
-  
-  
-  
-  
-  /////////////////////DELETE TESTING
-  describe.each([
-    [{query:{username: "MRAK"}},
-      200, {}, "Delete user: valid"],
-  
-    [{query:{user: "MRAK"}},
-      400, {}, "Delete user: Invalid Attribute"]
-  
-  ])("Delete user", (req, code, expected,  name) => {
-  
-    test( name, (done) => {
-    
-      var res = { 
-        json(input) {
-          try {
-            if (code === 200) {
-              expect(this.code).toBeUndefined();
-            
-            }else{
-              expect(this.code).toEqual(code);
-            }
-    
-            expect(input).toMatchObject(expected);
-            done();
-          } catch (err) {
-            done(err);
-          }
-        },
-      
-        code: undefined,
-      
-        status(input) {
-          this.code = input;
-          return this;
+
+});
+
+
+
+
+/////////////////////DELETE TESTING
+describe.each([
+  [
+    {
+      query:{ 
+            username: "MRAK"
+           }
+    },
+    200, 
+    {}, 
+    "Delete user: valid"
+  ],
+  [
+    {
+      query:{ 
+            user: "MRAK",
+           }
+    },
+    400, 
+    {}, 
+    "Delete user: Invalid Attribute"
+  ]
+
+])("Delete user", (req, code, expected,  name) => {
+
+test( name, done => {
+
+  var res = { 
+    json(input) {
+      try {
+        if (code === 200) {
+          expect(this.code).toBeUndefined();
+        
+        }else{
+          expect(this.code).toEqual(code);
         }
+
+        expect(input).toMatchObject(expected);
+        done();
+      } catch (err) {
+        done(err);
       }
-    
-      userHandler.deleteUser(req, res);
-    });
+    },
   
-  });
+    code: undefined,
+  
+    status(input) {
+      this.code = input;
+      return this;
+    }
+  }
+
+  userHandler.deleteUser(req, res);
+});
+
+});
+
+
 
 };

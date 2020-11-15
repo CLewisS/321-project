@@ -94,6 +94,7 @@ module.exports = (server) => {
     
       expect(res.statusCode).toEqual(code);
       if (code === 200) {
+        console.log(res.body);
         expect(res.body[0].name).toBe(name);
         expect(Object.keys(res.body[0])).toHaveLength(10);
       }
@@ -101,4 +102,117 @@ module.exports = (server) => {
     });
 
   });
+
+
+
+
+
+
+
+
+/* Update SERVICE TESTS */
+describe.each([
+  [ "?id=1",
+    {
+    name: "Update name",
+    dow: "Monday",
+    date: "2020-10-17",
+    time: "12:57:33",
+    lat: 49.56911,
+    longi: 123.456,
+    owner: "Caleb",
+    type: "food",
+    description: "This is a description"
+   },
+   200
+  ],
+  [ "?id=1",
+    {
+    username: "update name",
+    dow: "Monday",
+    date: "2020-10-17",
+    time: "12:57:33",
+    lat: 49.56911,
+    longi: 123.456,
+    owner: "Caleb",
+    type: "food",
+    description: "This is a description"
+   },
+   400
+  ],
+  [ "?userid=1",
+    {
+    username: "update name",
+    dow: "Monday",
+    date: "2020-10-17",
+    time: "12:57:33",
+    lat: 49.56911,
+    longi: 123.456,
+    owner: "Caleb",
+    type: "food",
+    description: "This is a description"
+   },
+   400
+  ],
+  [ "?id=1",
+    {
+    username: "update name",
+    dow: "Monday",
+    date: "2020-10-17",
+    time: "12:57:33",
+    lat: "49.56911",
+    longi: "123.456",
+    owner: "Caleb",
+    type: "food",
+    description: "This is a description"
+   },
+   400
+  ]
+
+
+])("Update service", (query, body, code) => {
+
+test("Update " + query, async () => {
+
+  var res = await request(server)
+    .put("/service" + query)
+    .send(body);
+
+  expect(res.statusCode).toEqual(code);
+});
+
+});
+
+
+
+
+
+
+/* DELETE SERVICE TESTS */
+// describe.each([
+//     [ "?id=1",
+//       200
+//     ],
+//     [ "?idnum=1",
+//        400
+//     ]
+  
+// ])("Delete service", (query, body, code) => {
+
+// test("Delete " + query, async () => {
+
+//   var res = await request(server).delete("/service" + query);
+//   if (code === 200) {
+//   expect(res.statusCode).toBeDefined();
+//   }
+// });
+
+// });
+
+
+
+
+
+
+
 };

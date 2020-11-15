@@ -52,7 +52,7 @@ public class ChatFrontendTest {
     @Test
     public void ChatSendVoidTest() {
         //Case: 1 void input
-        //onView(withId(R.id.edittext_chatbox)).perform(typeText(""));
+        onView(withId(R.id.edittext_chatbox)).perform(typeText(""));
         onView(withId(R.id.button_chatbox_send)).perform(click());
 
         //TODO: verify that nothing is sent

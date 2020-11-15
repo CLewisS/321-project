@@ -1,11 +1,8 @@
 package com.example.community_link;
 
-import android.view.View;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-
 
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -46,4 +43,14 @@ public class SignUpTest {
         onView(withId(R.id.menuSignupButt)).perform(click());
         onView(withId(R.id.passErrSignup)).check(matches(isDisplayed()));
     }
+    /*
+    @Test
+    public void B_SignUpWithCorrectEntry(){
+        onView(withId(R.id.signupButtIntro)).perform(click());
+        onView(withId(R.id.usernameSignup)).perform(typeText("AlexA11"));
+        onView(withId(R.id.passwordSignup)).perform(typeText("111233"));
+        onView(withId(R.id.passwordSignup2)).perform(typeText("111233"));
+        onView(withId(R.id.menuSignupButt)).perform(click());
+        onView(withId(R.id.loginButtIntro)).check(doesNotExist());
+    }*/
 }

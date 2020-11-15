@@ -16,6 +16,9 @@ module.exports = function () {
         [{body:{username: "MRAK", password: 2343233, deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
           400, {}, "Add user: Invalid Type"],
 
+        [{body:{username: "Joe", password: "word"}},
+          200, {username: "Joe", password: "word"}, "Add user: no deviceToken"],
+
         [{body:{username: "Alice", password: "12345", deviceToken: ""}},
           200, {username:"Alice", password:"12345"}, "Add user: Null deviceToken"]
 
@@ -65,6 +68,9 @@ module.exports = function () {
 
       [{body:{username: "MRAK", password: 2343233, deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
         400, {}, "Update Add: Invalid Type"],
+
+      [{body:{username: "Joe", password: "pass"}},
+        200, {username: "Joe", password: "pass"}, "Update user: no deviceToken"],
 
       [{body:{username: "Alice", password: "newpasswordAlice", deviceToken: ""}},
         200, {username:"Alice", password:"newpasswordAlice"}, "Update user: Null deviceToken"]

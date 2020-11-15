@@ -16,10 +16,8 @@ var isCorrectType = function (key, value) {
 
   if (stringAttributes.includes(key) && typeof(value) != "string") {
     throw "Expected type String for " + key + ", but got type " + typeof(value); 
-    return false;
   } else if (numberAttributes.includes(key) && typeof(value) != "number") {
     throw "Expected type number for " + key + ", but got type " + typeof(value); 
-    return false;
   } 
 
   return true;
@@ -39,13 +37,9 @@ var serviceIsValid = function (service) {
 
     if(!serviceAttributes.includes(key)) {
       throw key + " is not a valid service attribute";
-      return false;
     }
 
-    if (!isCorrectType(key, service[String(key)])){
-      throw key + "'s value not a valid service attribute type";
-      return false;
-    }
+    isCorrectType(key, service[String(key)]);
 
   }
 
@@ -120,9 +114,7 @@ var createConditionString = function(key, conditions){
     str = createMaxString(attribute, conditions, key);
   } else if (split[1] === "min") {
     str = createMinString(attribute, conditions, key);
-  } else {
-    throw key + " is not a valid key";
-  }
+  } 
 
   return str;
 
@@ -133,10 +125,8 @@ var hasValidComparator = function(split) {
 
   if(split.length === 1 && !singleValConditions.includes(split[0])) {
     throw split[0] + " needs to be a max or min value";
-    return false;
   } else if (split.length == 2 && !validComps.includes(split[1])) {
     throw split[0] + " needs to be a max or min value, but was " + split[1];
-    return false;
   }
 
   return true;
@@ -147,7 +137,6 @@ var hasValidComparator = function(split) {
 var hasCorrectType = function (key, value) {
   if (numberAttributes.includes(key) && isNaN(Number(value))) {
     throw "Expected type number for " + key + ", but got type " + typeof(value); 
-    return false; 
   }
 
   return true;
@@ -159,7 +148,6 @@ var isValidCondition = function (condition, value) {
   var split = condition.split("-");
   if (!searchConditions.includes(split[0])) {
     throw "Condition " + condition + " is not valid";
-    return false;
   }
   
   return (hasValidComparator(split) && hasCorrectType(split[0], value));

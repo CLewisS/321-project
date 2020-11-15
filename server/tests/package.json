@@ -64,7 +64,7 @@
   },
   "scripts": {
     "start-dev": "nodemon ../requestManager/server.js",
-    "test": "jest --env=node"
+    "test": "jest --watch --runInBand --env=node --detectOpenHandles"
   },
   "author": "",
   "license": "ISC"

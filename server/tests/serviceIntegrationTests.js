@@ -94,7 +94,6 @@ module.exports = (server) => {
     
       expect(res.statusCode).toEqual(code);
       if (code === 200) {
-        console.log(res.body);
         expect(res.body[0].name).toBe(name);
         expect(Object.keys(res.body[0])).toHaveLength(10);
       }

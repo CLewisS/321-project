@@ -7,54 +7,20 @@ module.exports = function () {
 
 /////////////////////ADD TESTING
     describe.each([
-        [
-          {
-            body:{ 
-                  username: "MRAK",
-                  password: "dwiahsdfvlknsdvd",
-                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-                 }
-          },
-          200, 
-          {username:"MRAK", password:"dwiahsdfvlknsdvd"}, 
-          "Add user: valid"
-        ],
-        [
-          {
-            body:{ 
-                  user: "MRAK",
-                  password: "dwiahsdfvlknsdvd",
-                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-                 }
-          },
-          400, 
-          {}, 
-          "Add user: Invalid Attribute"
-        ],
-        [
-          {
-            body:{ 
-                  username: "MRAK",
-                  password: 2343233,
-                  deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-                 }
-          },
-          400, 
-          {}, 
-          "Add user: Invalid Type"
-        ],
-        [
-          {
-            body:{ 
-                username: "Alice",
-                password: "12345",
-                deviceToken: ""
-                 }
-          },
-          200, 
-          {username:"Alice", password:"12345"}, 
-          "Add user: Null deviceToken"
-        ]
+        [{body:{username: "MRAK", password: "dwiahsdfvlknsdvd", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
+          200, {username:"MRAK", password:"dwiahsdfvlknsdvd"}, "Add user: valid"],
+
+        [{body:{user: "MRAK", password: "dwiahsdfvlknsdvd", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
+          400, {}, "Add user: Invalid Attribute"],
+
+        [{body:{username: "MRAK", password: 2343233, deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
+          400, {}, "Add user: Invalid Type"],
+
+        [{body:{username: "Joe", password: "word"}},
+          200, {username: "Joe", password: "word"}, "Add user: no deviceToken"],
+
+        [{body:{username: "Alice", password: "12345", deviceToken: ""}},
+          200, {username:"Alice", password:"12345"}, "Add user: Null deviceToken"]
 
     ])("Add user", (req, code, expected,  name) => {
     
@@ -94,54 +60,20 @@ module.exports = function () {
 
 /////////////////////UPDATE TESTING
     describe.each([
-      [
-        {
-          body:{ 
-                username: "MRAK",
-                password: "newpasswordMRAK",
-                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-               }
-        },
-        200, 
-        {username:"MRAK", password:"newpasswordMRAK"}, 
-        "Update user: valid"
-      ],
-      [
-        {
-          body:{ 
-                user: "MRAK",
-                password: "dwiahsdfvlknsdvd",
-                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-               }
-        },
-        400, 
-        {}, 
-        "Update user: Invalid Attribute"
-      ],
-      [
-        {
-          body:{ 
-                username: "MRAK",
-                password: 2343233,
-                deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"
-               }
-        },
-        400, 
-        {}, 
-        "Update Add: Invalid Type"
-      ],
-      [
-        {
-          body:{ 
-              username: "Alice",
-              password: "newpasswordAlice",
-              deviceToken: ""
-               }
-        },
-        200, 
-        {username:"Alice", password:"newpasswordAlice"}, 
-        "Update user: Null deviceToken"
-      ]
+      [{body:{username: "MRAK", password: "newpasswordMRAK", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
+        200, {username:"MRAK", password:"newpasswordMRAK"}, "Update user: valid"],
+
+      [{body:{user: "MRAK", password: "dwiahsdfvlknsdvd", deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}}, 
+	      400, {}, "Update user: Invalid Attribute"],
+
+      [{body:{username: "MRAK", password: 2343233, deviceToken: "jfuvrdkopki./fv;jpobycvu_)-788gkdfl;.gdnblgo325v436bw5q4y4-"}},
+        400, {}, "Update Add: Invalid Type"],
+
+      [{body:{username: "Joe", password: "pass"}},
+        200, {username: "Joe", password: "pass"}, "Update user: no deviceToken"],
+
+      [{body:{username: "Alice", password: "newpasswordAlice", deviceToken: ""}},
+        200, {username:"Alice", password:"newpasswordAlice"}, "Update user: Null deviceToken"]
 
   ])("Update user", (req, code, expected,  name) => {
   

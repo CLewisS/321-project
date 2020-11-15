@@ -64,6 +64,10 @@
   },
   "scripts": {
     "start-dev": "nodemon ../requestManager/server.js",
+    "test-unit": "jest serviceHandler.test.js -t Unit-Tests --env=node",
+    "test-unit-u": "jest serviceHandler.test.js -t User-Module-Unit --env=node",
+    "test-unit-s": "jest serviceHandler.test.js -t Service-module-Unit --env=node",
+    "test-int": "jest --env=node -t Integration-Tests",
     "test": "jest --env=node"
   },
   "author": "",

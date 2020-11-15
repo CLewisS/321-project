@@ -135,13 +135,13 @@ module.exports.receiveService = function (req, res) {
   
   var receiveInfo = req.body;
   
-  db.receive(receiveInfo.username, receiveInfo.serviceID , (id, err) => {
+  db.receive(receiveInfo.username, receiveInfo.serviceID , (result, err) => {
 
     if (err) {
       res.status(err.code).json(err);
       return;
     } else {
-      res.json(id);
+      res.json({id: result.insertId});
       return;
     }
 

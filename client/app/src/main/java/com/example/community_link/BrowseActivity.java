@@ -415,12 +415,12 @@ public class BrowseActivity extends CommunityLinkActivity {
         System.out.println("LatDiff " + latDiff);
 
         if(currLat >= 0){
-            ret[LONG_MIN] = Math.max(currLong - latDiff, 0);
-            ret[LONG_MAX] = Math.min(currLong + latDiff, 90);
+            ret[LAT_MIN] = Math.max(currLat - latDiff, 0);
+            ret[LAT_MAX] = Math.min(currLat + latDiff, 90);
         }
         else{
-            ret[LONG_MAX] = Math.min(currLong + latDiff, 0);
-            ret[LONG_MIN] = Math.max(currLong - latDiff, -90);
+            ret[LAT_MAX] = Math.min(currLat + latDiff, 0);
+            ret[LAT_MIN] = Math.max(currLat - latDiff, -90);
         }
 
         double longDiff = dist / (Math.cos(Math.toRadians(currLat)) * 111.0);

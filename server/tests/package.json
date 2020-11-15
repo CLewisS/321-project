@@ -53,10 +53,14 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "rootDir": "../",
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "../serviceHandler/*.js",
-      "../dbInterface/serviceDB.js"
+      "!**/node_modules/**",
+      "**/serviceHandler/*.js",
+      "**/userHandler/*.js",
+      "**/dbInterface/serviceDB.js",
+      "**/dbInterface/userDB.js"
     ]
   },
   "devDependencies": {
@@ -64,7 +68,7 @@
   },
   "scripts": {
     "start-dev": "nodemon ../requestManager/server.js",
-    "test": "jest --watch --runInBand --env=node --detectOpenHandles"
+    "test": "jest --env=node"
   },
   "author": "",
   "license": "ISC"

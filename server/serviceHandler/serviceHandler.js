@@ -73,6 +73,7 @@ module.exports.deleteService = function (req, res) {
   if(keys.length!==1 || keys[0]!=="id"){
     //throw "The delete service id passed in was wrong.";
     res.status(400);
+    return;
   }
 
   // still need to delete the service in the serviceUser table.

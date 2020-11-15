@@ -160,7 +160,7 @@ module.exports.delete = function(serviceID, callback) {
         return;
       }
   
-      callback({code:200});
+      callback({},{});
     });
 
     // End connection
@@ -233,6 +233,7 @@ module.exports.update = function (serviceID, service, callback) {
         callback({}, {code: 500, message: err.message});
         return;
       }
+
     });
 
   });

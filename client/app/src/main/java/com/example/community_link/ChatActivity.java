@@ -93,8 +93,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters
-        //TODO: Remove this for online testing
-        //CommunityLinkApp.user = new UserProfile("Charlie", "Charlie");
+        //TODO: use this for offline modular testing
+        //CommunityLinkApp.user = new UserProfile("TEST", "TEST");
         targetName = null;
 
         MasterChatLog = new HashMap<String, List<ChatMessage>>();

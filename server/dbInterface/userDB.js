@@ -48,7 +48,6 @@ module.exports.add = function (user, callback) {
       if (err && err.code === "ER_DUP_ENTRY") {
         callback({}, {code: 403, message: err.message});
       } else if (err) {
-	console.log(err);
         callback({}, {code: 500, message: err.message});
         return; 
       }
@@ -249,6 +248,7 @@ module.exports.loginCheck = function (loginInfo, callback) {
  *   - callback: A callback function that is called once the user has been retrieved.
  *               The function must have one argument which will be the user object.
  */
+/*
 module.exports.get = function(username, callback) {
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -281,4 +281,4 @@ module.exports.get = function(username, callback) {
     });
 
   });
-};
+};*/

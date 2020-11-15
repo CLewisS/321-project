@@ -20,7 +20,10 @@ module.exports = function () {
           200, {username: "Joe", password: "word"}, "Add user: no deviceToken"],
 
         [{body:{username: "Alice", password: "12345", deviceToken: ""}},
-          200, {username:"Alice", password:"12345"}, "Add user: Null deviceToken"]
+          200, {username:"Alice", password:"12345"}, "Add user: Null deviceToken"],
+
+        [{body:{username: "Alice", password: "12345", deviceToken: "thththt"}},
+          403, {code: 403, message:"USER_ALREADY_EXISTS"}, "Add user: Duplicate"]
 
     ])("Add user", (req, code, expected,  name) => {
     

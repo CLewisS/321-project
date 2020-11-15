@@ -303,7 +303,7 @@ module.exports = function () {
     [{query: {username: "Cale", status: "receive"}}, 400, "food service"],
 
     [{query: {user: "Caleb", status: "receive"}}, 400]
-  ])("Get RSVPs", (req, codei, name) => {    
+  ])("Get RSVPs", (req, code, name) => {    
     test(JSON.stringify(req.query) , (done) => {
     
       var res = { 

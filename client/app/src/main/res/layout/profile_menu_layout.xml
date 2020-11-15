@@ -48,7 +48,7 @@
         android:backgroundTint="#AFA2F1"
         android:minHeight="48dp"
         android:onClick="logout"
-        android:text="Log out"
+        android:text="Logout"
         android:textAllCaps="false"
         android:textSize="24sp" />
 </LinearLayout>

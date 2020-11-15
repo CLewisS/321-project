@@ -342,6 +342,18 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
             Response.ErrorListener errorCallback = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    String resBody = new String(error.networkResponse.data);
+                    try {
+                        JSONObject res = new JSONObject(resBody);
+                        if("ERR_NO_RECIPIENT".equals(res.getString("message"))) {
+                            CharSequence toastMess = "Message wasn't sent\n\nUser " + targetName + " doesn't exist";
+                            Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    } catch(JSONException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("chat:sendMessage: HTTP POST response didn't work");
                     System.out.println(error.toString());
                 }

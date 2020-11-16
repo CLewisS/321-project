@@ -27,10 +27,18 @@ public class AddServiceTest {
 
     @Test
     public void A_CheckExistence(){
+        onView(withId(R.id.tvProjectName)).check(matches(isDisplayed()));
         onView(withId(R.id.etProjectName)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvType)).check(matches(isDisplayed()));
         onView(withId(R.id.type_spinner)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvDesc)).check(matches(isDisplayed()));
         onView(withId(R.id.etDesc)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvDate)).check(matches(isDisplayed()));
         onView(withId(R.id.datePicker)).check(matches(isDisplayed()));
+        onView(withId(R.id.tvTime)).check(matches(isDisplayed()));
+        onView(withId(R.id.hourAdd)).check(matches(isDisplayed()));
+        onView(withId(R.id.minAdd)).check(matches(isDisplayed()));
+        onView(withId(R.id.addServiceButt)).check(matches(isDisplayed()));
         onView(withId(R.id.cancelButt)).check(matches(isDisplayed()));
     }
 

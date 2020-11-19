@@ -221,44 +221,7 @@ module.exports = function () {
   });
   
   
-  describe.each([
-    [{query:{id:"3"}}, {}, 200, "Service delete: Valid"],
   
-    [{query:{service:"3"}}, {}, 400, "Service delete: invalid query"]
-   
-  ])("Delete service", (req, expected, code, name) => {
-  
-    test( name, (done) => {
-    
-      var res = { 
-        json(input) {
-          try {
-            if (code === 200) {
-              expect(this.code).toBeUndefined();
-            
-            }else{
-              expect(this.code).toEqual(code);
-            }
-    
-            expect(input).toMatchObject(expected);
-            done();
-          } catch (err) {
-            done(err);
-          }
-        },
-      
-        code: undefined,
-      
-        status(input) {
-          this.code = input;
-          return this;
-        }
-      }
-    
-      serviceHandler.deleteService(req, res);
-    });
-  
-  });
 
   describe.each([
     [{body:{username: "Caleb", serviceID: 1}}, 200],
@@ -303,7 +266,7 @@ module.exports = function () {
     [{query: {username: "Cale", status: "receive"}}, 400, "food service"],
 
     [{query: {user: "Caleb", status: "receive"}}, 400]
-  ])("Get RSVPs", (req, code, name) => {    
+  ])("Get RSVPs", (req, codei, name) => {    
     test(JSON.stringify(req.query) , (done) => {
     
       var res = { 
@@ -333,4 +296,50 @@ module.exports = function () {
       serviceHandler.getReceivedServices(req, res);
     });
   });
+
+
+
+
+  describe.each([
+    [{query:{id:"3"}}, {}, 200, "Service delete: Valid"],
+  
+    [{query:{service:"3"}}, {}, 400, "Service delete: invalid query"]
+   
+  ])("Delete service", (req, expected, code, name) => {
+  
+    test( name, (done) => {
+    
+      var res = { 
+        json(input) {
+          try {
+            if (code === 200) {
+              expect(this.code).toBeUndefined();
+            
+            }else{
+              expect(this.code).toEqual(code);
+            }
+    
+            expect(input).toMatchObject(expected);
+            done();
+          } catch (err) {
+            done(err);
+          }
+        },
+      
+        code: undefined,
+      
+        status(input) {
+          this.code = input;
+          return this;
+        }
+      }
+    
+      serviceHandler.deleteService(req, res);
+    });
+  
+  });
+
+
+
+
 };

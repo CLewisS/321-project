@@ -151,8 +151,6 @@ module.exports.delete = function(serviceID, callback) {
     // Build SQL query
     var query = "DELETE FROM services WHERE id = " + serviceID;
   
-
-
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
@@ -160,7 +158,7 @@ module.exports.delete = function(serviceID, callback) {
         return;
       }
   
-      callback({},{});
+      callback({id: serviceID},{});
     });
 
     // End connection

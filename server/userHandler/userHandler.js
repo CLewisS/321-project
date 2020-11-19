@@ -29,7 +29,7 @@ module.exports.addUser = function (req, res) {
 
   db.add(user, (username, err) => {
     if (err) {
-      res.status(err.code).json(err);
+      res.status(err.code).json({code: 403, message: err.message});
       return;
     } else {
       res.json(username);

@@ -46,7 +46,8 @@ module.exports.add = function (user, callback) {
 
     dbConn.query(query, values, (err, results, fields) => {
       if (err && err.code === "ER_DUP_ENTRY") {
-        callback({}, {code: 403, message: err.message});
+        callback({}, {code: 403, message: "USER_ALREADY_EXISTS"});
+        return;
       } else if (err) {
         callback({}, {code: 500, message: err.message});
         return; 

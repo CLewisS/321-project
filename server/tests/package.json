@@ -53,10 +53,15 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "rootDir": "../",
+
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "../serviceHandler/*.js",
-      "../dbInterface/serviceDB.js"
+      "!**/node_modules/**",
+      "**/serviceHandler/*.js",
+      "**/userHandler/*.js",
+      "**/dbInterface/serviceDB.js",
+      "**/dbInterface/userDB.js"
     ]
   },
   "devDependencies": {

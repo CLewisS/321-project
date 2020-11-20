@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -92,8 +93,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters
-        //TODO: Remove this for online testing
-        //CommunityLinkApp.user = new UserProfile("Charlie", "Charlie");
+        //TODO: use this for offline modular testing
+        //CommunityLinkApp.user = new UserProfile("TEST", "TEST");
         targetName = null;
 
         MasterChatLog = new HashMap<String, List<ChatMessage>>();
@@ -341,6 +342,18 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
             Response.ErrorListener errorCallback = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    String resBody = new String(error.networkResponse.data);
+                    try {
+                        JSONObject res = new JSONObject(resBody);
+                        if("ERR_NO_RECIPIENT".equals(res.getString("message"))) {
+                            CharSequence toastMess = "Message wasn't sent\n\nUser " + targetName + " doesn't exist";
+                            Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    } catch(JSONException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("chat:sendMessage: HTTP POST response didn't work");
                     System.out.println(error.toString());
                 }
@@ -399,7 +412,10 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //launch.
         displayNow();
-        Toast.makeText(this, "Chatting with: "+ targetName , Toast.LENGTH_SHORT).show();
+        CharSequence toastMess = "Chatting with: "+ targetName;
+        Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     //function for properly ordering the chat entries and display them

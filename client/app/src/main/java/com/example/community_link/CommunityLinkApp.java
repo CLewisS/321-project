@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.DiskBasedCache;
@@ -24,6 +25,7 @@ public class CommunityLinkApp extends Application {
     private static boolean loggedIn;
     private static final String TAG = "APP";
     private static Context context;
+    private static CommunityLinkActivity currActivity = null;
 
     @Override
     public void onCreate() {
@@ -33,6 +35,11 @@ public class CommunityLinkApp extends Application {
         requestManager = new RequestManager(requestCache);
         loggedIn = false;
     }
+
+    public static void setCurrActivity(CommunityLinkActivity activity) {
+        currActivity = activity;
+    }
+
 
     public static boolean userLoggedIn() {
         return loggedIn;
@@ -63,6 +70,10 @@ public class CommunityLinkApp extends Application {
         user = null;
         loggedIn = false;
 
+        if (currActivity.getClass().equals(MainActivity.class)) {
+            ((MainActivity) currActivity).setIntro();
+        }
+
         CharSequence toastMess = "Successfully logged out";
         Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -85,6 +96,10 @@ public class CommunityLinkApp extends Application {
                     Log.w(TAG, "User authenticated");
                     try {
                         setNewUser(response.getString("username"), response.getString("password"));
+                        currActivity.clearPopups(0);
+                        if (currActivity.getClass().equals(MainActivity.class)) {
+                            ((MainActivity) currActivity).setUserView();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -94,9 +109,17 @@ public class CommunityLinkApp extends Application {
             Response.ErrorListener errorCallback = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.w(TAG, "User not authenticated.");
-                    System.out.println("HTTP response didn't work");
-                    System.out.println(error.toString());
+                    if (error instanceof AuthFailureError) {
+                        Log.w(TAG, "User not authenticated.");
+                        CharSequence toastMess = "Username and/or password incorrect";
+                        Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    } else {
+                        System.out.println("HTTP response didn't work");
+                        System.out.println(error.toString());
+                    }
+
                 }
             };
 

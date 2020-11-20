@@ -70,6 +70,10 @@ public class CommunityLinkApp extends Application {
         user = null;
         loggedIn = false;
 
+        if (currActivity.getClass().equals(MainActivity.class)) {
+            ((MainActivity) currActivity).setIntro();
+        }
+
         CharSequence toastMess = "Successfully logged out";
         Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
@@ -93,7 +97,7 @@ public class CommunityLinkApp extends Application {
                     try {
                         setNewUser(response.getString("username"), response.getString("password"));
                         currActivity.clearPopups(0);
-                        if (currActivity.getClass() == MainActivity.class) {
+                        if (currActivity.getClass().equals(MainActivity.class)) {
                             ((MainActivity) currActivity).setUserView();
                         }
                     } catch (JSONException e) {

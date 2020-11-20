@@ -53,7 +53,7 @@ module.exports.addMessage = function(req, res) {
       data: message
   };
 
-  userDB.get(message.recipient, (user, err) => {
+ userDB.get(message.recipient, (user, err) => {
     if (err) {
       res.status(err.code).json(err);
       return;

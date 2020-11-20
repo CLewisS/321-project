@@ -21,9 +21,6 @@ var dbConfig = require("./dbConfig");
 
 module.exports.add = function (user, callback) {
 
-  // console.log("Adding User to DB");
-
-
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
@@ -32,8 +29,6 @@ module.exports.add = function (user, callback) {
       callback({}, {code: 500, message: err.message});
       return; 
     }
-
-    // console.log("Connected to MySQL server");
 
     var values = [
       user.username,
@@ -46,14 +41,13 @@ module.exports.add = function (user, callback) {
 
     dbConn.query(query, values, (err, results, fields) => {
       if (err && err.code === "ER_DUP_ENTRY") {
-        callback({}, {code: 403, message: err.message});
+        callback({}, {code: 403, message: "USER_ALREADY_EXISTS"});
+        return;
       } else if (err) {
         callback({}, {code: 500, message: err.message});
         return; 
       }
   
-      // console.log("Inserted");
-
       callback({
         username: user.username,
         password: user.password
@@ -68,7 +62,6 @@ module.exports.add = function (user, callback) {
         return; 
       }
   
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -88,7 +81,6 @@ module.exports.add = function (user, callback) {
  *               The retrieved user are passed as an argument.
  */
 module.exports.delete = function(username, callback) {
-  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
@@ -99,12 +91,9 @@ module.exports.delete = function(username, callback) {
       return; 
     }
 
-    // console.log("Connected to MySQL server");
-    
     // Build SQL query
     var query = "DELETE FROM users WHERE username = '" + username + "'";
   
-    // console.log(query);
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
@@ -121,8 +110,6 @@ module.exports.delete = function(username, callback) {
         callback({}, {code: 500, message: err.message});
         return; 
       }
-  
-      // console.log("Closed connection to MySQL server");
     });
 
   });
@@ -189,9 +176,6 @@ module.exports.update = function ( user, callback) {
 
 module.exports.loginCheck = function (loginInfo, callback) {
 
-  // console.log("login check " + JSON.stringify(loginInfo));
-
-
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
@@ -200,8 +184,6 @@ module.exports.loginCheck = function (loginInfo, callback) {
       callback({}, {code: 500, message: err.message});
       return; 
     }
-
-    // console.log("Connected to MySQL server");
 
     // Insert service into database
     var query1 = "Select password from users where username='" + loginInfo.username + "'";
@@ -248,7 +230,6 @@ module.exports.loginCheck = function (loginInfo, callback) {
  *   - callback: A callback function that is called once the user has been retrieved.
  *               The function must have one argument which will be the user object.
  */
-/*
 module.exports.get = function(username, callback) {
 
   var dbConn = mysql.createConnection(dbConfig.userDB);
@@ -268,9 +249,12 @@ module.exports.get = function(username, callback) {
       if (err) {
         callback({}, {code: 500, message: err.message});
         return; 
-      } else{
-        callback(results[0]);
+      } else if (results.length === 0){
+        callback({}, {code: 400, message: "ERR_NO_RECIPIENT"});
+        return;
       }
+	    
+      callback(results[0]);
     });
 
     dbConn.end(function (err) {
@@ -281,4 +265,4 @@ module.exports.get = function(username, callback) {
     });
 
   });
-};*/
+};

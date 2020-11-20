@@ -96,6 +96,7 @@ module.exports.deleteService = function (req, res) {
 
 module.exports.updateService = function (req, res) {
 
+  var updateService = req.body;
   const keys = Object.keys(req.query);
   if(keys.length!==1 || keys[0]!=="id"){
     res.status(400).json({code: 400, message: "The id for the service to be deleted is invalid"});
@@ -105,7 +106,7 @@ module.exports.updateService = function (req, res) {
   var serviceID = Number(req.query["id"]);
   
   try {
-    var updateService = reqData.getServiceFromReq(req.body);
+    reqData.serviceIsValid(updateService)
   } catch (err) {
     res.status(400).json({code: 400, message: err});
     return;

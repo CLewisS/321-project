@@ -67,25 +67,23 @@ module.exports.addMessage = function(req, res) {
         timeToLive: 60 * 60 *24
       };
 
-      //console.log("Push notification " + payload.data + " to " + user.deviceToken);
       admin.messaging().sendToDevice(user.deviceToken, payload, options)
       .then(function(response) {
-        //console.log("Successfully sent message:" + JSON.stringify(response)); 
       })
       .catch(function(error) {
-        //console.log("Error sending message:", error);
       });
     }
+
+    db.add(message, (id, err) => {
+      if (err) {
+        res.status(err.code).json(err);
+        return;
+      } else {
+        res.json(id);
+        return;
+      }
+    });
   });
 
 
-  db.add(message, (id, err) => {
-    if (err) {
-      res.status(err.code).json(err);
-      return;
-    } else {
-      res.json(id);
-      return;
-    }
-  });
 };

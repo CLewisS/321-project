@@ -249,9 +249,12 @@ module.exports.get = function(username, callback) {
       if (err) {
         callback({}, {code: 500, message: err.message});
         return; 
-      } else{
-        callback(results[0]);
+      } else if (results.length === 0){
+        callback({}, {code: 400, message: "ERR_NO_RECIPIENT"});
+        return;
       }
+	    
+      callback(results[0]);
     });
 
     dbConn.end(function (err) {

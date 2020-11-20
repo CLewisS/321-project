@@ -10,11 +10,16 @@ var db = require("../dbInterface/serviceDB.js");
 var reqData = require("./requestData.js");
 
 module.exports.getServices = function (req, res) {
-  // console.log("query: " + JSON.stringify(req.query));
 
-  var conditions = reqData.getConditionsFromQuery(req.query);
+  try {
+    var conditions = reqData.getConditionsFromQuery(req.query);
+  } catch(err) {
+    res.status(400).json({code: 400, message: err});
+    return;
+  }
 
   db.get(conditions, (services, err) => { 
+
     if (err) {
       res.status(err.code).json(err);
       return;
@@ -22,43 +27,52 @@ module.exports.getServices = function (req, res) {
       res.json(services);
       return;
     }
+
   });
+
 };
 
 
 
 module.exports.addService = function (req, res) {
-  // console.log("service " + JSON.stringify(req.body));
-  
-  var service = reqData.getServiceFromReq(req.body);
-  var  insertID ;
+
+  try {  
+    var service = reqData.getServiceFromReq(req.body);
+  } catch (err) {
+    res.status(400).json({code: 400, message: err});
+    return;
+  }
 
   db.add(service, (id, err) => {
-    db.adduserServices(service, id, (err) => {
-      if (err) {
-        res.status(err.code).json(err);
-	return;
-      }
-    });
-
     if (err) {
       res.status(err.code).json(err);
       return;
     } else {
-      res.json(id);
-      return;
+
+      db.adduserServices(service, id, (err) => {
+        if (err) {
+          res.status(err.code).json(err);
+          return;
+        } else {
+          res.json(id);
+          return;
+        }
+      });
+
     }
+
   });
 
 };
 
 
 module.exports.deleteService = function (req, res) {
-  // console.log("In service handler: delete service");
+
   const id = req.query;
   const keys = Object.keys(id);
   if(keys.length!==1 || keys[0]!=="id"){
-    throw "The delete service id passed in was wrong.";
+    res.status(400).json({code: 400, message: "The passed in id is invalid"});
+    return;
   }
 
   // still need to delete the service in the serviceUser table.
@@ -66,6 +80,7 @@ module.exports.deleteService = function (req, res) {
   var idNum = parseInt(id[keys[0]],10);
   
   db.delete(idNum, (id, err) => {
+
     if (err) {
       res.status(err.code).json(err);
       return;
@@ -73,26 +88,32 @@ module.exports.deleteService = function (req, res) {
       res.json(id);
       return;
     }
+
   });
  
 };
 
 
 module.exports.updateService = function (req, res) {
-  // console.log("In service handler: update service");
+
   var updateService = req.body;
   const keys = Object.keys(req.query);
   if(keys.length!==1 || keys[0]!=="id"){
-    throw "The delete service id passed in was wrong.";
+    res.status(400).json({code: 400, message: "The id for the service to be deleted is invalid"});
+    return;
   }
 
-  var serviceID = parseInt(req.query["id"], 10);
-
-  if(!reqData.serviceIsValid(updateService)){
-    throw "This is not a valid service!";
+  var serviceID = Number(req.query["id"]);
+  
+  try {
+    reqData.serviceIsValid(updateService)
+  } catch (err) {
+    res.status(400).json({code: 400, message: err});
+    return;
   }
 
   db.update(serviceID, updateService, (service, err) => {
+
     if (err) {
       res.status(err.code).json(err);
       return;
@@ -100,45 +121,49 @@ module.exports.updateService = function (req, res) {
       res.json(service);
       return;
     }
+
   });
 
 };
 
 
 module.exports.receiveService = function (req, res) {
-  // console.log("In service handler: receive service");
   
   var receiveInfo = req.body;
   
-  db.receive(receiveInfo.username, receiveInfo.serviceID , (id, err) => {
+  db.receive(receiveInfo.username, receiveInfo.serviceID , (result, err) => {
+
     if (err) {
       res.status(err.code).json(err);
       return;
     } else {
-      res.json(id);
+      res.json({id: result.insertId});
       return;
     }
+
   });
   
 };
 
 
 module.exports.getReceivedServices = function (req, res) {
-  // console.log("In service handler: get received services");
 
   var conditions = ["username='" + req.query.username + "'", "status='" + req.query.status + "'"];
 
   db.getReceivedIDs(conditions, (services, err) => {
+
     if (err) {
       res.status(err.code).json(err);
       return;
     } else {
       var conditions = [];
+
       for(var service of services) {
         conditions.push("id=" + service.serviceID);
       }
 
       db.getReceivedServices(conditions, (services, err) => { 
+
         if (err) {
           res.status(err.code).json(err);
           return;
@@ -146,7 +171,11 @@ module.exports.getReceivedServices = function (req, res) {
           res.json(services);
           return;
         }
+
       });
+
     }
+
   });
+	
 };

@@ -1,48 +1,54 @@
-var serviceHandler = require("../../serviceHandler/serviceHandler.js");
-jest.mock("../../dbInterface/serviceDB.js");
-var db = require("../../dbInterface/serviceDB.js");
+jest.mock("../../dbInterface/dbConfig.js");
+var testDb = require("../testDbSetup.js");
+
+var integrationTests = require("../integrationTests.js");
+var unitTests = require("../unitTests.js");
+
+var server= require("../../requestManager");
 
 
-test("Service Add: Get JSON", () => {
-  var req = {body: { id: 123,
-                 name: "A service",
-                 dow: "Monday",
-                 date: "2020-10-17",
-                 time: "12:57:33",
-                 lat: 49.56911,
-                 longi: 123.456,
-                 owner: "Brendon",
-                 type: "food",
-                 description: "This is a description"
-               }};
-
-  var expected = {
-                   name: "A service",
-                   dow: "Monday",
-                   date: "2020-10-17",
-                   time: "12:57:33",
-                   lat: 49.56911,
-                   longi: 123.456,
-                   owner: "Brendon",
-                   type: "food",
-                   description: "This is a description"
-                };
-  
-
-  db.add.mockImplementation((service, callback) => {
-    expect(service).toMatchObject(expected);
-    callback({id: 15});
-  });
-
-  var res = {
-    data: {},
-    json(input) {
-        this.data = input;
+beforeAll((done) => {
+  var cb = function() {
+    var count = 0;
+    return () => {
+      if (count == 1) {
+        done();
+      } else {
+        count++;
+      }
     }
   };
 
-  serviceHandler.addService(req, res);
+  var callback = cb();
+  testDb.initServiceDb(callback);
+  testDb.initUserDb(callback);
+});
 
-  expect(db.add).toHaveBeenCalled();
-  expect(res.data).toMatchObject({id: 15});
+afterAll((done) => {
+  
+  var cb = function() {
+    var count = 0;
+    return () => {
+      if (count == 1) {
+        done();
+      } else {
+        count++;
+      }
+    }
+  };
+
+  server.close();
+
+  var callback = cb();
+  testDb.tearDownServiceDb(callback);
+  testDb.tearDownUserDb(callback);
+});
+
+
+describe("Unit-Tests", () => {
+  unitTests();
+});
+
+describe("Integration-Tests", () => {
+  integrationTests(server);
 });

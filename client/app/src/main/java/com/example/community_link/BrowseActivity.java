@@ -517,6 +517,28 @@ public class BrowseActivity extends CommunityLinkActivity {
 
     /* View manipulation functions */
 
+    private void setResultViewDate(ServiceData sd, View serviceView) {
+        TextView dateResult = serviceView.findViewById(R.id.dateTimeResult);
+        String date = sd.getDate().split("T")[0];
+        String [] dateSplit = date.split("-");
+        String dow = sd.getDow();
+        String month = new DateFormatSymbols().getMonths()[Integer.parseInt(dateSplit[1])-1];
+        String day = dateSplit[2];
+        String year = dateSplit[0];
+        String time = sd.getTime();
+        String[] hourMin = time.split(":");
+        dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + hourMin[0] + ":" + hourMin[1]);
+    }
+
+    private void setViewTags(View serviceView, int i) {
+        Button mapButt = serviceView.findViewById(R.id.mapButt2);
+        mapButt.setTag(i);
+        Button getButt = serviceView.findViewById(R.id.getThisService);
+        getButt.setTag(i);
+        Button messageButt = serviceView.findViewById(R.id.messageProvButt);
+        messageButt.setTag(i);
+    }
+
     private View getServiceResultView(int i) {
         ServiceData sd = sdList.get(i);
         LayoutInflater inflater = LayoutInflater.from(BrowseActivity.this);
@@ -528,16 +550,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         TextView owner = serviceView.findViewById(R.id.ownerResult);
         owner.setText("Provided by: " + sd.getOwner());
 
-        TextView dateResult = serviceView.findViewById(R.id.dateTimeResult);
-        String date = sd.getDate().split("T")[0];
-        String [] dateSplit = date.split("-");
-        String dow = sd.getDow();
-        String month = new DateFormatSymbols().getMonths()[Integer.parseInt(dateSplit[1])-1];
-        String day = dateSplit[2];
-        String year = dateSplit[0];
-        String time = sd.getTime();
-        String[] hourMin = time.split(":");
-        dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + hourMin[0] + ":" + hourMin[1]);
+        setResultViewDate(sd, serviceView);
 
         TextView locationResult = serviceView.findViewById(R.id.locationResult);
         locationResult.setText("Location: (" + sd.getLat() + ", " +sd.getLongi() + ")");
@@ -545,12 +558,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         TextView descriptionResult = serviceView.findViewById(R.id.descriptionResult);
         descriptionResult.setText(sd.getDescription());
 
-        Button mapButt = serviceView.findViewById(R.id.mapButt2);
-        mapButt.setTag(i);
-        Button getButt = serviceView.findViewById(R.id.getThisService);
-        getButt.setTag(i);
-        Button messageButt = serviceView.findViewById(R.id.messageProvButt);
-        messageButt.setTag(i);
+        setViewTags(serviceView, i);
 
         return serviceView;
     }

@@ -158,6 +158,13 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     @Override
     protected void onStart() {
         super.onStart();
+        Intent actIntent = getIntent();
+        if (actIntent.hasExtra("targetName")) {
+            targetName = actIntent.getStringExtra("targetName");
+            EditText targetText = findViewById(R.id.edittext_targetbox);
+            targetText.setText(targetName);
+        }
+
         LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver),
                 new IntentFilter("pushNdata")
         );

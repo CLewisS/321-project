@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -168,6 +169,13 @@ public class BrowseActivity extends CommunityLinkActivity {
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
+    }
+
+    public void messageProvider(View view) {
+        Intent chat = new Intent(this, ChatActivity.class);
+        String targetName = sdList.get((Integer) view.getTag()).getOwner();
+        chat.putExtra("targetName", targetName);
+        startActivity(chat);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -541,6 +549,8 @@ public class BrowseActivity extends CommunityLinkActivity {
         mapButt.setTag(i);
         Button getButt = serviceView.findViewById(R.id.getThisService);
         getButt.setTag(i);
+        Button messageButt = serviceView.findViewById(R.id.messageProvButt);
+        messageButt.setTag(i);
 
         return serviceView;
     }

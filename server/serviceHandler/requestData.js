@@ -1,8 +1,8 @@
 
-var serviceAttributes = ["name", "date", "dow", "time", "lat", "longi", "type", "owner", "description"];
+var serviceAttributes = ["name", "date", "dow", "time", "lat", "longi", "type", "owner", "description", "maxCapacity"];
 var searchConditions = ["id", "name", "date", "dow", "time", "lat", "longi", "type", "owner"];
 var stringAttributes = ["name", "date", "dow", "time", "type", "owner", "description"];
-var numberAttributes = ["id", "lat", "longi"];
+var numberAttributes = ["id", "lat", "longi", "maxCapacity"];
 var singleValConditions= ["id", "name", "dow", "type", "owner"];
 var validComps = ["min", "max"];
 

@@ -22,8 +22,6 @@ var dbConfig = require("./dbConfig");
 
 module.exports.add = function (service, callback) {
 
-  // console.log("Adding Service to DB");
-
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
   // Start database connection  
@@ -32,8 +30,6 @@ module.exports.add = function (service, callback) {
       callback({}, {code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     // Get Service Values  
     var values = [service.name, 
@@ -55,15 +51,26 @@ module.exports.add = function (service, callback) {
         callback({}, {code: 500, message: err.message});
         return;
       }
-      callback({id: results.insertId});
-    });
 
-    // End connection
-    dbConn.end(function (err) {
-      if (err) {
-        callback({}, {code: 500, message: err.message});
-        return;
-      }
+      var id = results.insertId;
+
+      var rsvpValues = [id, 0, service.maxCapacity];
+      dbConn.query("INSERT INTO rsvp_count VALUES (?, ?, ?)", rsvpValues, (err, results, fields) => {
+        if (err) {
+          callback({}, {code: 500, message: err.message});
+          return;
+        }
+        callback({id: id});
+      });
+
+      // End connection
+      dbConn.end(function (err) {
+        if (err) {
+          callback({}, {code: 500, message: err.message});
+          return;
+        }
+      });
+
     });
 
   });
@@ -81,7 +88,6 @@ module.exports.add = function (service, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.get = function(conditions, callback) {
-  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -91,8 +97,6 @@ module.exports.get = function(conditions, callback) {
       callback({}, {code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = "SELECT * FROM services WHERE ";
@@ -135,7 +139,6 @@ module.exports.get = function(conditions, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.delete = function(serviceID, callback) {
-  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -146,28 +149,38 @@ module.exports.delete = function(serviceID, callback) {
       return;
     }
 
-    // console.log("Connected to MySQL server");
-
-    // Build SQL query
-    var query = "DELETE FROM services WHERE id = " + serviceID;
+    
+    var query = "DELETE FROM rsvp_count WHERE id = " + serviceID;
   
-    // Get services
+    // Delete service 
     dbConn.query(query, (err, result, fields) => {
       if (err) {
         callback({}, {code: 500, message: err.message});
         return;
       }
+
+      var query = "DELETE FROM services WHERE id = " + serviceID;
   
-      callback({id: serviceID},{});
+      // Delete service 
+      dbConn.query(query, (err, result, fields) => {
+        if (err) {
+          callback({}, {code: 500, message: err.message});
+          return;
+        }
+  
+        callback({id: serviceID},{});
+      });
+
+      // End connection
+      dbConn.end(function (err) {
+        if (err) {
+          callback({}, {code: 500, message: err.message});
+          return;
+        }
+      });
+  
     });
 
-    // End connection
-    dbConn.end(function (err) {
-      if (err) {
-        callback({}, {code: 500, message: err.message});
-        return;
-      }
-    });
 
   });
 
@@ -187,9 +200,6 @@ module.exports.delete = function(serviceID, callback) {
 
 module.exports.update = function (serviceID, service, callback) {
 
-  // console.log("Adding Service to DB");
-
-
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
   // Start database connection  
@@ -198,8 +208,6 @@ module.exports.update = function (serviceID, service, callback) {
       callback({}, {code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     // Get Service Values  
     var values = [service.name, 
@@ -241,9 +249,6 @@ module.exports.update = function (serviceID, service, callback) {
 
 module.exports.adduserServices = function (service, insertId, callback) {
 
-  // console.log("Adding Service to userDB userServices table.");
-
-
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
@@ -252,8 +257,6 @@ module.exports.adduserServices = function (service, insertId, callback) {
       callback({code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     var values = [
       service.owner,
@@ -286,50 +289,96 @@ module.exports.adduserServices = function (service, insertId, callback) {
 }; 
 
 
-module.exports.receive = function (receiver,serviceID, callback) {
+/* Helper function for receive. 
+ * It checks if the service is at max capacity.
+ *
+ * If the service is a max capacity it rejects to a message for the response.
+ *
+ * If the service isn't at max capacity it increments 
+ * the number of RSVPs for the service.
+ */
+var updateRsvp = function(serviceID) {
+  return new Promise((resolve, reject) => {
+    var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
-  // console.log("Adding Service to userDB userServices table.");
+    // Start database connection  
+    dbConn.connect(function (err) {
+      if (err) {
+        reject({code: 500, message: err.message});
+      }
 
-  var dbConn = mysql.createConnection(dbConfig.userDB);
-
-  // Start database connection  
-  dbConn.connect(function (err) {
-    if (err) {
-      callback({}, {code: 500, message: err.message});
-      return;
-    }
-
-    // console.log("Connected to MySQL server");
-
-    var values = [
-      receiver,
-      "receive",
-      serviceID
-    ];
-
-
+      let query = "UPDATE rsvp_count SET rsvps = rsvps + 1 WHERE id=" + serviceID;
+      dbConn.query(query, (err, results, fields) => {
+        if (err && err.sqlMessage == "Check constraint 'rsvp_count_chk_1' is violated.") {
+          reject({code: 200, message: "SERVICE_AT_MAX"});
+        } else if (err) {
+		console.log(err);
+          reject({code: 500, message: err.message});
+        }
     
-    // Insert service into database
-    var query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
-  
-    dbConn.query(query, values, (err, results, fields) => {
+        resolve(serviceID);
+      });
+
+
+      // End connection
+      dbConn.end(function (err) {
+        if (err) {
+          reject({code: 500, message: err.message});
+        }
+
+      });
+
+    });
+
+  });
+
+};
+
+module.exports.receive = function (receiver, serviceID, callback) {
+
+  updateRsvp(serviceID).then((serviceID) => {
+
+    var dbConn = mysql.createConnection(dbConfig.userDB);
+
+    // Start database connection  
+    dbConn.connect(function (err) {
       if (err) {
         callback({}, {code: 500, message: err.message});
         return;
       }
-  
-      callback(results);
+
+      let values = [
+        receiver,
+        "receive",
+        serviceID
+      ];
+
+      // Insert service into database
+      let query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
+    
+      dbConn.query(query, values, (err, results, fields) => {
+        if (err) {
+          callback({}, {code: 500, message: err.message});
+          return;
+        }
+
+        callback({id: serviceID});
+
+        // End connection
+        dbConn.end(function (err) {
+          if (err) {
+            callback({}, {code: 500, message: err.message});
+            return;
+          }
+        });
+    
+      });
+
     });
+  },
 
-
-    // End connection
-    dbConn.end(function (err) {
-      if (err) {
-        callback({}, {code: 500, message: err.message});
-        return;
-      }
-    });
-
+  (err) => {
+    callback({}, err);
   });
 
 }; 
@@ -337,8 +386,6 @@ module.exports.receive = function (receiver,serviceID, callback) {
 
 module.exports.getReceivedIDs = function(conditions, callback) {
 
-  // console.log("Getting received services from DB");
-
   var dbConn = mysql.createConnection(dbConfig.userDB);
 
   // Start database connection  
@@ -347,8 +394,6 @@ module.exports.getReceivedIDs = function(conditions, callback) {
       callback({}, {code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = "SELECT * FROM userServices WHERE ";
@@ -389,7 +434,6 @@ module.exports.getReceivedIDs = function(conditions, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.getReceivedServices = function(conditions, callback) {
-  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -399,8 +443,6 @@ module.exports.getReceivedServices = function(conditions, callback) {
       callback({}, {code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     // Build SQL query
     var query = "SELECT * FROM services WHERE ";

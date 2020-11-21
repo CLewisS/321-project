@@ -1,4 +1,5 @@
-var serviceHandler = require("../serviceHandler/serviceHandler.js");
+var serviceHandler = require("../../serviceHandler/serviceHandler.js");
+
 module.exports = function () {
   
   describe.each([
@@ -11,7 +12,8 @@ module.exports = function () {
         longi: 123.456,
         owner: "Caleb",
         type: "food",
-        description: "This is a description"
+        description: "This is a description",
+        maxCapacity: 3
       }} , 200, {id:3}, "Service Add: valid"] ,
   
       [{body: { id: 123,
@@ -23,7 +25,8 @@ module.exports = function () {
         longi: 123.456,
         owner: "Caleb",
         type: "food",
-        description: "This is a description"
+        description: "This is a description",
+        maxCapacity: 2
       }} , 400 , {}, "Service Add: Invalid Attribute"],
   
       [{body: { id: 123,
@@ -35,7 +38,8 @@ module.exports = function () {
           longi: 123.456,
           owner: "Caleb",
           type: "food",
-          description: "This is a description"
+          description: "This is a description",
+          maxCapacity: 1
         }} , 400, {}, "Service Add: Invalid Type"]
   
   

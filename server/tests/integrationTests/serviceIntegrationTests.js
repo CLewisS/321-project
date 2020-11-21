@@ -13,7 +13,8 @@ module.exports = (server) => {
              longi: 123.456,
              owner: "Caleb",
              type: "food",
-             description: "This is a description"
+             description: "This is a description",
+	     maxCapacity: 5
       }, 200],
 
       [{id: 123,
@@ -25,7 +26,8 @@ module.exports = (server) => {
              longi: 123.456,
              owner: "Caleb",
              type: "food",
-             description: "This is a description"
+             description: "This is a description",
+	     maxCapacity: 5
       }, 400],
 
       [{id: 123,
@@ -37,7 +39,8 @@ module.exports = (server) => {
              longi: 123.456,
              owner: "caleb",
              type: "food",
-             description: "this is a description"
+             description: "This is a description",
+	     maxCapacity: 5
       }, 400],
 
       [{id: 123,
@@ -49,7 +52,8 @@ module.exports = (server) => {
              longi: 123.456,
              owner: "caleb",
              type: "food",
-             description: "this is a description"
+             description: "This is a description",
+	     maxCapacity: 5
       }, 400]
 
 

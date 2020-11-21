@@ -1,10 +1,10 @@
-jest.mock("../../dbInterface/dbConfig.js");
-var testDb = require("../testDbSetup.js");
+jest.mock("../dbInterface/dbConfig.js");
+var testDb = require("./testDbSetup.js");
 
-var integrationTests = require("../integrationTests.js");
-var unitTests = require("../unitTests.js");
+var integrationTests = require("./integrationTests/integrationTests.js");
+var unitTests = require("./unitTests/unitTests.js");
 
-var server= require("../../requestManager");
+var server = require("../requestManager");
 
 
 beforeAll((done) => {

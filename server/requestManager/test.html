@@ -21,13 +21,14 @@
       var body = { id: 123,
                    name: 'A service',
                    dow: 'Monday',
-                   date: '2020-10-17',
+                   date: '2020-12-17',
                    time: '12:57:33',
                    lat:   49.56911,
-                   longi: 123.456,
-                   owner: 'Brendon',
+                   longi: -123.456,
+                   owner: 'Caleb',
                    type:  'food',
-                   description: 'This is a description'
+                   description: 'This is a description',
+	           maxCapacity: 15
                  };
   
       Http.open("POST", '/service');
@@ -89,16 +90,17 @@
 
           const Http = new XMLHttpRequest();
 
-          var body = { receiver: "brendon",
-                       serviceID:10
+          var body = { username: "Caleb",
+                       serviceID: 87
                     };
       
-          Http.open("POST", '/receiveService');
+          Http.open("POST", '/service/use');
           Http.setRequestHeader('Content-Type', 'application/json');
           
           Http.send(JSON.stringify(body));
           //Http.send(body);
-          console.log("Adding service: POST /receiveService");
+          console.log("Adding service: POST /service/use");
+
         }
 
     var drop_service = function () {

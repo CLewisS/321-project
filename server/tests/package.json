@@ -54,7 +54,6 @@
   "jest": {
     "testEnvironment": "node",
     "rootDir": "../",
-
     "collectCoverage": true,
     "collectCoverageFrom": [
       "!**/node_modules/**",

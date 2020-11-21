@@ -130,14 +130,14 @@ module.exports.updateService = function (req, res) {
 module.exports.receiveService = function (req, res) {
   
   var receiveInfo = req.body;
-  
+
   db.receive(receiveInfo.username, receiveInfo.serviceID , (result, err) => {
 
     if (err) {
       res.status(err.code).json(err);
       return;
     } else {
-      res.json({id: result.insertId});
+      res.json(result);
       return;
     }
 

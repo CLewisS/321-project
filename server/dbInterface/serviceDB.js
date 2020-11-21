@@ -52,13 +52,15 @@ module.exports.add = function (service, callback) {
         return;
       }
 
-      var rsvpValues = [results.insertId, 0, service.maxCapacity];
+      var id = results.insertId;
+
+      var rsvpValues = [id, 0, service.maxCapacity];
       dbConn.query("INSERT INTO rsvp_count VALUES (?, ?, ?)", rsvpValues, (err, results, fields) => {
         if (err) {
           callback({}, {code: 500, message: err.message});
           return;
         }
-        callback({id: results.insertId});
+        callback({id: id});
       });
 
       // End connection
@@ -137,7 +139,6 @@ module.exports.get = function(conditions, callback) {
  *               The retrieved services are passed as an argument.
  */
 module.exports.delete = function(serviceID, callback) {
-  // console.log("Getting Services from DB");
 
   var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -148,26 +149,38 @@ module.exports.delete = function(serviceID, callback) {
       return;
     }
 
-    // Build SQL query
-    var query = "DELETE FROM services WHERE id = " + serviceID;
+    
+    var query = "DELETE FROM rsvp_count WHERE id = " + serviceID;
   
-    // Get services
+    // Delete service 
     dbConn.query(query, (err, result, fields) => {
       if (err) {
         callback({}, {code: 500, message: err.message});
         return;
       }
+
+      var query = "DELETE FROM services WHERE id = " + serviceID;
   
-      callback({id: serviceID},{});
+      // Delete service 
+      dbConn.query(query, (err, result, fields) => {
+        if (err) {
+          callback({}, {code: 500, message: err.message});
+          return;
+        }
+  
+        callback({id: serviceID},{});
+      });
+
+      // End connection
+      dbConn.end(function (err) {
+        if (err) {
+          callback({}, {code: 500, message: err.message});
+          return;
+        }
+      });
+  
     });
 
-    // End connection
-    dbConn.end(function (err) {
-      if (err) {
-        callback({}, {code: 500, message: err.message});
-        return;
-      }
-    });
 
   });
 
@@ -244,8 +257,6 @@ module.exports.adduserServices = function (service, insertId, callback) {
       callback({code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     var values = [
       service.owner,
@@ -351,6 +362,7 @@ module.exports.receive = function (receiver, serviceID, callback) {
           return;
         }
 
+        callback({id: serviceID});
 
         // End connection
         dbConn.end(function (err) {

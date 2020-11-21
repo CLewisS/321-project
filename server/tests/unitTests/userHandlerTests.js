@@ -1,6 +1,6 @@
-var userHandler = require("../userHandler/userHandler.js");
-jest.mock("../dbInterface/dbConfig.js");
-var testDb = require("./testDbSetup.js");
+var userHandler = require("../../userHandler/userHandler.js");
+//jest.mock("../dbInterface/dbConfig.js");
+//var testDb = require("./testDbSetup.js");
 
 
 module.exports = function () {

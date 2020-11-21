@@ -25,7 +25,7 @@ var initServiceDb = function (callback) {
       return;
     }
   
-    var createServiceTable = `CREATE TABLE IF NOT EXISTS services (
+    var query = `CREATE TABLE IF NOT EXISTS services (
                                 id INT unsigned NOT NULL AUTO_INCREMENT,
                                 name VARCHAR(150) NOT NULL,
                                 date DATE NOT NULL,
@@ -40,40 +40,77 @@ var initServiceDb = function (callback) {
                               );`
 
   
-    serviceDbConn.query(createServiceTable, (err) => {
+    serviceDbConn.query(query, (err) => {
       if (err) {
         console.log(err);
         return;
       }
 
-      var service1 = ["food service", "2020-8-17", "Monday", "12:57:33", 49.56911, 123.456, "Caleb", "food", "This is a description"];
-      var query1 = `INSERT INTO services (name, date, dow, time, lat, longi, owner, type, description)
+      var service = ["food service", "2020-8-17", "Monday", "12:57:33", 49.56911, 123.456, "Caleb", "food", "This is a description"];
+      var query = `INSERT INTO services (name, date, dow, time, lat, longi, owner, type, description)
                     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      serviceDbConn.query(query1, service1, (err) => {
+      serviceDbConn.query(query, service, (err) => {
         if (err) {
           console.log(err);
           return;
 	}
 
-        var service2 = ["A service", "2020-11-17", "Friday", "12:57:33", 49.56911, 123.456, "Caleb", "food", "This is a description"];
-        var query2 = `INSERT INTO services (name, date, dow, time, lat, longi, owner, type, description)
+        var service = ["A service", "2020-11-17", "Friday", "12:57:33", 49.56911, 123.456, "Caleb", "food", "This is a description"];
+        var query = `INSERT INTO services (name, date, dow, time, lat, longi, owner, type, description)
                       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   
-        serviceDbConn.query(query2, service2, (err) => {
+        serviceDbConn.query(query, service, (err) => {
           if (err) {
             console.log(err);
             return;
   	  }
 
-          serviceDbConn.end((err) => {
+          var query = `CREATE TABLE IF NOT EXISTS rsvp_count( 
+	                 id INT UNSIGNED NOT NULL,
+			 rsvps INT NOT NULL,
+			 max INT NOT NULL,
+			 PRIMARY KEY (id),
+			 FOREIGN KEY (id) REFERENCES services (id),
+			 CHECK (rsvps <= max)
+		       )`;
+
+          serviceDbConn.query(query, (err) => {
             if (err) {
               console.log(err);
               return;
             }
-            callback();
-          });
-  
+
+            var query = "INSERT INTO rsvp_count VALUES (1, 0, 5)";
+
+            serviceDbConn.query(query, (err) => {
+              if (err) {
+                console.log(err);
+                return;
+              }
+
+	    });
+
+            var query = "INSERT INTO rsvp_count VALUES (2, 0, 7)";
+
+            serviceDbConn.query(query, (err) => {
+              if (err) {
+                console.log(err);
+                return;
+              }
+
+	    });
+
+            serviceDbConn.end((err) => {
+              if (err) {
+                console.log(err);
+                return;
+              }
+              callback();
+            });
+
+	  });
+
         });
 
       });
@@ -94,20 +131,30 @@ var tearDownServiceDb = function (callback) {
       return;
     }
   
-    var dropServiceTable = "DROP TABLE IF EXISTS services";
+    var dropRsvpTable = "DROP TABLE IF EXISTS rsvp_count";
   
-    serviceDbConn.query(dropServiceTable, (err) => {
+    serviceDbConn.query(dropRsvpTable, (err) => {
       if (err) {
         console.log(err);
         return;
       }
+
+      var dropServiceTable = "DROP TABLE IF EXISTS services";
   
-      serviceDbConn.end((err) => {
+      serviceDbConn.query(dropServiceTable, (err) => {
         if (err) {
           console.log(err);
           return;
         }
-	callback();
+  
+        serviceDbConn.end((err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          callback();
+        });
+  
       });
   
     });

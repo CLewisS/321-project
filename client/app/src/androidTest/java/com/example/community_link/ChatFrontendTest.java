@@ -31,7 +31,7 @@ public class ChatFrontendTest {
             new ActivityScenarioRule<>(ChatActivity.class);
 
     //Warning: Live versions are test-incompatible.
-    //If the test crashes while starting, please check if the test-supportive features in Chat_Activity.java:line99-100 are enabled.
+    //If the test crashes while starting, please check if the test-supportive features in Chat_Activity.java:line97 is enabled.
     //Enable them and recompile for testing purposes.
 
     @Test

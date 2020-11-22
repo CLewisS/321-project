@@ -85,8 +85,6 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     private Gson gson;
     private Context context;
 
-    //supportive for test
-    private boolean test = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +94,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters
-        setupForTest();
-        if(test){CommunityLinkApp.user = new UserProfile("TEST", "TEST");}
+//        if(test){CommunityLinkApp.user = new UserProfile("TEST", "TEST");}
 
         targetName = null;
 
@@ -361,6 +358,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                             Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
+                        }else{
+                            Toast.makeText(ChatActivity.this, "Server unavailable, please try later.", Toast.LENGTH_SHORT).show();
                         }
                     } catch(JSONException e) {
                         e.printStackTrace();
@@ -583,7 +582,4 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         return true;
     }
 
-    public void setupForTest(){
-        test = true;
-    }
 }

@@ -354,7 +354,19 @@ public class CommunityLinkActivity extends AppCompatActivity {
             Response.ErrorListener errorCallback = new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), "Username already exists.", Toast.LENGTH_SHORT).show();
+                    String resBody = new String(error.networkResponse.data);
+                    try {
+                        JSONObject res = new JSONObject(resBody);
+                        if("USER_ALREADY_EXISTS".equals(res.getString("message"))) {
+                            CharSequence toastMess = "Sorry, username already exists\nPlease choose a different username";
+                            Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    } catch(JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     System.out.println("HTTP response didn't work");
                     System.out.println(error.toString());
                 }

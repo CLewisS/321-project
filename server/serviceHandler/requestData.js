@@ -1,8 +1,8 @@
 
-var serviceAttributes = ["name", "date", "dow", "time", "lat", "longi", "type", "owner", "description"];
+var serviceAttributes = ["name", "date", "dow", "time", "lat", "longi", "type", "owner", "description", "maxCapacity"];
 var searchConditions = ["id", "name", "date", "dow", "time", "lat", "longi", "type", "owner"];
 var stringAttributes = ["name", "date", "dow", "time", "type", "owner", "description"];
-var numberAttributes = ["id", "lat", "longi"];
+var numberAttributes = ["id", "lat", "longi", "maxCapacity"];
 var singleValConditions= ["id", "name", "dow", "type", "owner"];
 var validComps = ["min", "max"];
 
@@ -14,8 +14,13 @@ var validComps = ["min", "max"];
  */
 var isCorrectType = function (key, value) {
 
-  return !((stringAttributes.includes(key) && typeof(value) != "string") || 
-           (numberAttributes.includes(key) && typeof(value) != "number"));
+  if (stringAttributes.includes(key) && typeof(value) != "string") {
+    throw "Expected type String for " + key + ", but got type " + typeof(value); 
+  } else if (numberAttributes.includes(key) && typeof(value) != "number") {
+    throw "Expected type number for " + key + ", but got type " + typeof(value); 
+  } 
+
+  return true;
 
 };
 
@@ -26,20 +31,27 @@ var isCorrectType = function (key, value) {
  *    - service: An object which contains all the attribute values to create a service
  */
 var serviceIsValid = function (service) {
+
   const keys = Object.keys(service);
   for(var key of keys){
-    if(!serviceAttributes.includes(key) || !isCorrectType(key, service[String(key)])){
-      return false;
+
+    if(!serviceAttributes.includes(key)) {
+      throw key + " is not a valid service attribute";
     }
+
+    isCorrectType(key, service[String(key)]);
+
   }
 
   return true;
+
 };
 
 module.exports.serviceIsValid = serviceIsValid;
 
 
 module.exports.getServiceFromReq = function(body) {
+
   var service;
   if (typeof(body) === "string") {
     service = JSON.parse(body);
@@ -51,14 +63,14 @@ module.exports.getServiceFromReq = function(body) {
     delete service.id;
   }
 
-  if (!serviceIsValid(service)) {
-    throw "Service is invalid";
+  if (serviceIsValid(service)) {
+    return service;
   }
 
-  return service;
 };
 
 var createMaxString = function (attribute, conditions, key) {
+
   var str;
 
   if (numberAttributes.includes(attribute)) {
@@ -68,9 +80,11 @@ var createMaxString = function (attribute, conditions, key) {
   }
 
   return str;
+
 };
 
 var createMinString = function (attribute, conditions, key) {
+
   var str;
 
   if (numberAttributes.includes(attribute)) {
@@ -80,6 +94,7 @@ var createMinString = function (attribute, conditions, key) {
   }
 
   return str;
+
 };
 
 /* Create a condition string from a query string key value pair 
@@ -88,6 +103,7 @@ var createMinString = function (attribute, conditions, key) {
  *   - conditions: the object read form the url query string.
  */
 var createConditionString = function(key, conditions){
+
   var str;
   var split = key.split("-");
   var attribute = split[0];
@@ -98,34 +114,45 @@ var createConditionString = function(key, conditions){
     str = createMaxString(attribute, conditions, key);
   } else if (split[1] === "min") {
     str = createMinString(attribute, conditions, key);
-  } else {
-    throw key + " is not a valid key";
-  }
+  } 
 
   return str;
+
 };
 
 
 var hasValidComparator = function(split) {
-  if(split.length !== 2 && singleValConditions.includes(split[0])) {
-    return true;
-  } else if (validComps.includes(split[1])) {
-    return true;
+
+  if(split.length === 1 && !singleValConditions.includes(split[0])) {
+    throw split[0] + " needs to be a max or min value";
+  } else if (split.length == 2 && !validComps.includes(split[1])) {
+    throw split[0] + " needs to be a max or min value, but was " + split[1];
   }
 
-  return false;
+  return true;
+
 };
 
-var isValidCondition = function (condition) {
+
+var hasCorrectType = function (key, value) {
+  if (numberAttributes.includes(key) && isNaN(Number(value))) {
+    throw "Expected type number for " + key + ", but got type " + typeof(value); 
+  }
+
+  return true;
+};
+
+
+var isValidCondition = function (condition, value) {
+
   var split = condition.split("-");
+  if (!searchConditions.includes(split[0])) {
+    throw "Condition " + condition + " is not valid";
+  }
   
-  if (searchConditions.includes(split[0]) && hasValidComparator(split)) {
-    return true;
-  } 
+  return (hasValidComparator(split) && hasCorrectType(split[0], value));
 
-  return false;
 };
-
 
 
 /* Create an array of strings. 
@@ -135,31 +162,23 @@ var isValidCondition = function (condition) {
  *   - conditions: the object read form the url query string.
  */
 var createConditionsArray = function (conditions) {
+
   const keys = Object.keys(conditions);
 
   let conditionStrs = [];
 
   for (var key of keys) {
-    if (isValidCondition(key)) {
+
+    if (isValidCondition(key, conditions[String(key)])) {
       var str = createConditionString(key, conditions);
       conditionStrs.push(str);
-    } else {
-      throw key + " is not a valid key";
-    }
+    } 
+
   }
 
   return conditionStrs;
-};
-
-
-
-
-
-
-
-
-module.exports.getConditionsFromQuery = function(queryString) {
-
-  return createConditionsArray(queryString);
 
 };
+
+
+module.exports.getConditionsFromQuery = createConditionsArray;

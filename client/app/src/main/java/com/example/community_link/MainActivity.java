@@ -48,7 +48,7 @@ public class MainActivity extends CommunityLinkActivity {
         running = false;
     }
 
-    private void setIntro() {
+    public void setIntro() {
         TextView welcome = findViewById(R.id.welcome);
         TextView loginText = findViewById(R.id.loginText);
         TextView signupText = findViewById(R.id.signupText);

@@ -9,3 +9,6 @@ node_modules/
 
 # API Keys
 fcm-key.json
+
+# Caverage Results
+coverage/

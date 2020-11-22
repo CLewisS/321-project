@@ -61,22 +61,41 @@
             android:gravity="center_horizontal"
             android:text="There will be a service provided for you. Don't worry about bringing anything that will all be sorted out." />
 
-        <Button
-            android:id="@+id/mapButt2"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#C0C2FD"
-            android:onClick="viewOnMap"
-            android:text="View on Map"
-            android:textAllCaps="false" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/mapButt2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#C0C2FD"
+                android:onClick="viewOnMap"
+                android:text="View on Map"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/getThisService"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#C0C2FD"
+                android:onClick="getThisService"
+                android:text="RSVP" />
+
+        </LinearLayout>
 
         <Button
-            android:id="@+id/getThisService"
+            android:id="@+id/messageProvButt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:backgroundTint="#C0C2FD"
-            android:onClick="getThisService"
-            android:text="RSVP" />
+            android:onClick="messageProvider"
+            android:text="Message Provider"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

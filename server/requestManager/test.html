@@ -7,13 +7,6 @@
 
       const Http = new XMLHttpRequest();
   
-      var conditions = {
-        date:  {min:'2020-10-15', max:'2020-10-25'},
-        type:  "food",
-        lat:   {max:47.453, min:50.342},
-        longi: {max: 130.456, min: 122.908}
-      };
-      
         //Http.open("GET", '/service?date-minn=2020-10-15&lat-min=45.786&lat-max=67.89&longi-min=122.3434');
       Http.open("GET", '/service?owner=jon&date-min=2020-10-16&date-max=2020-10-25&type=food&lat-min=45.786&lat-max=67.89&longi-min=122.3434&longi-max=125.2323');
       Http.send();
@@ -28,20 +21,20 @@
       var body = { id: 123,
                    name: 'A service',
                    dow: 'Monday',
-                   date: '2020-10-17',
+                   date: '2020-12-17',
                    time: '12:57:33',
                    lat:   49.56911,
-                   longi: 123.456,
-                   owner: 'Brendon',
+                   longi: -123.456,
+                   owner: 'Caleb',
                    type:  'food',
-                   description: 'This is a description'
+                   description: 'This is a description',
+	           maxCapacity: 15
                  };
   
       Http.open("POST", '/service');
       Http.setRequestHeader('Content-Type', 'application/json');
       
       Http.send(JSON.stringify(body));
-      //Http.send(body);
       console.log("Adding service: POST /service");
     }
 
@@ -97,16 +90,17 @@
 
           const Http = new XMLHttpRequest();
 
-          var body = { receiver: "brendon",
-                       serviceID:10
+          var body = { username: "Caleb",
+                       serviceID: 87
                     };
       
-          Http.open("POST", '/receiveService');
+          Http.open("POST", '/service/use');
           Http.setRequestHeader('Content-Type', 'application/json');
           
           Http.send(JSON.stringify(body));
           //Http.send(body);
-          console.log("Adding service: POST /receiveService");
+          console.log("Adding service: POST /service/use");
+
         }
 
     var drop_service = function () {
@@ -210,11 +204,11 @@
 
       var loginInfo = { 
               username: "brendon",
-              password: "newpass3453453",
+              password: "newpassword3",
               deviceToken:"new device1"
                  };
       // you can change the id here based on your database table
-      Http.open("PUT", '/userlogin');
+      Http.open("PUT", '/user/login');
       Http.setRequestHeader('Content-Type', 'application/json');
       
       Http.send(JSON.stringify(loginInfo));

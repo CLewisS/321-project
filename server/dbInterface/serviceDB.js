@@ -158,6 +158,7 @@ module.exports.delete = function(serviceID, callback) {
         callback({}, {code: 500, message: err.message});
         return;
       }
+<<<<<<< HEAD
 
       var query = "DELETE FROM services WHERE id = " + serviceID;
   
@@ -179,6 +180,10 @@ module.exports.delete = function(serviceID, callback) {
         }
       });
   
+=======
+      callback(result);
+      // callback({},{});
+>>>>>>> server_pass
     });
 
 

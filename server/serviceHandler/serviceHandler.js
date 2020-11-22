@@ -71,7 +71,8 @@ module.exports.deleteService = function (req, res) {
   const id = req.query;
   const keys = Object.keys(id);
   if(keys.length!==1 || keys[0]!=="id"){
-    res.status(400).json({code: 400, message: "The passed in id is invalid"});
+    //throw "The delete service id passed in was wrong.";
+    res.status(400).json({code: 400, message: "The query for the service to be deleted is invalid"});
     return;
   }
 
@@ -99,7 +100,7 @@ module.exports.updateService = function (req, res) {
   var updateService = req.body;
   const keys = Object.keys(req.query);
   if(keys.length!==1 || keys[0]!=="id"){
-    res.status(400).json({code: 400, message: "The id for the service to be deleted is invalid"});
+    res.status(400).json({code: 400, message: "The id for the service to be update is invalid"});
     return;
   }
 

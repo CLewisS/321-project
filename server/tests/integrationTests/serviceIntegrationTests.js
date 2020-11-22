@@ -172,25 +172,25 @@ test("Update " + query, async () => {
 
 
 /* DELETE SERVICE TESTS */
-// describe.each([
-//     [ "?id=1",
-//       200
-//     ],
-//     [ "?idnum=1",
-//        400
-//     ]
+describe.each([
+    [ "?id=2",
+      200
+    ],
+    [ "?idnum=1",
+       400
+    ]
   
-// ])("Delete service", (query, body, code) => {
+])("Delete service", (query, body, code) => {
 
-// test("Delete " + query, async () => {
+test("Delete " + query, async () => {
 
-//   var res = await request(server).delete("/service" + query);
-//   if (code === 200) {
-//   expect(res.statusCode).toBeDefined();
-//   }
-// });
+  var res = await request(server).delete("/service" + query);
+  if (code === 200) {
+  expect(res.statusCode).toBeUndefined();;
+  }
+});
 
-// });
+});
 
 
 

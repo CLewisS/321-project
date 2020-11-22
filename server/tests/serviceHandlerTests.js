@@ -226,9 +226,9 @@ module.exports = function () {
   describe.each([
     [{body:{username: "Caleb", serviceID: 1}}, 200],
 
-    [{body:{user: "Caleb", serviceID: 1}}, 400],
+    [{body:{user: "Caleb", serviceID: 1}}, 500],
     
-    [{body:{username: "Cale", serviceID: 67}}, 400]
+    [{body:{username: "Cale", serviceID: 67}}, 500]
 
   ])("RSVPs", (req, code) => {    
     test(JSON.stringify(req.body) , (done) => {
@@ -263,10 +263,10 @@ module.exports = function () {
   describe.each([
     [{query: {username: "Caleb", status: "receive"}}, 200, "food service"],
 
-    [{query: {username: "Cale", status: "receive"}}, 400, "food service"],
+    [{query: {username: "Cale", status: "receive"}}, 500],
 
-    [{query: {user: "Caleb", status: "receive"}}, 400]
-  ])("Get RSVPs", (req, codei, name) => {    
+    [{query: {user: "Caleb", status: "receive"}}, 500]
+  ])("Get RSVPs", (req, code, name) => {    
     test(JSON.stringify(req.query) , (done) => {
     
       var res = { 

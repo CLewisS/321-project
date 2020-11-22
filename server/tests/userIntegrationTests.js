@@ -105,7 +105,7 @@ test("returns " + code, async () => {
 
 /* DELETE USER TESTS */
 describe.each([
-  ["?username=Caleb", 200,{}],
+  ["?username=Bob", 200,{}],
 
   ["?name=Caleb", 400,{code: 400, message: "Expected a username, but didn't get one"}],
 

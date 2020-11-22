@@ -96,20 +96,71 @@
             android:textAllCaps="false"
             tools:ignore="OnClick" />
 
-        <Button
-
-            android:id="@+id/chatEntry_Button"
+        <LinearLayout
+            android:id="@+id/userButts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="0dp"
-            android:backgroundTint="#85ADFF"
-            android:onClick="enterChat"
-            android:paddingTop="32dp"
-            android:paddingBottom="32dp"
-            android:text="@string/chatModule_Title"
-            android:textAllCaps="false"
-            android:textSize="24sp" />
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1">
+
+                <Button
+
+                    android:id="@+id/chatEntry_Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#85ADFF"
+                    android:onClick="enterChat"
+                    android:paddingTop="32dp"
+                    android:paddingBottom="32dp"
+                    android:textAllCaps="false"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="horizontal"
+                    android:translationZ="90dp">
+
+                    <ImageView
+                        android:id="@+id/chatImg"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        app:srcCompat="@drawable/chat" />
+
+                    <TextView
+                        android:id="@+id/chatButtText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/chatModule_Title"
+                        android:textColor="#000000"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <Button
+
+                android:id="@+id/upcomingButt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#85ADFF"
+                android:onClick="upcomingServices"
+                android:paddingTop="32dp"
+                android:paddingBottom="32dp"
+                android:text="You\'re services"
+                android:textAllCaps="false"
+                android:textSize="24sp" />
+        </LinearLayout>
 
     </LinearLayout>
 

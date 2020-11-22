@@ -2,6 +2,7 @@ package com.example.community_link;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -72,6 +73,9 @@ public class CommunityLinkApp extends Application {
 
         if (currActivity.getClass().equals(MainActivity.class)) {
             ((MainActivity) currActivity).setIntro();
+        } else {
+            Intent main = new Intent(context, MainActivity.class);
+            context.startActivity(main);
         }
 
         CharSequence toastMess = "Successfully logged out";
@@ -118,6 +122,11 @@ public class CommunityLinkApp extends Application {
                     } else {
                         System.out.println("HTTP response didn't work");
                         System.out.println(error.toString());
+
+                        CharSequence errorMess = "Sorry, we can't login at the moment.";
+                        Toast errorToast = Toast.makeText(context, errorMess, Toast.LENGTH_LONG);
+                        errorToast.setGravity(Gravity.CENTER, 0, 0);
+                        errorToast.show();
                     }
 
                 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +55,8 @@ public class MainActivity extends CommunityLinkActivity {
         TextView signupText = findViewById(R.id.signupText);
         Button loginButt = findViewById(R.id.loginButtIntro);
         Button signupButt = findViewById(R.id.signupButtIntro);
-        Button chatButt = findViewById(R.id.chatEntry_Button);
+        LinearLayout userButts = findViewById(R.id.userButts);
+
 
         welcome.setText("Welcome to Community Link!");
 
@@ -62,7 +64,7 @@ public class MainActivity extends CommunityLinkActivity {
         loginButt.setVisibility(View.VISIBLE);
         signupText.setVisibility(View.VISIBLE);
         signupButt.setVisibility(View.VISIBLE);
-        chatButt.setVisibility(View.GONE);
+        userButts.setVisibility(View.GONE);
     }
 
     public void setUserView() {
@@ -71,7 +73,7 @@ public class MainActivity extends CommunityLinkActivity {
         TextView signupText = findViewById(R.id.signupText);
         Button loginButt = findViewById(R.id.loginButtIntro);
         Button signupButt = findViewById(R.id.signupButtIntro);
-        Button chatButt = findViewById(R.id.chatEntry_Button);
+        LinearLayout userButts = findViewById(R.id.userButts);
 
         String username = CommunityLinkApp.user.getUsername();
         welcome.setText("Hello " + username + "!");
@@ -80,7 +82,7 @@ public class MainActivity extends CommunityLinkActivity {
         loginButt.setVisibility(View.GONE);
         signupText.setVisibility(View.GONE);
         signupButt.setVisibility(View.GONE);
-        chatButt.setVisibility(View.VISIBLE);
+        userButts.setVisibility(View.VISIBLE);
     }
 
     private void getFCMToken() {
@@ -137,5 +139,9 @@ public class MainActivity extends CommunityLinkActivity {
         }
     }
 
+    public void upcomingServices(View view){
+        Intent upcomingServices = new Intent(this, UpcomingActivity.class);
+        startActivity(upcomingServices);
+    }
 
 }

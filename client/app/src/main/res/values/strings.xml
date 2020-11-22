@@ -5,10 +5,9 @@
     <string name="chatBox">Enter Message</string>
     <string name="chatSend">Send</string>
     <string name="A_Dev_Placeholder">Place Holder Text</string>
-    <string name="chatModule_Title">Begin Chatting</string>
+    <string name="chatModule_Title">Chat</string>
     <string name="chatTargetApply">Add</string>
     <string name="chatTargetHint">New Contact</string>
-
 
 
     <string name="welcome_string">
@@ -88,6 +87,11 @@
         <item>8</item>
         <item>9</item>
         <item>10</item>
+    </string-array>
+
+    <string-array name="upcoming_modes">
+        <item>RSVP\'d Services</item>
+        <item>Services You\'re Providing</item>
     </string-array>
 
 </resources>

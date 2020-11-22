@@ -48,7 +48,7 @@ module.exports.add = function (user, callback) {
       if (err && err.code === "ER_DUP_ENTRY") {
         callback({}, {code: 403, message: err.message});
       } else if (err) {
-	console.log(err);
+	// console.log(err);
         callback({}, {code: 500, message: err.message});
         return; 
       }

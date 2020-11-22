@@ -153,7 +153,10 @@ module.exports.receiveService = function (req, res) {
 module.exports.getReceivedServices = function (req, res) {
 
   var conditions = ["username='" + req.query.username + "'", "status='" + req.query.status + "'"];
-
+  // console.log(req.query.username);
+  // console.log(req.body.username);
+  console.log(conditions)
+  
   db.getReceivedIDs(conditions, (services, err) => {
 
     if (err) {
@@ -165,7 +168,6 @@ module.exports.getReceivedServices = function (req, res) {
       for(var service of services) {
         conditions.push("id=" + service.serviceID);
       }
-
       db.getReceivedServices(conditions, (services, err) => { 
 
         if (err) {

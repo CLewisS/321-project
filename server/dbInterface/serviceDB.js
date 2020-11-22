@@ -302,7 +302,8 @@ module.exports.receive = function (receiver,serviceID, callback) {
     }
 
     // console.log("Connected to MySQL server");
-
+    // console.log(serviceID);
+    // console.log(typeof( serviceID));
     var values = [
       receiver,
       "receive",

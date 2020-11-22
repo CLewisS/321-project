@@ -2,6 +2,7 @@ package com.example.community_link;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -52,6 +53,13 @@ public class UpcomingActivity extends CommunityLinkActivity {
         };
 
         initSpinners();
+    }
+
+    public void viewOnMap(View view) {
+        int index = (Integer) view.getTag();
+        Intent mapActivity = new Intent(this, MapActivity.class);
+        mapActivity.putExtra("service", sdList.get(index));
+        startActivity(mapActivity);
     }
 
     private void initSpinners() {

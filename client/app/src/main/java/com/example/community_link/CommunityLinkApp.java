@@ -122,6 +122,11 @@ public class CommunityLinkApp extends Application {
                     } else {
                         System.out.println("HTTP response didn't work");
                         System.out.println(error.toString());
+
+                        CharSequence errorMess = "Sorry, we can't login at the moment.";
+                        Toast errorToast = Toast.makeText(context, errorMess, Toast.LENGTH_LONG);
+                        errorToast.setGravity(Gravity.CENTER, 0, 0);
+                        errorToast.show();
                     }
 
                 }

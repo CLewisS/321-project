@@ -509,6 +509,11 @@ public class BrowseActivity extends CommunityLinkActivity {
             public void onErrorResponse(VolleyError error) {
                 System.out.println("HTTP response didn't work");
                 System.out.println(error.toString());
+
+                CharSequence errorMess = "Sorry, we couldn't retrieve the information at the moment.";
+                Toast errorToast = Toast.makeText(getApplicationContext(), errorMess, Toast.LENGTH_LONG);
+                errorToast.setGravity(Gravity.CENTER, 0, 0);
+                errorToast.show();
             }
         };
 

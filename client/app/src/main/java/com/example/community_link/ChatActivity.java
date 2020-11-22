@@ -85,6 +85,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     private Gson gson;
     private Context context;
 
+    //supportive for test
+    private boolean test = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,8 +96,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters
-        //TODO: use this for offline modular testing
-        //CommunityLinkApp.user = new UserProfile("TEST", "TEST");
+        setupForTest();
+        if(test){CommunityLinkApp.user = new UserProfile("TEST", "TEST");}
+
         targetName = null;
 
         MasterChatLog = new HashMap<String, List<ChatMessage>>();
@@ -438,6 +442,13 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
 
         ArrayList<ChatMessage> receivedMessages = new ArrayList<ChatMessage>(Arrays.asList(newMessages));
+        //correction for timestamp formatting
+        for (int i=0; i<receivedMessages.size(); i++) {
+            if (receivedMessages.get(i).timestamp.length() > 19) {
+                receivedMessages.get(i).timestamp = receivedMessages.get(i).timestamp.substring(0, 20);
+            }
+        }
+
         if(base == null){
             base = new ArrayList<ChatMessage>();
         }
@@ -570,5 +581,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
         startActivityForResult(myIntent, 0);
         return true;
+    }
+
+    public void setupForTest(){
+        test = true;
     }
 }

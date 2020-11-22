@@ -1,9 +1,12 @@
 package com.example.community_link;
 
+import android.util.Log;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +14,10 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static com.google.android.material.internal.ContextUtils.getActivity;
 import static org.junit.Assert.assertTrue;
 
 
@@ -24,15 +30,21 @@ public class ChatFrontendTest {
     public ActivityScenarioRule<ChatActivity> activityRule =
             new ActivityScenarioRule<>(ChatActivity.class);
 
-//    @Before
-//    public void setUp(){
-//
-//    }
-//
-//    @After
-//    public void verify(){
-//
-//    }
+    //Warning: Live versions are test-incompatible.
+    //If the test crashes while starting, please check if the test-supportive features in Chat_Activity.java:line99-100 are enabled.
+    //Enable them and recompile for testing purposes.
+
+    @Test
+    public void StartUpCheck(){
+        onView(withId(R.id.chat_Target_spinner)).check(matches(isDisplayed()));
+        onView(withId(R.id.edittext_targetbox)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_targetbox_apply)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.edittext_chatbox)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_chatbox_send)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.navbar)).check(matches(isDisplayed()));
+    }
 
 
     @Test
@@ -41,8 +53,7 @@ public class ChatFrontendTest {
         onView(withId(R.id.edittext_chatbox)).perform(typeText(""));
         onView(withId(R.id.button_chatbox_send)).perform(click());
 
-        //TODO: verify that nothing is sent
-        assertTrue(true);
+        onView(withId(R.id.chat_recycleView)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -51,8 +62,7 @@ public class ChatFrontendTest {
         onView(withId(R.id.edittext_chatbox)).perform(typeText(" "));
         onView(withId(R.id.button_chatbox_send)).perform(click());
 
-        //TODO: verify that nothing is sent
-        assertTrue(true);
+        onView(withId(R.id.chat_recycleView)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -61,7 +71,6 @@ public class ChatFrontendTest {
         onView(withId(R.id.edittext_chatbox)).perform(typeText("Test string"));
         onView(withId(R.id.button_chatbox_send)).perform(click());
 
-        //TODO: verify that the Text is sent
-        assertTrue(true);
+        onView(withId(R.id.chat_recycleView)).check(matches(isDisplayed()));
     }
 }

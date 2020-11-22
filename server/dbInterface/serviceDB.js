@@ -159,8 +159,8 @@ module.exports.delete = function(serviceID, callback) {
         callback({}, {code: 500, message: err.message});
         return;
       }
-  
-      callback({},{});
+      callback(result);
+      // callback({},{});
     });
 
     // End connection

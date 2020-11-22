@@ -158,32 +158,8 @@ module.exports.delete = function(serviceID, callback) {
         callback({}, {code: 500, message: err.message});
         return;
       }
-<<<<<<< HEAD
-
-      var query = "DELETE FROM services WHERE id = " + serviceID;
-  
-      // Delete service 
-      dbConn.query(query, (err, result, fields) => {
-        if (err) {
-          callback({}, {code: 500, message: err.message});
-          return;
-        }
-  
-        callback({id: serviceID},{});
-      });
-
-      // End connection
-      dbConn.end(function (err) {
-        if (err) {
-          callback({}, {code: 500, message: err.message});
-          return;
-        }
-      });
-  
-=======
       callback(result);
       // callback({},{});
->>>>>>> server_pass
     });
 
 

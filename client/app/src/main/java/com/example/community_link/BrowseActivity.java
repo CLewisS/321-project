@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -94,7 +93,7 @@ public class BrowseActivity extends CommunityLinkActivity {
      */
     private void initFilters() {
         // Distance spinner
-        Spinner distFilters = (Spinner) filterLayout.findViewById(R.id.distanceFilter);
+        Spinner distFilters = (Spinner) filterLayout.findViewById(R.id.upcomingMode);
         ArrayAdapter<CharSequence> distAdapter = ArrayAdapter.createFromResource(this,
                 R.array.dists_array, android.R.layout.simple_spinner_item);
         distAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -193,7 +192,6 @@ public class BrowseActivity extends CommunityLinkActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void getUsedServices(){
         usedList.clear();
-        sdList.clear();
 
         Response.Listener usedServiceResponse = new Response.Listener<JSONArray>() {
             @Override
@@ -293,6 +291,7 @@ public class BrowseActivity extends CommunityLinkActivity {
     /* HTTP request functions */
 
     private void getServicesBrowse(JSONObject conditions) {
+        sdList.clear();
         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -393,7 +392,7 @@ public class BrowseActivity extends CommunityLinkActivity {
 
     private double[] getSpinnerDist() {
         if (userLoc != null) {
-            Spinner distFilter = filterLayout.findViewById(R.id.distanceFilter);
+            Spinner distFilter = filterLayout.findViewById(R.id.upcomingMode);
             String dist = distFilter.getSelectedItem().toString();
 
             double currLat = userLoc.getLatitude();
@@ -470,6 +469,7 @@ public class BrowseActivity extends CommunityLinkActivity {
     }
 
     private void getServicesSuggest(JSONObject conditions) {
+        sdList.clear();
         Response.Listener getServicesResponseCallback = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -530,13 +530,19 @@ public class BrowseActivity extends CommunityLinkActivity {
         dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + hourMin[0] + ":" + hourMin[1]);
     }
 
-    private void setViewTags(View serviceView, int i) {
+    private void setViewTags(View serviceView, int i, String owner) {
         Button mapButt = serviceView.findViewById(R.id.mapButt2);
         mapButt.setTag(i);
+
         Button getButt = serviceView.findViewById(R.id.getThisService);
-        getButt.setTag(i);
         Button messageButt = serviceView.findViewById(R.id.messageProvButt);
-        messageButt.setTag(i);
+        if (CommunityLinkApp.userLoggedIn() && !CommunityLinkApp.user.getUsername().equals(owner)) {
+            messageButt.setTag(i);
+            getButt.setTag(i);
+        } else {
+            messageButt.setVisibility(View.GONE);
+            getButt.setVisibility(View.GONE);
+        }
     }
 
     private View getServiceResultView(int i) {
@@ -558,7 +564,7 @@ public class BrowseActivity extends CommunityLinkActivity {
         TextView descriptionResult = serviceView.findViewById(R.id.descriptionResult);
         descriptionResult.setText(sd.getDescription());
 
-        setViewTags(serviceView, i);
+        setViewTags(serviceView, i, sd.getOwner());
 
         return serviceView;
     }

@@ -91,6 +91,11 @@ public class RequestManager {
         sendGetRequest(endpoint , usedServiceCallBack, usedServiceError);
     }
 
+    public void getOwnedServices(String username, Response.Listener usedServiceCallBack, Response.ErrorListener usedServiceError){
+        String endpoint = "/service/use?username=" + username + "&status=post";
+        sendGetRequest(endpoint , usedServiceCallBack, usedServiceError);
+    }
+
     public void deleteUser(Response.Listener deleteUserCallback, Response.ErrorListener deleteUserErrorCallback) {
         sendDeleteRequest("/user?username=" + CommunityLinkApp.user.getUsername(), new JSONObject(), deleteUserCallback, deleteUserErrorCallback);
     }

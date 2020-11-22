@@ -2,6 +2,7 @@ package com.example.community_link;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -72,6 +73,9 @@ public class CommunityLinkApp extends Application {
 
         if (currActivity.getClass().equals(MainActivity.class)) {
             ((MainActivity) currActivity).setIntro();
+        } else {
+            Intent main = new Intent(context, MainActivity.class);
+            context.startActivity(main);
         }
 
         CharSequence toastMess = "Successfully logged out";

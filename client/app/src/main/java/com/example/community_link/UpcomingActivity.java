@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,20 +28,50 @@ import java.util.ArrayList;
 public class UpcomingActivity extends CommunityLinkActivity {
 
     private ArrayList<ServiceData> sdList = new ArrayList<ServiceData>();
+    private AdapterView.OnItemSelectedListener modeSpinnerListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upcoming);
+
+        modeSpinnerListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    getRsvpServices();
+                } else if (position == 1) {
+                    getOwnedServices();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
+
+        initSpinners();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getRsvpServices();
+    private void initSpinners() {
+        // Distance spinner
+        Spinner upcomingMode = (Spinner) findViewById(R.id.upcomingMode);
+        ArrayAdapter<CharSequence> upcomingAdapter = ArrayAdapter.createFromResource(this,
+                R.array.upcoming_modes, android.R.layout.simple_spinner_item);
+        upcomingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        upcomingMode.setAdapter(upcomingAdapter);
+
+        upcomingMode.setOnItemSelectedListener(modeSpinnerListener);
+
     }
+
+
 
     private void getRsvpServices() {
+        sdList.clear();
+        LinearLayout serviceResults = findViewById(R.id.rsvpResults);
+        serviceResults.removeAllViews();
 
         Response.Listener usedServiceResponse = new Response.Listener<JSONArray>() {
             @Override
@@ -68,10 +101,60 @@ public class UpcomingActivity extends CommunityLinkActivity {
             public void onErrorResponse(VolleyError error) {
                 System.out.println("HTTP response didn't work");
                 System.out.println(error.toString());
+
+                CharSequence toastMess = "Sorry, the services you RSVP'd for couldn't be found at the moment.";
+                Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
             }
         };
 
         CommunityLinkApp.requestManager.getUserUsedService(CommunityLinkApp.user.getUsername(),
+                usedServiceResponse, errorCallback);
+    }
+
+    private void getOwnedServices() {
+        sdList.clear();
+        LinearLayout serviceResults = findViewById(R.id.rsvpResults);
+        serviceResults.removeAllViews();
+
+        Response.Listener usedServiceResponse = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Gson gson = new Gson();
+                for (int index = 0; index < response.length(); index++) {
+                    try {
+                        sdList.add(gson.fromJson(response.getString(index), ServiceData.class));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (sdList.size() == 0){
+                    CharSequence toastMess = "You have no services that you are providing.";
+                    Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                } else {
+                    displayServices();
+                }
+            }
+        };
+
+        Response.ErrorListener errorCallback = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("HTTP response didn't work");
+                System.out.println(error.toString());
+
+                CharSequence toastMess = "Sorry, the services you are providing couldn't be found at the moment.";
+                Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        };
+
+        CommunityLinkApp.requestManager.getOwnedServices(CommunityLinkApp.user.getUsername(),
                 usedServiceResponse, errorCallback);
     }
 
@@ -98,19 +181,26 @@ public class UpcomingActivity extends CommunityLinkActivity {
         dateResult.setText(dow + ", " + month + " " + day + ", " + year + " starts at " + hourMin[0] + ":" + hourMin[1]);
     }
 
-    private void setViewTags(View serviceView, int i) {
+    private void setViewTags(View serviceView, int i, String owner) {
         Button mapButt = serviceView.findViewById(R.id.mapButt2);
         mapButt.setTag(i);
         Button getButt = serviceView.findViewById(R.id.getThisService);
         getButt.setTag(i);
         Button messageButt = serviceView.findViewById(R.id.messageProvButt);
-        messageButt.setTag(i);
+        if (CommunityLinkApp.userLoggedIn() && !CommunityLinkApp.user.getUsername().equals(owner)) {
+            messageButt.setTag(i);
+        } else {
+            messageButt.setVisibility(View.GONE);
+        }
     }
 
     private View getServiceResultView(int i) {
         ServiceData sd = sdList.get(i);
         LayoutInflater inflater = LayoutInflater.from(UpcomingActivity.this);
         View serviceView = inflater.inflate(R.layout.service_result, null);
+
+        Button getButt = serviceView.findViewById(R.id.getThisService);
+        getButt.setVisibility(View.GONE);
 
         TextView serviceTitle = serviceView.findViewById(R.id.serviceResultTitle);
         serviceTitle.setText(sd.getName());
@@ -126,7 +216,7 @@ public class UpcomingActivity extends CommunityLinkActivity {
         TextView descriptionResult = serviceView.findViewById(R.id.descriptionResult);
         descriptionResult.setText(sd.getDescription());
 
-        setViewTags(serviceView, i);
+        setViewTags(serviceView, i, sd.getOwner());
 
         return serviceView;
     }
@@ -134,6 +224,7 @@ public class UpcomingActivity extends CommunityLinkActivity {
     private void displayServices() {
         LinearLayout serviceResults = findViewById(R.id.rsvpResults);
         serviceResults.removeAllViews();
+
         for (int i = 0; i < sdList.size(); i++) {
             View resultView = getServiceResultView(i);
             serviceResults.addView(resultView);

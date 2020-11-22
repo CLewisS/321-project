@@ -76,4 +76,9 @@
         <item>Selling</item>
     </string-array>
 
+    <string-array name="upcoming_modes">
+        <item>RSVP\'d Services</item>
+        <item>Services You\'re Providing</item>
+    </string-array>
+
 </resources>

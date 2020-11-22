@@ -44,6 +44,7 @@ module.exports.add = function (user, callback) {
         callback({}, {code: 403, message: "USER_ALREADY_EXISTS"});
         return;
       } else if (err) {
+	// console.log(err);
         callback({}, {code: 500, message: err.message});
         return; 
       }

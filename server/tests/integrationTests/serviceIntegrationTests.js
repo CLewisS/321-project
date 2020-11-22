@@ -107,6 +107,71 @@ module.exports = (server) => {
   });
 
 
+
+/*RSVPs TESTS*/
+describe.each([
+  [{username: "Caleb", serviceID: 2}, 200],
+
+  [{name: "Caleb", serviceID: 1}, 500],
+
+  [{username: "Cal", serviceID: 21}, 500],
+
+])("RSVPS", (body, code) => {
+
+test("Receive "+JSON.stringify(body) , async () => {
+
+  var res = await request(server)
+    .post("/service/use")
+    .send(body);
+
+  if (code === 200) {
+    console.log(res.body);
+    expect(res.statusCode).toBe(200);
+  }else{
+    expect(res.statusCode).toEqual(code);
+  }
+
+});
+
+});
+
+
+
+
+/*Get RSVPs TESTS*/
+describe.each([
+  ["?username=Caleb&status=receive", 200, "food service"],
+
+  ["?name=Caleb&status=receive", 500],
+
+  ["?username=Cb&status=post", 500],
+
+])("Get RSVPS", (query, code, name) => {
+
+test("Receive "+query, async () => {
+
+  var res = await request(server)
+    .get("/service/use" + query);
+
+  if (code === 200) {
+    console.log(res.query);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[0].name).toBe(name);
+    expect(Object.keys(res.body[0])).toHaveLength(10);
+
+  }else{
+    expect(res.statusCode).toEqual(code);
+  }
+
+});
+
+});
+
+
+
+
+
+
 /* Update SERVICE TESTS */
 describe.each([
   ["?id=1",
@@ -186,7 +251,7 @@ test("Delete " + query, async () => {
 
   var res = await request(server).delete("/service" + query);
   if (code === 200) {
-  expect(res.statusCode).toBeUndefined();;
+  expect(res.statusCode).toBeUndefined();
   }
 });
 

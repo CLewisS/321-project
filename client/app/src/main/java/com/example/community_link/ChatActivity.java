@@ -68,6 +68,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
     //User profiles are to be implemented as App global
     public String targetName;
+    private boolean validTarget;
     public final String timeAnchor = "2020-09-01 12:12:12";
     public String lastUpdate = "2020-09-01 12:12:12";
     public String chat_target_pick_hint = "History:";
@@ -97,7 +98,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 //        if(test){CommunityLinkApp.user = new UserProfile("TEST", "TEST");}
 
         targetName = null;
-
+        validTarget = false;
+        
         MasterChatLog = new HashMap<String, List<ChatMessage>>();
         targetNameList = new ArrayList<String>();
         targetNameList.add(chat_target_pick_hint);
@@ -180,12 +182,14 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         if(targetNameList == null || targetNameList.size() < 2|| targetNameList.get(1) == null){
             if(targetName == null){
                 targetName = CommunityLinkApp.user.getUsername(); //initialization default to user self-Looping on first creation
+                validTarget = true;
             }
             targetNameList = new ArrayList<String>();
             targetNameList.add(chat_target_pick_hint);
             targetNameList.add(targetName);
         }else{
             targetName = targetNameList.get(1);
+            validTarget = true;
         }
 
         //launch chat view
@@ -317,7 +321,10 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     public void sendMessage(String message) {
         //guard for empty sends
         if(message == null || message.equals("") || message.equals(" ")){return;}
-
+        if(!validTarget){
+            Toast.makeText(ChatActivity.this, "Recipient does not exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
         //do a quick check for mis-aligned server state
         checkForUpdate();
 
@@ -358,8 +365,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                             Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
+                            validTarget = false;
                         }else{
-                            Toast.makeText(ChatActivity.this, "Server unavailable, please try later.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChatActivity.this, "Server unavailable, please try later", Toast.LENGTH_SHORT).show();
                         }
                     } catch(JSONException e) {
                         e.printStackTrace();
@@ -372,9 +380,10 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         } catch (JSONException e) {
             System.out.println("chat:sendMessage: JSON components malfunctions");
             e.printStackTrace();
+            return;
         }
 
-        //adding successfully sent message to display
+        //adding sent message to display
         putAndOrder(new ChatMessage[]{localMessage});
     }
 
@@ -484,7 +493,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
     //the function used to put current chat history into the local cache
     public void updateLog() {
-        if(targetName == null){
+        if(!validTarget || targetName == null){
             System.out.println("Chat: NULL chat target, cache file not needed");
             return;
         }

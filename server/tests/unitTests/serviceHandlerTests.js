@@ -113,13 +113,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.getServices(req, res);
     });
@@ -215,7 +213,7 @@ module.exports = function () {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.updateService(req, res);
     });
@@ -250,13 +248,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.receiveService(req, res);
     });
@@ -287,13 +283,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.getReceivedServices(req, res);
     });
@@ -328,20 +322,15 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.deleteService(req, res);
     });
   
   });
-
-
-
 
 };

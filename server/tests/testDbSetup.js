@@ -36,7 +36,7 @@ var initServiceDb = function (callback) {
                                 type VARCHAR(150) NOT NULL,
                                 description TEXT,
                                 PRIMARY KEY (id)
-                              );`
+                              )`;
 
   
     serviceDbConn.query(query, (err) => {
@@ -60,7 +60,7 @@ var initServiceDb = function (callback) {
         serviceDbConn.query(query, service, (err) => {
           if (err) {
             return;
-  	  }
+          }
 
           var query = `CREATE TABLE IF NOT EXISTS rsvp_count( 
 	                 id INT UNSIGNED NOT NULL,
@@ -83,7 +83,7 @@ var initServiceDb = function (callback) {
                 return;
               }
 
-	    });
+            });
 
             query = "INSERT INTO rsvp_count VALUES (2, 0, 7)";
 

@@ -6,6 +6,13 @@ var numberAttributes = ["id", "lat", "longi", "maxCapacity"];
 var singleValConditions= ["id", "name", "dow", "type", "owner"];
 var validComps = ["min", "max"];
 
+var isStringAttribute = function (attribute) {
+  return stringAttributes.includes(attribute);
+};
+
+var isNumberAttribute = function (attribute) {
+  return numberAttributes.includes(attribute);
+};
 
 /* Check if the json value has the correct variable type fot that attribute key.
  * Parameters:
@@ -14,9 +21,9 @@ var validComps = ["min", "max"];
  */
 var isCorrectType = function (key, value) {
 
-  if (stringAttributes.includes(key) && typeof(value) != "string") {
+  if (isStringAttribute(key) && typeof(value) != "string") {
     throw "Expected type String for " + key + ", but got type " + typeof(value); 
-  } else if (numberAttributes.includes(key) && typeof(value) != "number") {
+  } else if (isNumberAttribute(key) && typeof(value) != "number") {
     throw "Expected type number for " + key + ", but got type " + typeof(value); 
   } 
 
@@ -120,12 +127,19 @@ var createConditionString = function(key, conditions){
 
 };
 
+var notSingleVal = function (cond) {
+ return !singleValConditions.includes(cond)
+};
+
+var notValidComp = function (comp) {
+ return !validComps.includes(comp)
+};
 
 var hasValidComparator = function(split) {
 
-  if(split.length === 1 && !singleValConditions.includes(split[0])) {
+  if(split.length === 1 && notSingleVal(split[0])) {
     throw split[0] + " needs to be a max or min value";
-  } else if (split.length == 2 && !validComps.includes(split[1])) {
+  } else if (split.length === 2 && notValidComp(split[1])) {
     throw split[0] + " needs to be a max or min value, but was " + split[1];
   }
 

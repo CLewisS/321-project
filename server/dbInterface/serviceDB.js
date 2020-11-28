@@ -60,7 +60,7 @@ module.exports.add = function (service, callback) {
           callback({}, {code: 500, message: err.message});
           return;
         }
-        callback({id: id});
+        callback({id});
       });
 
       // End connection
@@ -250,7 +250,6 @@ module.exports.adduserServices = function (service, insertId, callback) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-	      console.log(err);
         callback({code: 500, message: err.message});
         return;
       }
@@ -330,7 +329,6 @@ module.exports.receive = function (receiver, serviceID, callback) {
     let query = "SELECT * FROM userServices WHERE id='" + receiver + ":" + serviceID + "'";
     dbConn.query(query, (err, result, fields) => {
       if (err) {
-        console.log(err);
         callback({}, {code: 500, message: err.message});
         return;
       } else if (result.length !== 0) {

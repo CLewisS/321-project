@@ -16,7 +16,7 @@ beforeAll((done) => {
       } else {
         count++;
       }
-    }
+    };
   };
 
   var callback = cb();
@@ -34,7 +34,7 @@ afterAll((done) => {
       } else {
         count++;
       }
-    }
+    };
   };
 
   server.close();

@@ -100,7 +100,7 @@ var initServiceDb = function (callback) {
               callback();
             });
 
-	  });
+          });
 
         });
 
@@ -168,7 +168,7 @@ var initUserDb = function (callback) {
                              deviceToken VARCHAR(150),
                              password VARCHAR(150) NOT NULL,
                              PRIMARY KEY (username)
-                           );`
+                           )`;
   
     userDbConn.query(createuserTable, (err) => {
       if (err) {

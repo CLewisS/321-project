@@ -6,12 +6,12 @@ var numberAttributes = ["id", "lat", "longi", "maxCapacity"];
 var singleValConditions= ["id", "name", "dow", "type", "owner"];
 var validComps = ["min", "max"];
 
-var isStringAttribute = function (attribute) {
-  return stringAttributes.includes(attribute);
+var invalidStringAttribute = function (attribute) {
+  return stringAttributes.includes(attribute) && typeof(attribute) != "String";
 };
 
-var isNumberAttribute = function (attribute) {
-  return numberAttributes.includes(attribute);
+var invalidNumberAttribute = function (attribute) {
+  return numberAttributes.includes(attribute) && typeof(attribute) != "number;
 };
 
 /* Check if the json value has the correct variable type fot that attribute key.
@@ -21,9 +21,9 @@ var isNumberAttribute = function (attribute) {
  */
 var isCorrectType = function (key, value) {
 
-  if (isStringAttribute(key) && typeof(value) != "string") {
+  if (invalidStringAttribute(key)) {
     throw "Expected type String for " + key + ", but got type " + typeof(value); 
-  } else if (isNumberAttribute(key) && typeof(value) != "number") {
+  } else if (invalidNumberAttribute(key)) {
     throw "Expected type number for " + key + ", but got type " + typeof(value); 
   } 
 
@@ -127,19 +127,19 @@ var createConditionString = function(key, conditions){
 
 };
 
-var notSingleVal = function (cond) {
- return !singleValConditions.includes(cond)
+var invalidSingleVal = function (length, cond) {
+ return length ===1 && !singleValConditions.includes(cond);
 };
 
-var notValidComp = function (comp) {
- return !validComps.includes(comp)
+var invalidComp = function (length, comp) {
+ return length ===2 && !validComps.includes(comp);
 };
 
 var hasValidComparator = function(split) {
 
-  if(split.length === 1 && notSingleVal(split[0])) {
+  if(invalidSingleVal(split.length, split[0])) {
     throw split[0] + " needs to be a max or min value";
-  } else if (split.length === 2 && notValidComp(split[1])) {
+  } else if (invalidComp(split.length, split[1])) {
     throw split[0] + " needs to be a max or min value, but was " + split[1];
   }
 

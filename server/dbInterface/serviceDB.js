@@ -48,7 +48,6 @@ module.exports.add = function (service, callback) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
-	      console.log(err);
         callback({}, {code: 500, message: err.message});
         return;
       }
@@ -58,7 +57,6 @@ module.exports.add = function (service, callback) {
       var rsvpValues = [id, 0, service.maxCapacity];
       dbConn.query("INSERT INTO rsvp_count VALUES (?, ?, ?)", rsvpValues, (err, results, fields) => {
         if (err) {
-	      console.log(err);
           callback({}, {code: 500, message: err.message});
           return;
         }
@@ -104,8 +102,8 @@ module.exports.get = function(conditions, callback) {
 
     // Build SQL query
     var query = "SELECT * FROM services" 
-                + " INNER JOIN rsvp_count ON services.id=rsvp_count.id";
-                + " WHERE " + sqlConds.join(" AND ")
+                + " INNER JOIN rsvp_count ON services.id=rsvp_count.id"
+                + " WHERE " + sqlConds.join(" AND ");
 
     // Get services
     dbConn.query(query, (err, result, fields) => {
@@ -291,27 +289,16 @@ var updateRsvp = function(receiver, serviceID) {
         reject({code: 500, message: err.message});
       }
 
-      let query = "SELECT * FROM userServices WHERE id='" + receiver + ":" + serviceID + "'";
-      dbConn.query(query, (err, result, fields) => {
-        if (err) {
-          console.log(err);
+
+      let query = "UPDATE rsvp_count SET numPeople = numPeople + 1 WHERE id=" + serviceID;
+      dbConn.query(query, (err, results, fields) => {
+        if (err && err.sqlMessage == "Check constraint 'not_over_max' is violated.") {
+          reject({code: 200, message: "SERVICE_AT_MAX"});
+        } else if (err) {
           reject({code: 500, message: err.message});
-        } else if (result.length != 0) {
-		console.log(result);
-          reject({code: 200, message: "ALREADY_RSVP"});
-	}
-
-        let query = "UPDATE rsvp_count SET numPeople = numPeople + 1 WHERE id=" + serviceID;
-        dbConn.query(query, (err, results, fields) => {
-          if (err && err.sqlMessage == "Check constraint 'not_over_max' is violated.") {
-            reject({code: 200, message: "SERVICE_AT_MAX"});
-          } else if (err) {
-            reject({code: 500, message: err.message});
-          }
+        }
     
-          resolve(serviceID);
-        });
-
+        resolve(serviceID);
 
         // End connection
         dbConn.end(function (err) {
@@ -320,7 +307,7 @@ var updateRsvp = function(receiver, serviceID) {
           }
 
         });
-          
+
       });
 
     });
@@ -331,50 +318,63 @@ var updateRsvp = function(receiver, serviceID) {
 
 module.exports.receive = function (receiver, serviceID, callback) {
 
-  updateRsvp(receiver, serviceID).then((serviceID) => {
+  var dbConn = mysql.createConnection(dbConfig.userDB);
 
-    var dbConn = mysql.createConnection(dbConfig.userDB);
+  // Start database connection  
+  dbConn.connect(function (err) {
+    if (err) {
+      callback({}, {code: 500, message: err.message});
+      return;
+    }
 
-    // Start database connection  
-    dbConn.connect(function (err) {
+    let query = "SELECT * FROM userServices WHERE id='" + receiver + ":" + serviceID + "'";
+    dbConn.query(query, (err, result, fields) => {
       if (err) {
+        console.log(err);
         callback({}, {code: 500, message: err.message});
+        return;
+      } else if (result.length != 0) {
+        callback({}, {code: 200, message: "ALREADY_RSVP"});
         return;
       }
 
-      let values = [
-        receiver + ":" + serviceID,
-        receiver,
-        "receive",
-        serviceID
-      ];
+      updateRsvp(receiver, serviceID).then((serviceID) => {
 
-      // Insert service into database
-      let query = "INSERT INTO userServices (id, username, status, serviceID) VALUES(?, ?, ?, ?)";
-    
-      dbConn.query(query, values, (err, results, fields) => {
-        if (err) {
-          callback({}, {code: 500, message: err.message});
-          return;
-        }
+        let values = [
+          receiver + ":" + serviceID,
+          receiver,
+          "receive",
+          serviceID
+        ];
 
-        callback({id: serviceID});
-
-        // End connection
-        dbConn.end(function (err) {
+        // Insert service into database
+        let query = "INSERT INTO userServices (id, username, status, serviceID) VALUES(?, ?, ?, ?)";
+        
+        dbConn.query(query, values, (err, results, fields) => {
           if (err) {
             callback({}, {code: 500, message: err.message});
             return;
           }
+
+          callback({id: serviceID});
+
+          // End connection
+          dbConn.end(function (err) {
+            if (err) {
+              callback({}, {code: 500, message: err.message});
+              return;
+            }
+          });
+        
         });
-    
+
+      },
+
+      (err) => {
+        callback({}, {code: 500, message: err.message});
       });
 
     });
-  },
-
-  (err) => {
-    callback({}, {code: 500, message: err.message});
   });
 
 }; 

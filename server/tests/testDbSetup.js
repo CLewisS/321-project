@@ -21,7 +21,6 @@ var initServiceDb = function (callback) {
 
   serviceDbConn.connect((err) => {
     if (err) {
-      console.log("Couldn't connect to DB: " + err);
       return;
     }
   
@@ -42,7 +41,6 @@ var initServiceDb = function (callback) {
   
     serviceDbConn.query(query, (err) => {
       if (err) {
-        console.log(err);
         return;
       }
 
@@ -52,7 +50,6 @@ var initServiceDb = function (callback) {
 
       serviceDbConn.query(query, service, (err) => {
         if (err) {
-          console.log(err);
           return;
 	}
 
@@ -62,22 +59,20 @@ var initServiceDb = function (callback) {
   
         serviceDbConn.query(query, service, (err) => {
           if (err) {
-            console.log(err);
             return;
   	  }
 
           var query = `CREATE TABLE IF NOT EXISTS rsvp_count( 
 	                 id INT UNSIGNED NOT NULL,
-			 rsvps INT NOT NULL,
-			 max INT NOT NULL,
+			 numPeople INT NOT NULL,
+			 maxCapacity INT NOT NULL,
 			 PRIMARY KEY (id),
 			 FOREIGN KEY (id) REFERENCES services (id),
-			 CHECK (rsvps <= max)
+			 CHECK (numPeople <= maxCapacity)
 		       )`;
 
           serviceDbConn.query(query, (err) => {
             if (err) {
-              console.log(err);
               return;
             }
 
@@ -85,7 +80,6 @@ var initServiceDb = function (callback) {
 
             serviceDbConn.query(query, (err) => {
               if (err) {
-                console.log(err);
                 return;
               }
 
@@ -95,7 +89,6 @@ var initServiceDb = function (callback) {
 
             serviceDbConn.query(query, (err) => {
               if (err) {
-                console.log(err);
                 return;
               }
 
@@ -103,7 +96,6 @@ var initServiceDb = function (callback) {
 
             serviceDbConn.end((err) => {
               if (err) {
-                console.log(err);
                 return;
               }
               callback();
@@ -127,7 +119,6 @@ var tearDownServiceDb = function (callback) {
 
   serviceDbConn.connect((err) => {
     if (err) {
-      console.log("Couldn't connect to DB");
       return;
     }
   
@@ -135,7 +126,6 @@ var tearDownServiceDb = function (callback) {
   
     serviceDbConn.query(dropRsvpTable, (err) => {
       if (err) {
-        console.log(err);
         return;
       }
 
@@ -143,13 +133,11 @@ var tearDownServiceDb = function (callback) {
   
       serviceDbConn.query(dropServiceTable, (err) => {
         if (err) {
-          console.log(err);
           return;
         }
   
         serviceDbConn.end((err) => {
           if (err) {
-            console.log(err);
             return;
           }
           callback();
@@ -173,7 +161,6 @@ var initUserDb = function (callback) {
 
   userDbConn.connect((err) => {
     if (err) {
-      console.log("Couldn't connect to DB");
       return;
     }
 
@@ -186,24 +173,21 @@ var initUserDb = function (callback) {
   
     userDbConn.query(createuserTable, (err) => {
       if (err) {
-        console.log(err);
         return;
       } 
 
       userDbConn.query("DELETE FROM users", (err) => {
         if (err) {
-          console.log(err);
           return;
         }
 
         userDbConn.query("INSERT INTO users (username, password, deviceToken) VALUES ('Caleb', 'pass', 'AFWEf7823rtubSDV_sA97GBUahaeibreagfaergi')", 
           (err) => {
             if (err) {
-              console.log(err);
               return;
             }
             var createUserServicesTable = `CREATE TABLE IF NOT EXISTS userServices (
-                                             id INT unsigned NOT NULL AUTO_INCREMENT, 
+                                             id VARCHAR(55), 
                                              username VARCHAR(50) NOT NULL,
                                              status VARCHAR(15) NOT NULL,
                                              serviceID INT unsigned NOT NULL,
@@ -212,13 +196,11 @@ var initUserDb = function (callback) {
                                            )`;
             userDbConn.query(createUserServicesTable, (err) => {
               if (err) {
-                console.log(err);
                 return;
               }
 
               userDbConn.end((err) => {
                 if (err) {
-                  console.log(err);
                   return;
                 }
                 callback();
@@ -241,25 +223,21 @@ var tearDownUserDb = function (callback) {
 
   userDbConn.connect((err) => {
     if (err) {
-      console.log("Couldn't connect to DB");
       return;
     }
   
     userDbConn.query("DROP TABLE IF EXISTS userServices", (err) => {
       if (err) {
-        console.log(err);
         return;
       } 
 
       userDbConn.query("DROP TABLE IF EXISTS users", (err) => {
         if (err) {
-          console.log(err);
           return;
         }
 
         userDbConn.end((err) => {
           if (err) {
-            console.log(err);
             return;
           }
           callback();

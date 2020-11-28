@@ -99,7 +99,7 @@ module.exports = (server) => {
       expect(res.statusCode).toEqual(code);
       if (code === 200) {
         expect(res.body[0].name).toBe(name);
-        expect(Object.keys(res.body[0])).toHaveLength(10);
+        expect(Object.keys(res.body[0])).toHaveLength(12);
       }
 
     });
@@ -125,7 +125,6 @@ test("Receive "+JSON.stringify(body) , async () => {
     .send(body);
 
   if (code === 200) {
-    console.log(res.body);
     expect(res.statusCode).toBe(200);
   }else{
     expect(res.statusCode).toEqual(code);
@@ -154,7 +153,6 @@ test("Receive "+query, async () => {
     .get("/service/use" + query);
 
   if (code === 200) {
-    console.log(res.query);
     expect(res.statusCode).toBe(200);
     expect(res.body[0].name).toBe(name);
     expect(Object.keys(res.body[0])).toHaveLength(10);

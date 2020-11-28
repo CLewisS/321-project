@@ -6,12 +6,12 @@ var numberAttributes = ["id", "lat", "longi", "maxCapacity"];
 var singleValConditions= ["id", "name", "dow", "type", "owner"];
 var validComps = ["min", "max"];
 
-var invalidStringAttribute = function (attribute) {
-  return stringAttributes.includes(attribute) && typeof(attribute) != "String";
+var invalidStringAttribute = function (key, value) {
+  return stringAttributes.includes(key) && typeof(value) != "string";
 };
 
-var invalidNumberAttribute = function (attribute) {
-  return numberAttributes.includes(attribute) && typeof(attribute) != "number;
+var invalidNumberAttribute = function (key, value) {
+  return numberAttributes.includes(key) && typeof(value) != "number";
 };
 
 /* Check if the json value has the correct variable type fot that attribute key.
@@ -21,9 +21,9 @@ var invalidNumberAttribute = function (attribute) {
  */
 var isCorrectType = function (key, value) {
 
-  if (invalidStringAttribute(key)) {
+  if (invalidStringAttribute(key, value)) {
     throw "Expected type String for " + key + ", but got type " + typeof(value); 
-  } else if (invalidNumberAttribute(key)) {
+  } else if (invalidNumberAttribute(key, value)) {
     throw "Expected type number for " + key + ", but got type " + typeof(value); 
   } 
 

@@ -292,7 +292,7 @@ var updateRsvp = function(receiver, serviceID) {
 
       let query = "UPDATE rsvp_count SET numPeople = numPeople + 1 WHERE id=" + serviceID;
       dbConn.query(query, (err, results, fields) => {
-        if (err && err.sqlMessage == "Check constraint 'not_over_max' is violated.") {
+        if (err && err.sqlMessage === "Check constraint 'not_over_max' is violated.") {
           reject({code: 200, message: "SERVICE_AT_MAX"});
         } else if (err) {
           reject({code: 500, message: err.message});
@@ -333,7 +333,7 @@ module.exports.receive = function (receiver, serviceID, callback) {
         console.log(err);
         callback({}, {code: 500, message: err.message});
         return;
-      } else if (result.length != 0) {
+      } else if (result.length !== 0) {
         callback({}, {code: 200, message: "ALREADY_RSVP"});
         return;
       }

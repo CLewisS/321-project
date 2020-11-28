@@ -64,13 +64,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.addService(req, res);
     });

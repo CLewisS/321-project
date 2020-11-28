@@ -11,8 +11,9 @@ var reqData = require("./requestData.js");
 
 module.exports.getServices = function (req, res) {
 
+  var conditions;
   try {
-    var conditions = reqData.getConditionsFromQuery(req.query);
+    conditions = reqData.getConditionsFromQuery(req.query);
   } catch(err) {
     res.status(400).json({code: 400, message: err});
     return;
@@ -36,8 +37,9 @@ module.exports.getServices = function (req, res) {
 
 module.exports.addService = function (req, res) {
 
+  var service;
   try {  
-    var service = reqData.getServiceFromReq(req.body);
+    service = reqData.getServiceFromReq(req.body);
   } catch (err) {
     res.status(400).json({code: 400, message: err});
     return;
@@ -106,7 +108,7 @@ module.exports.updateService = function (req, res) {
   var serviceID = Number(req.query["id"]);
   
   try {
-    reqData.serviceIsValid(updateService)
+    reqData.serviceIsValid(updateService);
   } catch (err) {
     res.status(400).json({code: 400, message: err});
     return;

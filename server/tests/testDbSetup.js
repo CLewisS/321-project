@@ -85,14 +85,13 @@ var initServiceDb = function (callback) {
 
 	    });
 
-            var query = "INSERT INTO rsvp_count VALUES (2, 0, 7)";
+            query = "INSERT INTO rsvp_count VALUES (2, 0, 7)";
 
             serviceDbConn.query(query, (err) => {
               if (err) {
                 return;
               }
-
-	    });
+            });
 
             serviceDbConn.end((err) => {
               if (err) {

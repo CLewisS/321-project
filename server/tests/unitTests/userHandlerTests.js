@@ -27,7 +27,7 @@ module.exports = function () {
 
   ])("Add user", (req, code, expected,  name) => {
   
-    test( name, done => {
+    test( name, (done) => {
   
       var res = { 
         json(input) {
@@ -46,13 +46,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       userHandler.addUser(req, res);
     });

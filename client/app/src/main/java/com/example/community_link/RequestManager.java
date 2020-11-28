@@ -86,6 +86,11 @@ public class RequestManager {
         sendPostRequest("/service/use", userService, useServiceCallback, useServiceErrorCallback);
     }
 
+    public void updatePeoPle(JSONObject service, Response.Listener updateCallback, Response.ErrorListener updateErrorCallback){
+        Log.w("UPDATE SERVICE", service.toString());
+        sendPutRequest("/service", service, updateCallback, updateErrorCallback);
+    }
+
     public void getUserUsedService(String username, Response.Listener usedServiceCallBack, Response.ErrorListener usedServiceError){
         String endpoint = "/service/use?username=" + username + "&status=receive";
         sendGetRequest(endpoint , usedServiceCallBack, usedServiceError);

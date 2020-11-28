@@ -20,10 +20,13 @@ public class ServiceData implements Serializable{
     private double lat;
     private int id;
     private int maxCapacity;
+    private int numPeople;
 
     public ServiceData(){
         longi = -123.116226;
         lat = 49.246292;
+        numPeople = 0;
+        maxCapacity = 1;
     }
 
     public void setName(String name){
@@ -59,6 +62,14 @@ public class ServiceData implements Serializable{
     public void setLat(double lat){ this.lat = lat;}
 
     public void setMaxCapacity(int maxCapacity){this.maxCapacity = maxCapacity;}
+
+    public boolean isFull(){return numPeople >= maxCapacity;}
+
+    public void addPeople(){
+        if(!this.isFull()){
+            numPeople++;
+        }
+    }
 
     public String toString(){
         return  "ID: " + id + "\n" +

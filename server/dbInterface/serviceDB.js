@@ -48,6 +48,7 @@ module.exports.add = function (service, callback) {
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
+	      console.log(err);
         callback({}, {code: 500, message: err.message});
         return;
       }
@@ -57,6 +58,7 @@ module.exports.add = function (service, callback) {
       var rsvpValues = [id, 0, service.maxCapacity];
       dbConn.query("INSERT INTO rsvp_count VALUES (?, ?, ?)", rsvpValues, (err, results, fields) => {
         if (err) {
+	      console.log(err);
           callback({}, {code: 500, message: err.message});
           return;
         }
@@ -98,20 +100,19 @@ module.exports.get = function(conditions, callback) {
       return;
     }
 
-    // Build SQL query
-    var query = "SELECT * FROM services WHERE ";
-
     var sqlConds = conditions;
 
-    query += sqlConds.join(" AND ");
-  
+    // Build SQL query
+    var query = "SELECT * FROM services" 
+                + " INNER JOIN rsvp_count ON services.id=rsvp_count.id";
+                + " WHERE " + sqlConds.join(" AND ")
+
     // Get services
     dbConn.query(query, (err, result, fields) => {
       if (err) {
         callback({}, {code: 500, message: err.message});
         return;
       }
-  
       callback(result);
     });
 
@@ -240,16 +241,18 @@ module.exports.adduserServices = function (service, insertId, callback) {
     }
 
     var values = [
+      service.owner + ":" + insertId.id,
       service.owner,
       "post",
       insertId.id
     ];
 
     // Insert service into database
-    var query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
+    var query = "INSERT INTO userServices (id, username, status, serviceID) VALUES(?, ?, ?, ?)";
   
     dbConn.query(query, values, (err, results, fields) => {
       if (err) {
+	      console.log(err);
         callback({code: 500, message: err.message});
         return;
       }
@@ -278,7 +281,7 @@ module.exports.adduserServices = function (service, insertId, callback) {
  * If the service isn't at max capacity it increments 
  * the number of RSVPs for the service.
  */
-var updateRsvp = function(serviceID) {
+var updateRsvp = function(receiver, serviceID) {
   return new Promise((resolve, reject) => {
     var dbConn = mysql.createConnection(dbConfig.serviceDB);
 
@@ -288,25 +291,36 @@ var updateRsvp = function(serviceID) {
         reject({code: 500, message: err.message});
       }
 
-      let query = "UPDATE rsvp_count SET rsvps = rsvps + 1 WHERE id=" + serviceID;
-      dbConn.query(query, (err, results, fields) => {
-        if (err && err.sqlMessage == "Check constraint 'rsvp_count_chk_1' is violated.") {
-          reject({code: 200, message: "SERVICE_AT_MAX"});
-        } else if (err) {
-		console.log(err);
-          reject({code: 500, message: err.message});
-        }
-    
-        resolve(serviceID);
-      });
-
-
-      // End connection
-      dbConn.end(function (err) {
+      let query = "SELECT * FROM userServices WHERE id='" + receiver + ":" + serviceID + "'";
+      dbConn.query(query, (err, result, fields) => {
         if (err) {
+          console.log(err);
           reject({code: 500, message: err.message});
-        }
+        } else if (result.length != 0) {
+		console.log(result);
+          reject({code: 200, message: "ALREADY_RSVP"});
+	}
 
+        let query = "UPDATE rsvp_count SET numPeople = numPeople + 1 WHERE id=" + serviceID;
+        dbConn.query(query, (err, results, fields) => {
+          if (err && err.sqlMessage == "Check constraint 'not_over_max' is violated.") {
+            reject({code: 200, message: "SERVICE_AT_MAX"});
+          } else if (err) {
+            reject({code: 500, message: err.message});
+          }
+    
+          resolve(serviceID);
+        });
+
+
+        // End connection
+        dbConn.end(function (err) {
+          if (err) {
+            reject({code: 500, message: err.message});
+          }
+
+        });
+          
       });
 
     });
@@ -317,7 +331,7 @@ var updateRsvp = function(serviceID) {
 
 module.exports.receive = function (receiver, serviceID, callback) {
 
-  updateRsvp(serviceID).then((serviceID) => {
+  updateRsvp(receiver, serviceID).then((serviceID) => {
 
     var dbConn = mysql.createConnection(dbConfig.userDB);
 
@@ -329,13 +343,14 @@ module.exports.receive = function (receiver, serviceID, callback) {
       }
 
       let values = [
+        receiver + ":" + serviceID,
         receiver,
         "receive",
         serviceID
       ];
 
       // Insert service into database
-      let query = "INSERT INTO userServices (username, status, serviceID) VALUES(?, ?, ?)";
+      let query = "INSERT INTO userServices (id, username, status, serviceID) VALUES(?, ?, ?, ?)";
     
       dbConn.query(query, values, (err, results, fields) => {
         if (err) {
@@ -359,7 +374,7 @@ module.exports.receive = function (receiver, serviceID, callback) {
   },
 
   (err) => {
-    callback({}, err);
+    callback({}, {code: 500, message: err.message});
   });
 
 }; 

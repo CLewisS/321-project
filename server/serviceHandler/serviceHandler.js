@@ -71,7 +71,6 @@ module.exports.deleteService = function (req, res) {
   const id = req.query;
   const keys = Object.keys(id);
   if(keys.length!==1 || keys[0]!=="id"){
-    //throw "The delete service id passed in was wrong.";
     res.status(400).json({code: 400, message: "The query for the service to be deleted is invalid"});
     return;
   }
@@ -150,9 +149,6 @@ module.exports.receiveService = function (req, res) {
 module.exports.getReceivedServices = function (req, res) {
 
   var conditions = ["username='" + req.query.username + "'", "status='" + req.query.status + "'"];
-  // console.log(req.query.username);
-  // console.log(req.body.username);
-  console.log(conditions)
   
   db.getReceivedIDs(conditions, (services, err) => {
 

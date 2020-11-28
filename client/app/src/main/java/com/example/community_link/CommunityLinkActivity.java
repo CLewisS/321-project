@@ -309,6 +309,10 @@ public class CommunityLinkActivity extends AppCompatActivity {
             TextView userErr = signupView.findViewById(R.id.userErrSignup);
             userErr.setText("Please enter a username.");
             err = true;
+        } else if (username.length() >= 50) {
+            TextView userErr = signupView.findViewById(R.id.userErrSignup);
+            userErr.setText("Sorry, username must be shorter than 50 characters.");
+            err = true;
         }
 
         TextView passErr = signupView.findViewById(R.id.passErrSignup);

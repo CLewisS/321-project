@@ -72,7 +72,7 @@
     "test-unit-u": "jest serviceHandler.test.js -t User-Module-Unit --env=node",
     "test-unit-s": "jest serviceHandler.test.js -t Service-module-Unit --env=node",
     "test-int": "jest --env=node -t Integration-Tests",
-    "test": "jest --env=node"
+    "test": "jest --env=node --forceExit"
   },
   "author": "",
   "license": "ISC"

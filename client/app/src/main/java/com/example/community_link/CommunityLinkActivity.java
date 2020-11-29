@@ -212,6 +212,8 @@ public class CommunityLinkActivity extends AppCompatActivity {
     public void logout(View view){
         CommunityLinkApp.logout();
         Log.w("Log out", "Clearing popups");
+        Intent main = new Intent(this, MainActivity.class);
+        startActivity(main);
         clearPopups(ALL);
     }
 
@@ -308,6 +310,10 @@ public class CommunityLinkActivity extends AppCompatActivity {
         if (username.isEmpty()) {
             TextView userErr = signupView.findViewById(R.id.userErrSignup);
             userErr.setText("Please enter a username.");
+            err = true;
+        } else if (username.length() >= 50) {
+            TextView userErr = signupView.findViewById(R.id.userErrSignup);
+            userErr.setText("Sorry, username must be shorter than 50 characters.");
             err = true;
         }
 

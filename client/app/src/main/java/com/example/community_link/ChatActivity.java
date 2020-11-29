@@ -326,7 +326,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
             return;
         }
         //do a quick check for mis-aligned server state
-        checkForUpdate();
+        //checkForUpdate();
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());

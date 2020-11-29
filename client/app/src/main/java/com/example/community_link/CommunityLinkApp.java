@@ -73,9 +73,6 @@ public class CommunityLinkApp extends Application {
 
         if (currActivity.getClass().equals(MainActivity.class)) {
             ((MainActivity) currActivity).setIntro();
-        } else {
-            Intent main = new Intent(context, MainActivity.class);
-            context.startActivity(main);
         }
 
         CharSequence toastMess = "Successfully logged out";

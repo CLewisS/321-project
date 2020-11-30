@@ -95,7 +95,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters
-//        if(test){CommunityLinkApp.user = new UserProfile("TEST", "TEST");}
+//        CommunityLinkApp.user = new UserProfile("TEST", "TEST");
 
         targetName = null;
         validTarget = false;
@@ -193,12 +193,15 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
 
         //launch chat view
-        chatLog = loadFromFile(targetName);
+        chatLog = new ArrayList<ChatMessage>();
+        mergeChat(chatLog, loadFromFile(targetName));
         if(MasterChatLog.containsKey(targetName) && MasterChatLog.get(targetName) != null){
             mergeChat(chatLog, MasterChatLog.get(targetName).toArray(new ChatMessage[0]));
         }
-        checkForUpdate();
         displayNow();
+
+        //background resync
+        checkForUpdate();
 
         //handles the push notification
         if(getIntent().getStringExtra("pushNdata") != null){
@@ -219,6 +222,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 }
                 mergeChat(MasterChatLog.get(newPushedMessage.sender),new ChatMessage[]{newPushedMessage});
             }
+            getIntent().removeExtra("pushNdata");
         }
     }
 
@@ -282,7 +286,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     public void reSyncPull(String fromTime) {
         //a fix for the ServerDB timestamp format
         if(fromTime.length()>19){
-            fromTime = fromTime.substring(0, 20);
+            fromTime = fromTime.substring(0, 19);
         }
 
         //format request message
@@ -325,8 +329,6 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
             Toast.makeText(ChatActivity.this, "Recipient does not exist", Toast.LENGTH_SHORT).show();
             return;
         }
-        //do a quick check for mis-aligned server state
-        //checkForUpdate();
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -385,6 +387,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //adding sent message to display
         putAndOrder(new ChatMessage[]{localMessage});
+
+        //do a quick check for mis-aligned server state
+        //checkForUpdate();
     }
 
     //call this function to switch to an new chat channel specified by newTargetName.
@@ -418,23 +423,25 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //element reSync with new parameters
         targetName = newTargetName;
-        chatLog = loadFromFile(newTargetName);
+        validTarget = true;
+        chatLog = new ArrayList<ChatMessage>();
+        mergeChat(chatLog, loadFromFile(newTargetName));
         if(MasterChatLog.containsKey(newTargetName) && MasterChatLog.get(newTargetName) != null){
             mergeChat(chatLog, MasterChatLog.get(newTargetName).toArray(new ChatMessage[0]));
         }
+        displayNow();
+        CharSequence toastMess = "Chatting with: "+ targetName;
+        Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+
+        //background chat resync
         if(chatLog == null || chatLog.size()<1){
             chatLog = new ArrayList<ChatMessage>();
             reSyncPull(timeAnchor);
         }else{
             reSyncPull(chatLog.get(0).timestamp);
         }
-
-        //launch.
-        displayNow();
-        CharSequence toastMess = "Chatting with: "+ targetName;
-        Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
     }
 
     //function for properly ordering the chat entries and display them
@@ -453,7 +460,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         //correction for timestamp formatting
         for (int i=0; i<receivedMessages.size(); i++) {
             if (receivedMessages.get(i).timestamp.length() > 19) {
-                receivedMessages.get(i).timestamp = receivedMessages.get(i).timestamp.substring(0, 20);
+                receivedMessages.get(i).timestamp = receivedMessages.get(i).timestamp.substring(0, 19);
             }
         }
 
@@ -526,8 +533,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     }
 
     //load local chatlog file of specified target, returns null if file not exists.
-    public List<ChatMessage> loadFromFile(String targetName){
-        List<ChatMessage> readFromFile = null;
+    public ChatMessage[] loadFromFile(String targetName){
+        ChatMessage[] readFromFile = null;
 
         chatLogFile = new File(context.getFilesDir(), targetName + chatDataLogFileSuffix);
         if(chatLogFile.exists()){
@@ -544,8 +551,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 }
                 read.close();
                 readString = sb.toString();
-                ChatMessage[] holder = gson.fromJson(readString, ChatMessage[].class);
-                readFromFile = new ArrayList<ChatMessage>(Arrays.asList(holder));
+                readFromFile = gson.fromJson(readString, ChatMessage[].class);
             } catch (FileNotFoundException e) {
                 System.out.println("Chat:OnCreate chat log file exists but not recognized");
                 e.printStackTrace();
@@ -575,7 +581,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
         chatAdapter.notifyItemInserted(latestChatPosition);
         recyclerView.setAdapter(chatAdapter);
-        recyclerView.smoothScrollToPosition(latestChatPosition);
+        recyclerView.scrollToPosition(latestChatPosition);
 
         spinner = (Spinner) findViewById(R.id.chat_Target_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, targetNameList);

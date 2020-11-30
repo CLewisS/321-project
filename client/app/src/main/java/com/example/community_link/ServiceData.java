@@ -80,7 +80,9 @@ public class ServiceData implements Serializable{
                 "Day of Week: " + this.dow + "\n" +
                 "Type: " + this.type + "\n" +
                 "Description: " + this.description + "\n" +
-                "Coordinate: (" + this.lat + "," + this.longi + ")\n";
+                "Coordinate: (" + this.lat + "," + this.longi + ")\n" +
+                "maxCapacity: " + this.maxCapacity + "\n" +
+                "numPeople: " + this.numPeople + "\n";
     }
 
     public double getLongi () {
@@ -122,6 +124,10 @@ public class ServiceData implements Serializable{
     public String getType() {
         return type;
     }
+
+    public int getNumPeople() { return numPeople; }
+
+    public int getMaxCapacity() { return maxCapacity; }
 
     public String toJSON(){
         Gson gson = new Gson();

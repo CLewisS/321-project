@@ -11,8 +11,9 @@ var reqData = require("./requestData.js");
 
 module.exports.getServices = function (req, res) {
 
+  var conditions;
   try {
-    var conditions = reqData.getConditionsFromQuery(req.query);
+    conditions = reqData.getConditionsFromQuery(req.query);
   } catch(err) {
     res.status(400).json({code: 400, message: err});
     return;
@@ -36,8 +37,9 @@ module.exports.getServices = function (req, res) {
 
 module.exports.addService = function (req, res) {
 
+  var service;
   try {  
-    var service = reqData.getServiceFromReq(req.body);
+    service = reqData.getServiceFromReq(req.body);
   } catch (err) {
     res.status(400).json({code: 400, message: err});
     return;
@@ -71,7 +73,6 @@ module.exports.deleteService = function (req, res) {
   const id = req.query;
   const keys = Object.keys(id);
   if(keys.length!==1 || keys[0]!=="id"){
-    //throw "The delete service id passed in was wrong.";
     res.status(400).json({code: 400, message: "The query for the service to be deleted is invalid"});
     return;
   }
@@ -107,7 +108,7 @@ module.exports.updateService = function (req, res) {
   var serviceID = Number(req.query["id"]);
   
   try {
-    reqData.serviceIsValid(updateService)
+    reqData.serviceIsValid(updateService);
   } catch (err) {
     res.status(400).json({code: 400, message: err});
     return;
@@ -150,9 +151,6 @@ module.exports.receiveService = function (req, res) {
 module.exports.getReceivedServices = function (req, res) {
 
   var conditions = ["username='" + req.query.username + "'", "status='" + req.query.status + "'"];
-  // console.log(req.query.username);
-  // console.log(req.body.username);
-  console.log(conditions)
   
   db.getReceivedIDs(conditions, (services, err) => {
 
@@ -163,7 +161,7 @@ module.exports.getReceivedServices = function (req, res) {
       var conditions = [];
 
       for(var service of services) {
-        conditions.push("id=" + service.serviceID);
+        conditions.push("services.id=" + service.serviceID);
       }
       db.getReceivedServices(conditions, (services, err) => { 
 

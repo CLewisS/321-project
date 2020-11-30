@@ -20,10 +20,13 @@ public class ServiceData implements Serializable{
     private double lat;
     private int id;
     private int maxCapacity;
+    private int numPeople;
 
     public ServiceData(){
         longi = -123.116226;
         lat = 49.246292;
+        numPeople = 0;
+        maxCapacity = 1;
     }
 
     public void setName(String name){
@@ -60,6 +63,14 @@ public class ServiceData implements Serializable{
 
     public void setMaxCapacity(int maxCapacity){this.maxCapacity = maxCapacity;}
 
+    public boolean isFull(){return numPeople >= maxCapacity;}
+
+    public void addPeople(){
+        if(!this.isFull()){
+            numPeople++;
+        }
+    }
+
     public String toString(){
         return  "ID: " + id + "\n" +
                 "Owner: " + this.owner + "\n" +
@@ -69,7 +80,9 @@ public class ServiceData implements Serializable{
                 "Day of Week: " + this.dow + "\n" +
                 "Type: " + this.type + "\n" +
                 "Description: " + this.description + "\n" +
-                "Coordinate: (" + this.lat + "," + this.longi + ")\n";
+                "Coordinate: (" + this.lat + "," + this.longi + ")\n" +
+                "maxCapacity: " + this.maxCapacity + "\n" +
+                "numPeople: " + this.numPeople + "\n";
     }
 
     public double getLongi () {
@@ -111,6 +124,10 @@ public class ServiceData implements Serializable{
     public String getType() {
         return type;
     }
+
+    public int getNumPeople() { return numPeople; }
+
+    public int getMaxCapacity() { return maxCapacity; }
 
     public String toJSON(){
         Gson gson = new Gson();

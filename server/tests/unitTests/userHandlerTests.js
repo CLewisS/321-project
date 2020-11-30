@@ -1,7 +1,4 @@
 var userHandler = require("../../userHandler/userHandler.js");
-//jest.mock("../dbInterface/dbConfig.js");
-//var testDb = require("./testDbSetup.js");
-
 
 module.exports = function () {
 
@@ -27,7 +24,7 @@ module.exports = function () {
 
   ])("Add user", (req, code, expected,  name) => {
   
-    test( name, done => {
+    test( name, (done) => {
   
       var res = { 
         json(input) {
@@ -46,13 +43,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       userHandler.addUser(req, res);
     });
@@ -78,7 +73,7 @@ module.exports = function () {
 
   ])("Update user", (req, code, expected,  name) => {
   
-    test( name, done => {
+    test( name, (done) => {
   
       var res = { 
         json(input) {
@@ -97,13 +92,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       userHandler.updateUser(req, res);
     });
@@ -126,7 +119,7 @@ module.exports = function () {
 
   ])("Login check", (req, code, expected,  name) => {
 
-    test( name, done => {
+    test( name, (done) => {
 
       var res = { 
         json(input) {
@@ -145,13 +138,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       userHandler.loginCheck(req, res);
     });
@@ -166,7 +157,7 @@ module.exports = function () {
 
   ])("Delete user", (req, code, expected,  name) => {
 
-    test( name, done => {
+    test( name, (done) => {
 
       var res = { 
         json(input) {
@@ -185,13 +176,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
 
       userHandler.deleteUser(req, res);
     });

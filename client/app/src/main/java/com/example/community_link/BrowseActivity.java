@@ -162,6 +162,38 @@ public class BrowseActivity extends CommunityLinkActivity {
             };
 
             CommunityLinkApp.requestManager.useService(CommunityLinkApp.user.getUsername(), serviceID, useServiceCallback, useServiceErrorCallback);
+            sd.addPeople();
+            JSONObject service = new JSONObject();
+            try {
+                service = new JSONObject(sd.toJSON());
+            }catch(JSONException e) {
+                e.printStackTrace();
+            }
+
+            Response.Listener updateResponseCallback = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.d("response", response.toString());
+                }
+            };
+
+            Response.ErrorListener updateErrorCallback = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.println("HTTP response didn't work");
+                    System.out.println(error.toString());
+                }
+            };
+
+            CommunityLinkApp.requestManager.updatePeoPle(service,updateResponseCallback,updateErrorCallback);
+            sdList.remove(index);
+            displayServices();
+
+            CharSequence toastMess = "Got the service!";
+            Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+
         } else {
             CharSequence toastMess = "Sorry, you must be logged in to RSVP.";
             Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
@@ -298,7 +330,10 @@ public class BrowseActivity extends CommunityLinkActivity {
                 Gson gson = new Gson();
                 for(int index=0; index<response.length(); index++) {
                     try {
-                        sdList.add(gson.fromJson(response.getString(index), ServiceData.class));
+                        ServiceData sd = gson.fromJson(response.getString(index), ServiceData.class);
+                        if(!sd.isFull()){
+                            sdList.add(sd);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

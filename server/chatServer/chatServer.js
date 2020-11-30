@@ -15,7 +15,6 @@ admin.initializeApp({
 
 
 module.exports.getMessages = function(req, res) {
-  // console.log("In chat server " + JSON.stringify(req.query));
  
   var queryString = req.query;
   var newest;
@@ -39,7 +38,6 @@ module.exports.getMessages = function(req, res) {
 };
 
 module.exports.addMessage = function(req, res) {
-  // console.log("In chat server " + JSON.stringify(req.body));
   
   var body = req.body;
 
@@ -76,16 +74,18 @@ module.exports.addMessage = function(req, res) {
       .catch(function(error) {
       });
 
-      db.add(message, (id, err) => {
-        if (err) {
-          res.status(err.code).json(err);
-          return;
-        } else {
-          res.json(id);
-          return;
-        }
-      });
-    }
+    } 
+
+    db.add(message, (id, err) => {
+      if (err) {
+        res.status(err.code).json(err);
+        return;
+      } else {
+        res.json(id);
+        return;
+      }
+    });
+
   });
 
 };

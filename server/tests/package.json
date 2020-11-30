@@ -68,10 +68,12 @@
   },
   "scripts": {
     "start-dev": "nodemon ../requestManager/server.js",
-    "test-unit": "jest serviceHandler.test.js -t Unit-Tests --env=node",
-    "test-unit-u": "jest serviceHandler.test.js -t User-Module-Unit --env=node",
-    "test-unit-s": "jest serviceHandler.test.js -t Service-module-Unit --env=node",
+    "test-unit": "jest testSuite.test.js -t Unit-Tests --env=node",
+    "test-unit-u": "jest testSuite.test.js -t User-Module-Unit --env=node",
+    "test-unit-s": "jest testSuite.test.js -t Service-module-Unit --env=node",
     "test-int": "jest --env=node -t Integration-Tests",
+    "test-int-u": "jest --env=node -t User-Module-Integration",
+    "test-int-s": "jest --env=node -t Service-Module-Integration",
     "test": "jest --env=node --forceExit"
   },
   "author": "",

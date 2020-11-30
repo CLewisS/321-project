@@ -44,7 +44,6 @@ module.exports.add = function (user, callback) {
         callback({}, {code: 403, message: "USER_ALREADY_EXISTS"});
         return;
       } else if (err) {
-	// console.log(err);
         callback({}, {code: 500, message: err.message});
         return; 
       }
@@ -242,8 +241,6 @@ module.exports.get = function(username, callback) {
       return; 
     }
 
-    // console.log("Connected to MySQL server");
-
     var query1 = "SELECT * FROM users where username='" + username  + "'";
 
     dbConn.query(query1, (err, results, fields) => {
@@ -254,7 +251,7 @@ module.exports.get = function(username, callback) {
         callback({}, {code: 400, message: "ERR_NO_RECIPIENT"});
         return;
       }
-	    
+ 
       callback(results[0]);
     });
 

@@ -64,13 +64,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.addService(req, res);
     });
@@ -104,7 +102,7 @@ module.exports = function () {
             if (code === 200) {
               expect(this.code).toBeUndefined();
               expect(input[0].name).toBe(expected);
-              expect(Object.keys(input[0])).toHaveLength(10);
+              expect(Object.keys(input[0])).toHaveLength(12);
             }else{
               expect(this.code).toEqual(code);
             }
@@ -115,13 +113,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.getServices(req, res);
     });
@@ -217,7 +213,7 @@ module.exports = function () {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.updateService(req, res);
     });
@@ -252,13 +248,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.receiveService(req, res);
     });
@@ -279,7 +273,7 @@ module.exports = function () {
             if (code === 200) {
               expect(this.code).toBeUndefined();
               expect(input[0].name).toBe(name);
-              expect(Object.keys(input[0])).toHaveLength(10);
+              expect(Object.keys(input[0])).toHaveLength(12);
             }else{
               expect(this.code).toEqual(code);
             }
@@ -289,13 +283,11 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.getReceivedServices(req, res);
     });
@@ -330,20 +322,15 @@ module.exports = function () {
           }
         },
       
-        code: undefined,
-      
         status(input) {
           this.code = input;
           return this;
         }
-      }
+      };
     
       serviceHandler.deleteService(req, res);
     });
   
   });
-
-
-
 
 };

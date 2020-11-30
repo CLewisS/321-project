@@ -6,6 +6,13 @@ var numberAttributes = ["id", "lat", "longi", "maxCapacity"];
 var singleValConditions= ["id", "name", "dow", "type", "owner"];
 var validComps = ["min", "max"];
 
+var invalidStringAttribute = function (key, value) {
+  return stringAttributes.includes(key) && typeof(value) != "string";
+};
+
+var invalidNumberAttribute = function (key, value) {
+  return numberAttributes.includes(key) && typeof(value) != "number";
+};
 
 /* Check if the json value has the correct variable type fot that attribute key.
  * Parameters:
@@ -14,9 +21,9 @@ var validComps = ["min", "max"];
  */
 var isCorrectType = function (key, value) {
 
-  if (stringAttributes.includes(key) && typeof(value) != "string") {
+  if (invalidStringAttribute(key, value)) {
     throw "Expected type String for " + key + ", but got type " + typeof(value); 
-  } else if (numberAttributes.includes(key) && typeof(value) != "number") {
+  } else if (invalidNumberAttribute(key, value)) {
     throw "Expected type number for " + key + ", but got type " + typeof(value); 
   } 
 
@@ -61,6 +68,10 @@ module.exports.getServiceFromReq = function(body) {
 
   if (service.hasOwnProperty("id")) {
     delete service.id;
+  }
+
+  if (service.hasOwnProperty("numPeople")) {
+    delete service.numPeople;
   }
 
   if (serviceIsValid(service)) {
@@ -120,12 +131,19 @@ var createConditionString = function(key, conditions){
 
 };
 
+var invalidSingleVal = function (length, cond) {
+ return length ===1 && !singleValConditions.includes(cond);
+};
+
+var invalidComp = function (length, comp) {
+ return length ===2 && !validComps.includes(comp);
+};
 
 var hasValidComparator = function(split) {
 
-  if(split.length === 1 && !singleValConditions.includes(split[0])) {
+  if(invalidSingleVal(split.length, split[0])) {
     throw split[0] + " needs to be a max or min value";
-  } else if (split.length == 2 && !validComps.includes(split[1])) {
+  } else if (invalidComp(split.length, split[1])) {
     throw split[0] + " needs to be a max or min value, but was " + split[1];
   }
 

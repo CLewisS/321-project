@@ -11,12 +11,12 @@ beforeAll((done) => {
   var cb = function() {
     var count = 0;
     return () => {
-      if (count == 1) {
+      if (count === 1) {
         done();
       } else {
         count++;
       }
-    }
+    };
   };
 
   var callback = cb();
@@ -29,12 +29,12 @@ afterAll((done) => {
   var cb = function() {
     var count = 0;
     return () => {
-      if (count == 1) {
+      if (count === 1) {
         done();
       } else {
         count++;
       }
-    }
+    };
   };
 
   server.close();

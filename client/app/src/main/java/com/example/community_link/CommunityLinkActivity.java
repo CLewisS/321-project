@@ -212,6 +212,8 @@ public class CommunityLinkActivity extends AppCompatActivity {
     public void logout(View view){
         CommunityLinkApp.logout();
         Log.w("Log out", "Clearing popups");
+        Intent main = new Intent(this, MainActivity.class);
+        startActivity(main);
         clearPopups(ALL);
     }
 

@@ -133,6 +133,7 @@ public class UpcomingActivity extends CommunityLinkActivity {
                 for (int index = 0; index < response.length(); index++) {
                     try {
                         sdList.add(gson.fromJson(response.getString(index), ServiceData.class));
+                        System.out.println(sdList.get(index).toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -223,6 +224,9 @@ public class UpcomingActivity extends CommunityLinkActivity {
 
         TextView descriptionResult = serviceView.findViewById(R.id.descriptionResult);
         descriptionResult.setText(sd.getDescription());
+
+        TextView numPeople = serviceView.findViewById(R.id.numPeopletxt);
+        //numPeople.setText(sd.get);
 
         setViewTags(serviceView, i, sd.getOwner());
 

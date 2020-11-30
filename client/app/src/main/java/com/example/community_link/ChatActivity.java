@@ -68,6 +68,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
     //User profiles are to be implemented as App global
     public String targetName;
+    private boolean validTarget;
     public final String timeAnchor = "2020-09-01 12:12:12";
     public String lastUpdate = "2020-09-01 12:12:12";
     public String chat_target_pick_hint = "History:";
@@ -85,6 +86,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     private Gson gson;
     private Context context;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +95,11 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters
-        //TODO: use this for offline modular testing
-        //CommunityLinkApp.user = new UserProfile("TEST", "TEST");
-        targetName = null;
+//        CommunityLinkApp.user = new UserProfile("TEST", "TEST");
 
+        targetName = null;
+        validTarget = false;
+        
         MasterChatLog = new HashMap<String, List<ChatMessage>>();
         targetNameList = new ArrayList<String>();
         targetNameList.add(chat_target_pick_hint);
@@ -179,21 +182,26 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         if(targetNameList == null || targetNameList.size() < 2|| targetNameList.get(1) == null){
             if(targetName == null){
                 targetName = CommunityLinkApp.user.getUsername(); //initialization default to user self-Looping on first creation
+                validTarget = true;
             }
             targetNameList = new ArrayList<String>();
             targetNameList.add(chat_target_pick_hint);
             targetNameList.add(targetName);
         }else{
             targetName = targetNameList.get(1);
+            validTarget = true;
         }
 
         //launch chat view
-        chatLog = loadFromFile(targetName);
+        chatLog = new ArrayList<ChatMessage>();
+        mergeChat(chatLog, loadFromFile(targetName));
         if(MasterChatLog.containsKey(targetName) && MasterChatLog.get(targetName) != null){
             mergeChat(chatLog, MasterChatLog.get(targetName).toArray(new ChatMessage[0]));
         }
-        checkForUpdate();
         displayNow();
+
+        //background resync
+        checkForUpdate();
 
         //handles the push notification
         if(getIntent().getStringExtra("pushNdata") != null){
@@ -214,6 +222,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 }
                 mergeChat(MasterChatLog.get(newPushedMessage.sender),new ChatMessage[]{newPushedMessage});
             }
+            getIntent().removeExtra("pushNdata");
         }
     }
 
@@ -277,7 +286,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     public void reSyncPull(String fromTime) {
         //a fix for the ServerDB timestamp format
         if(fromTime.length()>19){
-            fromTime = fromTime.substring(0, 20);
+            fromTime = fromTime.substring(0, 19);
         }
 
         //format request message
@@ -316,9 +325,10 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     public void sendMessage(String message) {
         //guard for empty sends
         if(message == null || message.equals("") || message.equals(" ")){return;}
-
-        //do a quick check for mis-aligned server state
-        checkForUpdate();
+        if(!validTarget){
+            Toast.makeText(ChatActivity.this, "Recipient does not exist", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         //setting up basic local elements
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -357,6 +367,9 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                             Toast toast = Toast.makeText(context, toastMess, Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
+                            validTarget = false;
+                        }else{
+                            Toast.makeText(ChatActivity.this, "Server unavailable, please try later", Toast.LENGTH_SHORT).show();
                         }
                     } catch(JSONException e) {
                         e.printStackTrace();
@@ -369,10 +382,14 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         } catch (JSONException e) {
             System.out.println("chat:sendMessage: JSON components malfunctions");
             e.printStackTrace();
+            return;
         }
 
-        //adding successfully sent message to display
+        //adding sent message to display
         putAndOrder(new ChatMessage[]{localMessage});
+
+        //do a quick check for mis-aligned server state
+        //checkForUpdate();
     }
 
     //call this function to switch to an new chat channel specified by newTargetName.
@@ -406,23 +423,25 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
         //element reSync with new parameters
         targetName = newTargetName;
-        chatLog = loadFromFile(newTargetName);
+        validTarget = true;
+        chatLog = new ArrayList<ChatMessage>();
+        mergeChat(chatLog, loadFromFile(newTargetName));
         if(MasterChatLog.containsKey(newTargetName) && MasterChatLog.get(newTargetName) != null){
             mergeChat(chatLog, MasterChatLog.get(newTargetName).toArray(new ChatMessage[0]));
         }
+        displayNow();
+        CharSequence toastMess = "Chatting with: "+ targetName;
+        Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+
+        //background chat resync
         if(chatLog == null || chatLog.size()<1){
             chatLog = new ArrayList<ChatMessage>();
             reSyncPull(timeAnchor);
         }else{
             reSyncPull(chatLog.get(0).timestamp);
         }
-
-        //launch.
-        displayNow();
-        CharSequence toastMess = "Chatting with: "+ targetName;
-        Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
     }
 
     //function for properly ordering the chat entries and display them
@@ -438,6 +457,13 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
 
         ArrayList<ChatMessage> receivedMessages = new ArrayList<ChatMessage>(Arrays.asList(newMessages));
+        //correction for timestamp formatting
+        for (int i=0; i<receivedMessages.size(); i++) {
+            if (receivedMessages.get(i).timestamp.length() > 19) {
+                receivedMessages.get(i).timestamp = receivedMessages.get(i).timestamp.substring(0, 19);
+            }
+        }
+
         if(base == null){
             base = new ArrayList<ChatMessage>();
         }
@@ -474,7 +500,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
 
     //the function used to put current chat history into the local cache
     public void updateLog() {
-        if(targetName == null){
+        if(!validTarget || targetName == null){
             System.out.println("Chat: NULL chat target, cache file not needed");
             return;
         }
@@ -507,8 +533,8 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
     }
 
     //load local chatlog file of specified target, returns null if file not exists.
-    public List<ChatMessage> loadFromFile(String targetName){
-        List<ChatMessage> readFromFile = null;
+    public ChatMessage[] loadFromFile(String targetName){
+        ChatMessage[] readFromFile = null;
 
         chatLogFile = new File(context.getFilesDir(), targetName + chatDataLogFileSuffix);
         if(chatLogFile.exists()){
@@ -525,8 +551,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
                 }
                 read.close();
                 readString = sb.toString();
-                ChatMessage[] holder = gson.fromJson(readString, ChatMessage[].class);
-                readFromFile = new ArrayList<ChatMessage>(Arrays.asList(holder));
+                readFromFile = gson.fromJson(readString, ChatMessage[].class);
             } catch (FileNotFoundException e) {
                 System.out.println("Chat:OnCreate chat log file exists but not recognized");
                 e.printStackTrace();
@@ -556,7 +581,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         }
         chatAdapter.notifyItemInserted(latestChatPosition);
         recyclerView.setAdapter(chatAdapter);
-        recyclerView.smoothScrollToPosition(latestChatPosition);
+        recyclerView.scrollToPosition(latestChatPosition);
 
         spinner = (Spinner) findViewById(R.id.chat_Target_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, targetNameList);
@@ -571,4 +596,5 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         startActivityForResult(myIntent, 0);
         return true;
     }
+
 }

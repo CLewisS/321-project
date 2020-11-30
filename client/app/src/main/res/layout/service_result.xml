@@ -37,6 +37,13 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/numPeopletxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="5 people RSVP'd" />
+
+        <TextView
             android:id="@+id/locationResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -188,6 +188,12 @@ public class BrowseActivity extends CommunityLinkActivity {
             CommunityLinkApp.requestManager.updatePeoPle(service,updateResponseCallback,updateErrorCallback);
             sdList.remove(index);
             displayServices();
+
+            CharSequence toastMess = "Got the service!";
+            Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+
         } else {
             CharSequence toastMess = "Sorry, you must be logged in to RSVP.";
             Toast toast = Toast.makeText(getApplicationContext(), toastMess, Toast.LENGTH_SHORT);

@@ -56,6 +56,18 @@ var serviceIsValid = function (service) {
 
 module.exports.serviceIsValid = serviceIsValid;
 
+/* A helper functino the removes service properties that are
+ * initialized when the service is inserted into tables
+ */
+var clearUnneccessaryFields = function (service) {
+  if (service.hasOwnProperty("id")) {
+    delete service.id;
+  }
+
+  if (service.hasOwnProperty("numPeople")) {
+    delete service.numPeople;
+  }
+};
 
 module.exports.getServiceFromReq = function(body) {
 
@@ -66,13 +78,7 @@ module.exports.getServiceFromReq = function(body) {
     service = body;
   }
 
-  if (service.hasOwnProperty("id")) {
-    delete service.id;
-  }
-
-  if (service.hasOwnProperty("numPeople")) {
-    delete service.numPeople;
-  }
+  clearUnneccessaryFields(service);
 
   if (serviceIsValid(service)) {
     return service;

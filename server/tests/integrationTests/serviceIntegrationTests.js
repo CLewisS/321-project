@@ -155,7 +155,7 @@ test("Receive "+query, async () => {
   if (code === 200) {
     expect(res.statusCode).toBe(200);
     expect(res.body[0].name).toBe(name);
-    expect(Object.keys(res.body[0])).toHaveLength(10);
+    expect(Object.keys(res.body[0])).toHaveLength(12);
 
   }else{
     expect(res.statusCode).toEqual(code);

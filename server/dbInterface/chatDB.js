@@ -17,9 +17,6 @@ var dbConfig = require("./dbConfig");
 
 module.exports.add = function (message, callback) {
 
-  // console.log("Adding message to DB");
-
-
   var dbConn = mysql.createConnection(dbConfig.chatDB);
 
   // Start database connection  
@@ -28,8 +25,6 @@ module.exports.add = function (message, callback) {
       callback({}, {code: 500, message: err.message});
       return;
     }
-
-    // console.log("Connected to MySQL server");
 
     var users = [message.sender, message.recipient];
     users.sort();
@@ -44,8 +39,6 @@ module.exports.add = function (message, callback) {
         return;
       }
   
-      // console.log("Updated thread message count");
-
       // Get number of messages in thread
       query = "SELECT numMess FROM threads WHERE thread = '" + thread + "'";
       dbConn.query(query, (err, results, fields) => {
@@ -69,7 +62,7 @@ module.exports.add = function (message, callback) {
             callback({}, {code: 500, message: err.message});
             return;
           }
-          // console.log("Inserted into messages");
+
           callback({id: values[0]});
         });
           
@@ -80,7 +73,6 @@ module.exports.add = function (message, callback) {
             return;
           }
       
-          // console.log("Closed connection to MySQL server");
         });
       });
 
@@ -101,7 +93,6 @@ module.exports.add = function (message, callback) {
  *               The retrieved messages are passed as an argument.
  */
 module.exports.get = function(user1, user2, newest, callback) {
-  // console.log("Getting messages from DB " + user1 + " " + user2 + " " + newest);
 
   var dbConn = mysql.createConnection(dbConfig.chatDB);
 
@@ -112,16 +103,12 @@ module.exports.get = function(user1, user2, newest, callback) {
       return;
     }
 
-    // console.log("Connected to MySQL server");
-
     var users = [user1, user2];
     users.sort();
 
     var thread = users[0] + ":" + users[1];
 
     var query = "SELECT numMess FROM threads WHERE thread='" + thread + "'";
-
-
 
     // Get total number of thread messages
     dbConn.query(query, (err, result, fields) => {
@@ -131,7 +118,6 @@ module.exports.get = function(user1, user2, newest, callback) {
       }
 
       if (result[0]) {
-        // console.log("Getting messages");
         // Get messages newer than newest
         var numMess = result[0].numMess;
 
@@ -153,8 +139,6 @@ module.exports.get = function(user1, user2, newest, callback) {
           callback({}, {code: 500, message: err.message});
           return;
         }
-  
-        // console.log("Closed connection to MySQL server");
       });
     });
 

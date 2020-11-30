@@ -439,7 +439,9 @@ module.exports.getReceivedServices = function(conditions, callback) {
     }
 
     // Build SQL query
-    var query = "SELECT * FROM services WHERE ";
+    var query = "SELECT * FROM services"
+                + " INNER JOIN rsvp_count ON services.id=rsvp_count.id"
+                + " WHERE ";
 
     var sqlConds = conditions;
 

@@ -273,7 +273,7 @@ module.exports = function () {
             if (code === 200) {
               expect(this.code).toBeUndefined();
               expect(input[0].name).toBe(name);
-              expect(Object.keys(input[0])).toHaveLength(10);
+              expect(Object.keys(input[0])).toHaveLength(12);
             }else{
               expect(this.code).toEqual(code);
             }

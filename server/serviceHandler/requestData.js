@@ -70,6 +70,10 @@ module.exports.getServiceFromReq = function(body) {
     delete service.id;
   }
 
+  if (service.hasOwnProperty("numPeople")) {
+    delete service.numPeople;
+  }
+
   if (serviceIsValid(service)) {
     return service;
   }

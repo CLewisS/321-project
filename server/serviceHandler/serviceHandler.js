@@ -161,7 +161,7 @@ module.exports.getReceivedServices = function (req, res) {
       var conditions = [];
 
       for(var service of services) {
-        conditions.push("id=" + service.serviceID);
+        conditions.push("services.id=" + service.serviceID);
       }
       db.getReceivedServices(conditions, (services, err) => { 
 

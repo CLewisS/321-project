@@ -13,6 +13,7 @@ import org.junit.runners.MethodSorters;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -43,14 +44,14 @@ public class SignUpTest {
         onView(withId(R.id.menuSignupButt)).perform(click());
         onView(withId(R.id.passErrSignup)).check(matches(isDisplayed()));
     }
-    /*
+
     @Test
-    public void B_SignUpWithCorrectEntry(){
+    public void c_SignUpWithCorrectEntry(){
         onView(withId(R.id.signupButtIntro)).perform(click());
-        onView(withId(R.id.usernameSignup)).perform(typeText("AlexA11"));
+        onView(withId(R.id.usernameSignup)).perform(typeText("AlexA114"));
         onView(withId(R.id.passwordSignup)).perform(typeText("111233"));
         onView(withId(R.id.passwordSignup2)).perform(typeText("111233"));
         onView(withId(R.id.menuSignupButt)).perform(click());
         onView(withId(R.id.loginButtIntro)).check(doesNotExist());
-    }*/
+    }
 }

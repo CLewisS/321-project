@@ -54,4 +54,13 @@ public class BrowseServiceTest {
         onView(withId(R.id.filtersButt)).check(matches(isDisplayed()));
         onView(withId(R.id.serviceSearch)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void d_UseSuggestionToBrowseService(){
+        onView(withId(R.id.suggestionsButt)).perform(click());
+        onView(withId(R.id.searchButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.suggestionsButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.filtersButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.serviceSearch)).check(matches(isDisplayed()));
+    }
 }

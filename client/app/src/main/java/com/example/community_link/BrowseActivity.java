@@ -604,6 +604,10 @@ public class BrowseActivity extends CommunityLinkActivity {
         TextView descriptionResult = serviceView.findViewById(R.id.descriptionResult);
         descriptionResult.setText(sd.getDescription());
 
+        int spotsAvailable = sd.getMaxCapacity() - sd.getNumPeople();
+        TextView numPeople = serviceView.findViewById(R.id.numPeopletxt);
+        numPeople.setText(spotsAvailable + " spots available.");
+
         setViewTags(serviceView, i, sd.getOwner());
 
         return serviceView;

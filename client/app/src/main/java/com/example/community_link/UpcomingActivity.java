@@ -71,7 +71,12 @@ public class UpcomingActivity extends CommunityLinkActivity {
 
     }
 
-
+    public void messageProvider(View view) {
+        Intent chat = new Intent(this, ChatActivity.class);
+        String targetName = sdList.get((Integer) view.getTag()).getOwner();
+        chat.putExtra("targetName", targetName);
+        startActivity(chat);
+    }
 
     private void getRsvpServices() {
         sdList.clear();

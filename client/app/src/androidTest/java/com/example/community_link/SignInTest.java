@@ -28,7 +28,7 @@ public class SignInTest {
             new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void A_LoginWithNoEntry() {
+    public void a_LoginWithNoEntry() {
         onView(withId(R.id.loginButtIntro)).perform(click());
         onView(withId(R.id.loginButt)).perform(click());
         onView(withId(R.id.userErrLogin)).check(matches(isDisplayed()));
@@ -37,7 +37,7 @@ public class SignInTest {
 
 
     @Test
-    public void B_LoginWithWrongEntry(){
+    public void b_LoginWithWrongEntry(){
         onView(withId(R.id.loginButtIntro)).perform(click());
         onView(withId(R.id.usernameLogin)).perform(typeText("AlexChen"));
         onView(withId(R.id.passwordLogin)).perform(typeText("Aha"));
@@ -46,7 +46,7 @@ public class SignInTest {
     }
 
     @Test
-    public void C_LoginWithCorrectEntry(){
+    public void c_LoginWithCorrectEntry(){
         onView(withId(R.id.loginButtIntro)).perform(click());
         onView(withId(R.id.usernameLogin)).perform(typeText("AlexChen"));
         onView(withId(R.id.passwordLogin)).perform(typeText("111111"));

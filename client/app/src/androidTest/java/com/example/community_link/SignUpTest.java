@@ -27,7 +27,7 @@ public class SignUpTest {
             new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void A_SignUpWithNoEntry() {
+    public void a_SignUpWithNoEntry() {
         onView(withId(R.id.signupButtIntro)).perform(click());
         onView(withId(R.id.menuSignupButt)).perform(click());
         onView(withId(R.id.userErrSignup)).check(matches(isDisplayed()));
@@ -35,7 +35,7 @@ public class SignUpTest {
 
 
     @Test
-    public void B_SignUpWithWrongEntry(){
+    public void b_SignUpWithWrongEntry(){
         onView(withId(R.id.signupButtIntro)).perform(click());
         onView(withId(R.id.usernameSignup)).perform(typeText("AlexA11"));
         onView(withId(R.id.passwordSignup)).perform(typeText("111233"));

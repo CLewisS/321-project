@@ -1,7 +1,5 @@
 package com.example.community_link;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -21,7 +19,6 @@ import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;

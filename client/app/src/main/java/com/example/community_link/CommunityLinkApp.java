@@ -2,7 +2,6 @@ package com.example.community_link;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;

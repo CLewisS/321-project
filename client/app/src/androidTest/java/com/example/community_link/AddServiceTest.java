@@ -26,7 +26,7 @@ public class AddServiceTest {
             new ActivityScenarioRule<>(AddServiceActivity.class);
 
     @Test
-    public void A_CheckExistence(){
+    public void a_CheckExistence(){
         onView(withId(R.id.tvProjectName)).check(matches(isDisplayed()));
         onView(withId(R.id.etProjectName)).check(matches(isDisplayed()));
         onView(withId(R.id.tvType)).check(matches(isDisplayed()));
@@ -43,7 +43,7 @@ public class AddServiceTest {
     }
 
     @Test
-    public void B_NotEnoughInformation(){
+    public void b_NotEnoughInformation(){
         onView(withId(R.id.addServiceButt)).perform(click());
         onView(withId(R.id.titleErr)).check(matches(isDisplayed()));
         onView(withId(R.id.descriptionErr)).check(matches(isDisplayed()));

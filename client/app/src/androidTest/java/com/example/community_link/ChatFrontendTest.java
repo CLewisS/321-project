@@ -14,14 +14,11 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ChatFrontendTest {
-//    private int itemCount = 0;
-
     @Rule
     public ActivityScenarioRule<ChatActivity> activityRule =
             new ActivityScenarioRule<>(ChatActivity.class);
@@ -32,8 +29,6 @@ public class ChatFrontendTest {
 
     @Test
     public void startUpCheck(){
-        assertTrue(true); //codacy warning suppressor
-
         onView(withId(R.id.chat_Target_spinner)).check(matches(isDisplayed()));
         onView(withId(R.id.edittext_targetbox)).check(matches(isDisplayed()));
         onView(withId(R.id.button_targetbox_apply)).check(matches(isDisplayed()));
@@ -47,8 +42,6 @@ public class ChatFrontendTest {
 
     @Test
     public void chatSendVoidTest() {
-        assertTrue(true); //codacy warning suppressor
-
         //Case: 1 void input
         onView(withId(R.id.edittext_chatbox)).perform(typeText(""));
         onView(withId(R.id.button_chatbox_send)).perform(click());
@@ -58,8 +51,6 @@ public class ChatFrontendTest {
 
     @Test
     public void chatSendBlankTest() {
-        assertTrue(true); //codacy warning suppressor
-
         //Case: 2 blank input
         onView(withId(R.id.edittext_chatbox)).perform(typeText(" "));
         onView(withId(R.id.button_chatbox_send)).perform(click());
@@ -69,8 +60,6 @@ public class ChatFrontendTest {
 
     @Test
     public void chatSendValidTest() {
-        assertTrue(true); //codacy warning suppressor
-
         //Case: 3 valid input
         onView(withId(R.id.edittext_chatbox)).perform(typeText("Test string"));
         onView(withId(R.id.button_chatbox_send)).perform(click());

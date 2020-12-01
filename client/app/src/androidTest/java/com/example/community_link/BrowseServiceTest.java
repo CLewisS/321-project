@@ -28,7 +28,7 @@ public class BrowseServiceTest {
 
 
     @Test
-    public void A_CheckButtonDisplay() {
+    public void a_CheckButtonDisplay() {
         onView(withId(R.id.searchButt)).check(matches(isDisplayed()));
         onView(withId(R.id.suggestionsButt)).check(matches(isDisplayed()));
         onView(withId(R.id.filtersButt)).check(matches(isDisplayed()));
@@ -37,13 +37,13 @@ public class BrowseServiceTest {
 
 
     @Test
-    public void B_UseFilterToBrowseService(){
+    public void b_UseFilterToBrowseService(){
         onView(withId(R.id.serviceSearch)).perform(click());
         onView(withId(R.id.serviceResultTitle)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void C_UseNameToBrowseService(){
+    public void c_UseNameToBrowseService(){
         onView(withId(R.id.serviceSearch)).perform(typeText("Clothing Giveaway"));
         onView(withId(R.id.serviceSearch)).perform(click());
         //onView(withId(R.id.serviceResultTitle)).check(matches(isDisplayed()));

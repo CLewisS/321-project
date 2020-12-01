@@ -48,6 +48,6 @@ app.put("/user/login", userHandler.loginCheck);
 
 
 
-var server = app.listen(PORT, () => console.log("Listening on port " + PORT));
+var server = app.listen(PORT);
 
 module.exports = server;

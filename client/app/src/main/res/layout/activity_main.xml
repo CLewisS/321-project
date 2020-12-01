@@ -157,7 +157,7 @@
                 android:onClick="upcomingServices"
                 android:paddingTop="32dp"
                 android:paddingBottom="32dp"
-                android:text="You\'re services"
+                android:text="Your services"
                 android:textAllCaps="false"
                 android:textSize="24sp" />
         </LinearLayout>

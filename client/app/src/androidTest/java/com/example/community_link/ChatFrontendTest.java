@@ -31,7 +31,7 @@ public class ChatFrontendTest {
     //Enable them and recompile for testing purposes.
 
     @Test
-    public void StartUpCheck(){
+    public void startUpCheck(){
         assertTrue(true); //codacy warning suppressor
 
         onView(withId(R.id.chat_Target_spinner)).check(matches(isDisplayed()));
@@ -46,7 +46,7 @@ public class ChatFrontendTest {
 
 
     @Test
-    public void ChatSendVoidTest() {
+    public void chatSendVoidTest() {
         assertTrue(true); //codacy warning suppressor
 
         //Case: 1 void input
@@ -57,7 +57,7 @@ public class ChatFrontendTest {
     }
 
     @Test
-    public void ChatSendBlankTest() {
+    public void chatSendBlankTest() {
         assertTrue(true); //codacy warning suppressor
 
         //Case: 2 blank input
@@ -68,7 +68,7 @@ public class ChatFrontendTest {
     }
 
     @Test
-    public void ChatSendValidTest() {
+    public void chatSendValidTest() {
         assertTrue(true); //codacy warning suppressor
 
         //Case: 3 valid input

@@ -95,7 +95,7 @@ public class ChatActivity extends CommunityLinkActivity implements AdapterView.O
         context = this;
 
         //setup local user parameters for tests
-        CommunityLinkApp.user = new UserProfile("TEST", "TEST");
+        //CommunityLinkApp.user = new UserProfile("TEST", "TEST");
 
         targetName = null;
         validTarget = false;

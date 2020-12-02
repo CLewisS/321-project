@@ -4,6 +4,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,7 +27,6 @@ public class BrowseServiceTest {
     public ActivityScenarioRule<BrowseActivity> activityRule =
             new ActivityScenarioRule<>(BrowseActivity.class);
 
-
     @Test
     public void a_CheckButtonDisplay() {
         onView(withId(R.id.searchButt)).check(matches(isDisplayed()));
@@ -39,13 +39,28 @@ public class BrowseServiceTest {
     @Test
     public void b_UseFilterToBrowseService(){
         onView(withId(R.id.serviceSearch)).perform(click());
-        onView(withId(R.id.serviceResultTitle)).check(matches(isDisplayed()));
+        onView(withId(R.id.searchButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.suggestionsButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.filtersButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.serviceSearch)).check(matches(isDisplayed()));
     }
 
     @Test
     public void c_UseNameToBrowseService(){
         onView(withId(R.id.serviceSearch)).perform(typeText("Clothing Giveaway"));
         onView(withId(R.id.serviceSearch)).perform(click());
-        //onView(withId(R.id.serviceResultTitle)).check(matches(isDisplayed()));
+        onView(withId(R.id.searchButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.suggestionsButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.filtersButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.serviceSearch)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void d_UseSuggestionToBrowseService(){
+        onView(withId(R.id.suggestionsButt)).perform(click());
+        onView(withId(R.id.searchButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.suggestionsButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.filtersButt)).check(matches(isDisplayed()));
+        onView(withId(R.id.serviceSearch)).check(matches(isDisplayed()));
     }
 }
